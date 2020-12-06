@@ -1,0 +1,17 @@
+.col_sort_buttons{
+    padding-right: 25.5vw;
+    flex-wrap: wrap;
+  }
+  
+  .sort_buttons{
+    height: 5vh;
+    // display: block;
+  }
+
+@media(max-width:335px){
+  .col_sort_buttons{
+    padding-right: 25.5vw;
+    flex-direction:  column;
+  }
+  
+}

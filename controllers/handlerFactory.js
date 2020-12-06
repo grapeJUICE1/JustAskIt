@@ -34,7 +34,7 @@ exports.createOne = (Model, allowedFields = []) => {
     res.status(201).json({
       status: 'success',
       data: {
-        data: newDoc,
+        doc: newDoc,
       },
     });
   });
@@ -131,6 +131,7 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         for: forDoc,
         doc: req.params.id,
       });
+      doc.voteCount = doc.likeCount - doc.dislikeCount;
       await doc.save();
       if (type === 'like') {
         return res.status(204).json({
@@ -152,6 +153,7 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         for: forDoc,
         doc: req.params.id,
       });
+      doc.voteCount = doc.likeCount - doc.dislikeCount;
       await doc.save();
       if (type === 'dislike') {
         return res.status(204).json({
@@ -182,6 +184,7 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         doc: req.params.id,
       });
     }
+    doc.voteCount = doc.likeCount - doc.dislikeCount;
     await doc.save();
     res.status(204).json({
       status: 'success',

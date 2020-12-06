@@ -26,31 +26,6 @@ const likeDislikeSchema = mongoose.Schema({
   doc: { type: mongoose.Schema.ObjectId, refPath: 'for', required: true },
 });
 
-likeDislikeSchema.pre('save', async function (next) {
-  //The code below checks that
-  //if doc field in the created document
-  //is a valid post , comment or answer
-  //if it is then it increases the
-  //like or dislike count on the desired
-  //post answer or comment and updates it
-  let doc;
-  if (this.for === 'Post') {
-    doc = await Post.findById(this.doc);
-  } else if (this.for === 'Answer') {
-    doc = await Answer.findById(this.doc);
-  } else if (this.for === 'Comment') {
-    doc = await Comment.findById(this.doc);
-  }
-
-  if (!doc) return next(new AppError('No document found with that id', 404));
-  doc.voteCount = doc.likeCount - doc.dislikeCount;
-  doc.save();
-});
-
-likeDislikeSchema.pre(/^find/, function (next) {
-  next();
-});
-
 //initializing and exporting LikeDislike model
 const LikeDislike = mongoose.model('LikeDislike', likeDislikeSchema);
 

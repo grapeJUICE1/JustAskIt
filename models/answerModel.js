@@ -14,6 +14,7 @@ const answerSchema = mongoose.Schema({
   },
   likeCount: { type: Number, default: 0 },
   dislikeCount: { type: Number, default: 0 },
+  voteCount: { type: Number, default: 0 },
   createdAt: Date,
   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
 });
