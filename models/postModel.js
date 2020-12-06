@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const Tag = require('./tagModel');
 
 //initializing post schema
 const postSchema = mongoose.Schema(
@@ -62,17 +63,25 @@ postSchema.virtual('answers', {
   localField: '_id',
 });
 
-postSchema.pre('save', function (next) {
+postSchema.pre('save', async function (next) {
+  //checks if tags accosiated with the post exist in the database
+  //if it doesn't exists , save the tag and continue
+  //if it does , don't save the tag and continue
+  for (const tag of this.tags) {
+    if (!(await Tag.findOne({ name: tag }))) {
+      Tag.create({ name: tag });
+    }
+  }
   //populating the slug  as the title of the post
   this.slug = slugify(this.title, { lower: true });
   //populating createdAt as the current date if the created post is new
-  console.log(this.isNew);
   if (this.isNew) this.createdAt = Date.now();
   next();
 });
 
-postSchema.pre(/^find/, function (next) {
+postSchema.pre(/^find/, async function (next) {
   //populating postedBy
+  console.log(await Tag.countDocuments({}));
   this.populate({ path: 'postedBy', select: '-__v -passwordChangedAt' });
   next();
 });
