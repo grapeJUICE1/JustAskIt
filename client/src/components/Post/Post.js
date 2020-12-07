@@ -2,6 +2,8 @@ import React from 'react';
 import classnames from 'classnames';
 import TimeFromNow from '../../shared/utils/formatDate';
 import styles from './Post.module.scss';
+import { Button } from 'react-bootstrap';
+import { withRouter } from 'react-router';
 // console.log(styles);
 
 const Post = (props) => {
@@ -11,10 +13,13 @@ const Post = (props) => {
       id={`${props.post.slug}`}
       key={props.post.id}
     >
-      <a
-        href={`#${props.post.slug}`}
+      <Button
+        variant="link"
+        onClick={() =>
+          props.history.push(`/posts/post/${props.post.id}/${props.post.slug}`)
+        }
         className={styles.post_title}
-      >{`${props.post.title.slice(0, 100)} ...`}</a>
+      >{`${props.post.title.slice(0, 100)} ...`}</Button>
       <div className="d-flex pt-2">
         <p className="text-muted pr-4">
           <span>
@@ -70,4 +75,4 @@ const Post = (props) => {
   );
 };
 
-export default Post;
+export default withRouter(Post);

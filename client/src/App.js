@@ -6,15 +6,19 @@ import Layout from './components/Layout/Layout';
 import Posts from './containers/Posts/Posts';
 
 import './App.scss';
+import FullPost from './containers/FullPost/FullPost';
+import Editor from './components/Editor/Editor';
 
 function App() {
   return (
     <Layout>
       <Switch>
-        <Route path="/posts" component={Posts} />
+        <Route path="/posts" exact component={Posts} />
+        <Route path="/ed" exact component={Editor} />
+        <Route path="/posts/post/:id/:slug?" component={FullPost} />
       </Switch>
     </Layout>
   );
 }
 
-export default withRouter(App);
+export default App;

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../axios-instances/axios-post';
 import * as actionTypes from './actionTypes';
 
 export const fetchPostsStart = () => {
@@ -25,7 +25,7 @@ export const fetchPosts = (sortBy, filter, currentPage, perPagePosts) => {
   return async (dispatch) => {
     dispatch(fetchPostsStart());
     try {
-      const res = await axios.get('http://localhost:7000/api/v1/posts', {
+      const res = await axios.get('/', {
         params: {
           sort: sortBy,
           limit: perPagePosts,
@@ -33,9 +33,7 @@ export const fetchPosts = (sortBy, filter, currentPage, perPagePosts) => {
           ...filter,
         },
       });
-      //   this.setState({ total: res.data.results });
-      //   this.setState({ totalPages: res.data.totalNumOfData });
-      //   this.setState({ posts: res.data.data.docs });
+
       dispatch(
         fetchPostsSuccess(
           res.data.data.docs,

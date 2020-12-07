@@ -10,7 +10,7 @@ font-size: .8rem;
 background-color: #94b4a4;
 font-family: 'Open Sans', sans-serif;
 font-weight: 100;
-overflow-x: hidden;
+overflow-x: none;
 min-width: 100%;
 }
 .container{
@@ -68,11 +68,12 @@ h3{
 
 
 
-.col-sort-buttons{
-  padding-right: 25.5vw;
-  flex-wrap: wrap;
-}
 
-.sort-buttons{
-  height: 5vh;
-}
+
+
+
+
+
+
+
+

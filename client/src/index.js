@@ -9,9 +9,11 @@ import thunk from 'redux-thunk';
 import { BrowserRouter } from 'react-router-dom';
 
 import postsReducer from './store/reducers/posts';
+import fullPostReducer from './store/reducers/fullPost';
 
 const rootReducer = combineReducers({
   posts: postsReducer,
+  fullPost: fullPostReducer,
 });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

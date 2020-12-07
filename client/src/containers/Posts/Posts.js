@@ -3,7 +3,6 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import SortButtons from '../../components/SortButtons/SortButtons';
 import Post from '../../components/Post/Post';
-import axios from 'axios';
 import { connect } from 'react-redux';
 
 import * as actions from '../../store/actions/index';
@@ -11,7 +10,7 @@ import * as actions from '../../store/actions/index';
 class Posts extends Component {
   PER_PAGE = 10;
   state = {
-    currentPage: 1,
+    currentPage: localStorage.getItem('currentPage') || 1,
     total: 0,
     totalPages: 0,
     sortBy: '-createdAt',
@@ -32,29 +31,13 @@ class Posts extends Component {
       prevState.filter !== this.state.filter ||
       prevState.currentPage !== this.state.currentPage
     ) {
+      localStorage.setItem('currentPage', this.state.currentPage);
       this.props.onFetchPosts(
         this.state.sortBy,
         this.state.filter,
         this.state.currentPage,
         this.PER_PAGE
       );
-    }
-  }
-  async fetchData() {
-    try {
-      const res = await axios.get('http://localhost:7000/api/v1/posts', {
-        params: {
-          sort: this.state.sortBy,
-          limit: this.PER_PAGE,
-          page: this.state.currentPage,
-          ...this.filter,
-        },
-      });
-      this.setState({ total: res.data.results });
-      this.setState({ totalPages: res.data.totalNumOfData });
-      this.setState({ posts: res.data.data.docs });
-    } catch (err) {
-      this.setState({ error: err });
     }
   }
 
@@ -80,6 +63,7 @@ class Posts extends Component {
   };
   filterUnanswered = (e) => {
     this.setState({ currentPage: 0 });
+    localStorage.setItem('currentPage', 0);
     this.setState({ sortBy: '-createdAt' });
     this.setState({ filter: { ...this.state.filter, answerCount: 0 } });
   };
@@ -130,6 +114,11 @@ class Posts extends Component {
         <ReactPaginate
           previousLabel={'<<'}
           nextLabel={'>>'}
+          initialPage={
+            localStorage.getItem('currentPage') - 1 >= 0
+              ? localStorage.getItem('currentPage') - 1
+              : 0
+          }
           pageCount={pageCount}
           onPageChange={this.handlePageClick}
           containerClassName={'pagination pb-5'}
