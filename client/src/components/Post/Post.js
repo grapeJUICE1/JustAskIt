@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import TimeFromNow from '../../shared/utils/formatDate';
+import { timeSince } from '../../shared/utils/formatDate';
 import styles from './Post.module.scss';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
@@ -66,7 +66,7 @@ const Post = (props) => {
       <div className="d-flex flex-row-reverse flex-end pt-3">
         <div className="d-flex flex-column">
           <small className="text-muted">
-            {`Asked ${TimeFromNow(props.post.createdAt)} ago `}
+            {`Asked ${timeSince(props.post.createdAt)} ago `}
           </small>
           <p>{`${props.post.postedBy.name}`}</p>
         </div>

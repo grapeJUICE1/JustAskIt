@@ -31,7 +31,7 @@ class FullPost extends Component {
     }
     return (
       <Fragment>
-        <Container className="d-flex flex-column justify-content-between pt-5 mt-5">
+        <Container className="d-flex flex-column justify-content-between pt-5 mt-5 mr-lg-4">
           <Question post={this.props.post} />
           {lol}
         </Container>

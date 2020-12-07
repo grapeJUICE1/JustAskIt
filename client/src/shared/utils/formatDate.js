@@ -1,4 +1,4 @@
-const timeSince = (date) => {
+export const timeSince = (date) => {
   if (typeof date !== 'object') {
     date = new Date(date);
   }
@@ -40,4 +40,33 @@ const timeSince = (date) => {
 
   return interval + ' ' + intervalType;
 };
-export default timeSince;
+
+export const formatDate = (date) => {
+  if (typeof date !== 'object') {
+    date = new Date(date);
+  }
+  const months = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  const hour = date.getHours();
+  let minutes = date.getMinutes();
+  minutes = hour > 12 ? hour + ' PM' : hour + ' Am';
+
+  return `${month} ${day}/${year} at ${hour}:${minutes}`;
+};

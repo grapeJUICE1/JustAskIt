@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import axios from 'axios';
-import { Container, Spinner } from 'react-bootstrap';
+import { Button, Container, Spinner } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import * as actions from '../../../store/actions/index';
+import { formatDate } from '../../../shared/utils/formatDate';
 
 class Answers extends Component {
   componentDidMount() {
@@ -42,6 +43,18 @@ class Answers extends Component {
       answers = this.props.answers.map((ans) => (
         <Fragment key={ans._id}>
           <h5>{ans.content}</h5>
+          <br />
+          <p
+            className="ml-auto"
+            style={{ fontWeight: 'bold', color: 'rgb(59, 59, 85)' }}
+          >
+            answered {formatDate(ans.createdAt)}
+          </p>
+          <p className="ml-auto">
+            <Button className="mr-0 mt-0 pt-0" variant="link" size="sm">
+              {ans.postedBy.name}
+            </Button>
+          </p>
           <br />
           <br />
           <br />

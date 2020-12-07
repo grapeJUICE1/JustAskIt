@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container } from 'react-bootstrap';
-import timeFromNow from '../../../shared/utils/formatDate';
+import { timeSince } from '../../../shared/utils/formatDate';
 import styles from './Question.module.scss';
 
 class Question extends Component {
@@ -14,7 +14,7 @@ class Question extends Component {
         </h2>
         <br />
         <h6>
-          Asked <strong>{timeFromNow(this.props.post.createdAt)} ago</strong>
+          Asked <strong>{timeSince(this.props.post.createdAt)} ago</strong>
           &nbsp; &nbsp; &nbsp; Viewed{' '}
           <strong>{this.props.post.views} times</strong>
         </h6>
