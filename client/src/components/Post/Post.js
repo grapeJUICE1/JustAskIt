@@ -4,15 +4,16 @@ import { timeSince } from '../../shared/utils/formatDate';
 import styles from './Post.module.scss';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
-// console.log(styles);
 
 const Post = (props) => {
   return (
     <div
-      className={styles.lol + ' p-3 mt-1'}
+      className={styles.post + ' p-3 mt-1'}
       id={`${props.post.slug}`}
       key={props.post.id}
     >
+      {/* className="d-flex flex-column" */}
+
       <Button
         variant="link"
         onClick={() =>
@@ -56,7 +57,8 @@ const Post = (props) => {
         {props.post.tags.map((tag) => (
           <div
             key={tag}
-            className={styles.tag_inside + ' px-1 py-1 mr-1 mb-1'}
+            onClick={(e) => props.onFilterTag(tag)}
+            className={styles.tag + ' px-1 py-1 mr-1 mb-1'}
             role="button"
           >
             {tag}
@@ -68,7 +70,9 @@ const Post = (props) => {
           <small className="text-muted">
             {`Asked ${timeSince(props.post.createdAt)} ago `}
           </small>
-          <p>{`${props.post.postedBy.name}`}</p>
+          <Button className="ml-auto" variant="link" size="sm">
+            {props.post.postedBy.name}
+          </Button>
         </div>
       </div>
     </div>

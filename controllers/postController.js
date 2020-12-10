@@ -11,6 +11,9 @@ exports.getAllPost = handlerFactory.getAll(Post, ['totalNumOfData']);
 exports.like = handlerFactory.likeDislike(Post, [], 'like', 'Post');
 exports.dislike = handlerFactory.likeDislike(Post, [], 'dislike', 'Post');
 exports.getOnePost = handlerFactory.getOne(Post, ['views']);
-exports.getPostOfUser = handlerFactory.getAll(Post, ['usersDoc']);
+exports.getPostOfUser = handlerFactory.getAll(Post, [
+  'usersDoc',
+  'totalNumOfData',
+]);
 exports.deletePost = handlerFactory.deleteOne(Post);
 exports.updatePost = handlerFactory.updateOne(Post, ['title', 'content']);

@@ -1,10 +1,10 @@
 /* Position and sizing of burger button */
 .bm-burger-button {
     position: relative;
-    width: 26px;
-    height: 20px;
-    left: 5px;
-    top: -4px ;
+    width: 1.625rem;
+    height: 1.25rem;
+    left: 0.3125rem;
+    top: -0.25rem ;
     z-index: 500;
   }
    
@@ -20,19 +20,15 @@
    
   /* Position and sizing of clickable cross button */
   .bm-cross-button {
-    height: 100vh;
-    width: 100vw;
-    top:0 !important;
-    right:0 !important;
-    display: none;
-    z-index: 100000000000000;
+    height: 24px;
+    width: 24px;
+    margin-top: 2.5rem;
   }
-   
+  
   /* Color/shape of close button cross */
   .bm-cross {
     background: #bdc3c7;
-  
-    }
+  }
   /*
   Sidebar wrapper styles
   Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
@@ -42,13 +38,15 @@
     left: 0;
     top: 0;
     height: 100%;
+    // width: 20vw;
   }
    
   /* General sidebar styles */
   .bm-menu {
     background: #373a47;
-    padding: 2.5em 1.5em 0;
+    padding: 2.5rem 1.5rem 0;
     font-size: 1.15em;
+    // width: 20vw;
   }
    
   /* Morph shape necessary with bubble or elastic */
@@ -59,12 +57,14 @@
   /* Wrapper for item list */
   .bm-item-list {
     color: #b8b7ad;
-    padding: 0.8em;
+    // padding: 0.8em;
   }
    
   /* Individual item */
   .bm-item {
     display: inline-block;
+    margin:0;
+    padding:0
   }
    
   /* Styling of overlay */

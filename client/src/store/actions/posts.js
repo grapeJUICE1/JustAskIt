@@ -1,4 +1,4 @@
-import axios from '../../axios-instances/axios-post';
+import axios from '../../axios-main';
 import * as actionTypes from './actionTypes';
 
 export const fetchPostsStart = () => {
@@ -25,7 +25,7 @@ export const fetchPosts = (sortBy, filter, currentPage, perPagePosts) => {
   return async (dispatch) => {
     dispatch(fetchPostsStart());
     try {
-      const res = await axios.get('/', {
+      const res = await axios.get('/posts', {
         params: {
           sort: sortBy,
           limit: perPagePosts,
@@ -42,7 +42,10 @@ export const fetchPosts = (sortBy, filter, currentPage, perPagePosts) => {
         )
       );
     } catch (err) {
-      dispatch(fetchPostsFail(err));
+      console.log(err);
+      if (err.response.data.message)
+        dispatch(fetchPostsFail(err.response.data));
+      else dispatch(fetchPostsFail(err));
     }
   };
 };

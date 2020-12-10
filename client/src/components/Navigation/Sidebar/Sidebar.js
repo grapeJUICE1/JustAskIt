@@ -1,23 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { slide as Menu } from 'react-burger-menu';
+import { Link } from 'react-router-dom';
 
 import './Sidebar.scss';
 
 const Sidebar = () => {
+  const [isMenuOpen, handleMenu] = useState(false);
+  const handleCloseMenu = () => {
+    handleMenu(false);
+  };
+  const handleStateChange = (state) => {
+    handleMenu(state.isOpen);
+  };
   return (
-    <Menu className="pt-5">
-      <a id="home" className="menu-item" href="#">
-        Home
-      </a>
-      <a id="about" className="menu-item" href="#">
-        About
-      </a>
-      <a id="contact" className="menu-item" href="#">
-        Contact
-      </a>
-      <a className="menu-item--small" href="#">
-        Settings
-      </a>
+    <Menu
+      className="pt-5"
+      width={'130px'}
+      isOpen={isMenuOpen}
+      onStateChange={handleStateChange}
+    >
+      <Link
+        id="posts"
+        onClick={handleCloseMenu}
+        className="menu-item"
+        to="/posts"
+      >
+        Posts
+      </Link>
+      <Link
+        id="users"
+        onClick={handleCloseMenu}
+        className="menu-item"
+        to="/posts"
+      >
+        Users
+      </Link>
     </Menu>
   );
 };

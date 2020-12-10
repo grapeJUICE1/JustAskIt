@@ -18,7 +18,11 @@ const handleValidationErrorDB = (err) => {
 
 //function to return jwt error in production
 const handleJWTError = () => {
-  return new AppError('Invalid Token | Please Log in again', 401);
+  return new AppError(
+    'Invalid Token | Please Log in again',
+    401,
+    'JsonWebTokenError'
+  );
 };
 
 //function to return error if token expires in production
@@ -77,6 +81,9 @@ module.exports = (err, req, res, next) => {
     sendErrProd(error, req, res);
   } else if (process.env.NODE_ENV === 'development') {
     //sending errors in development
-    sendErrDev(err, req, res);
+    let error = { ...err };
+    error.message = err.message;
+    if (err.name === 'JsonWebTokenError') error = handleJWTError();
+    sendErrDev(error, req, res);
   }
 };

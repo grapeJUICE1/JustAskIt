@@ -3,6 +3,7 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line prettier/prettier
 const fs = require('fs');
+const faker = require('faker');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const User = require('../models/userModel');
@@ -15,7 +16,7 @@ const LikeDislike = require('../models/likeDislikeModel');
 dotenv.config({ path: '../config.env' });
 
 mongoose
-  .connect(process.env.DATABASE_LOCAL, {
+  .connect('mongodb://localhost:27017/grape_forum', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -28,18 +29,13 @@ mongoose
     console.log(err);
   });
 
-const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
-const posts = JSON.parse(fs.readFileSync(`${__dirname}/posts.json`, 'utf-8'));
-const answers = JSON.parse(
-  fs.readFileSync(`${__dirname}/answers.json`, 'utf-8')
-);
-
 const importData = async () => {
   try {
     function genTag() {
       const lol = [
         'javascript',
         'python',
+        'faunadb',
         'java',
         'aws',
         'c#',
@@ -129,52 +125,69 @@ const importData = async () => {
         'ethical-hacking',
         'kali-linux',
         'shell',
+        'oculus',
+        'shader',
       ];
       const i = [];
       s = [1, 2, 3, 4, 5];
       for (let j = 0; j < s[Math.floor(Math.random() * s.length)]; j++) {
         i.push(lol[Math.floor(Math.random() * lol.length)]);
       }
+      console.log(i);
       return i;
     }
-    // await User.create(users);
-    // await Post.create(posts);
-    // const posts = await Post.find({});
-    // for (const post of posts) {
-    //   console.log(post.tags);
-    //   console.log('2nd', post.tags);
-    //   let s = genTag();
-    //   // const tags = req.body.tags.trim().split(' ');
-    //   for (const tag of s) {
-    //     if (!(await Tag.findOne({ name: tag }))) {
-    //       Tag.create({ name: tag });
-    //     }
-    //   }
-    //   post.tags = s;
-    //   console.log('3rd', post.tags);
-
-    //   await post.save();
+    // for (let i = 0; i < 40; i++) {
+    //   await User.create({
+    //     name: faker.name.findName(),
+    //     email: faker.internet.email(),
+    //     password: 'test1234',
+    //     passwordConfirm: 'test1234',
+    //     bio: faker.lorem.sentences(4),
+    //   });
     // }
+    const users = await User.find({});
+    // for (let i = 0; i < 60; i++) {
+    //   await Post.create({
+    //     title: faker.lorem.sentence(),
+    //     content: faker.lorem.paragraph(5),
+    //     postedBy: users[Math.floor(Math.random() * users.length)].id,
+    //     tags: genTag(),
+    //   });
+    // }
+
     const posts = await Post.find({});
-    for (const post of posts) {
-      post.likeCount = Math.round(Math.random() * 50);
-      post.dislikeCount = Math.round(Math.random() * 30);
-      const updatedPost = await post.save();
-      updatedPost.voteCount = updatedPost.likeCount - updatedPost.dislikeCount;
-      await updatedPost.save();
+
+    // for (let i = 0; i < 40; i++) {
+    //   const post = posts[Math.floor(Math.random() * posts.length)];
+    //   const answer = await Answer.create({
+    //     content: faker.lorem.paragraph(5),
+    //     postedBy: users[Math.floor(Math.random() * users.length)].id,
+    //     post: post.id,
+    //   });
+
+    //   // post.answerCount = await Answer.countDocuments({ post: post.id });
+    //   // // console.log(post);
+    //   // await post.save();
+    // }
+
+    const answers = await Answer.find({});
+    for (let i = 0; i < 200; i++) {
+      let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
+      let doc;
+      if (forModel === 'Post') {
+        doc = posts[Math.floor(Math.random() * posts.length)].id;
+      } else {
+        doc = answers[Math.floor(Math.random() * answers.length)].id;
+      }
+
+      await LikeDislike.create({
+        type: ['like', 'dislike'][Math.floor(Math.random() * 2)],
+        user: users[Math.floor(Math.random() * users.length)].id,
+        for: forModel,
+        doc,
+      });
     }
 
-    // for (const ans of answers) {
-    //   await Answer.create(ans);
-    //   const postOfCreatedAnswer = await Post.findById(ans.post);
-    //   console.log(postOfCreatedAnswer.answerCount);
-    //   postOfCreatedAnswer.answerCount = await Answer.countDocuments({
-    //     post: ans.post,
-    //   });
-    //   postOfCreatedAnswer.save();
-    //   console.log(postOfCreatedAnswer.answerCount);
-    // }
-    // await Comments.create(posts)
     console.log('Data successfully loaded!');
   } catch (err) {
     console.log(err);
@@ -184,12 +197,13 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    // const tour = await Tour.deleteMany({});
     // await User.deleteMany({});
     // await Post.deleteMany({});
-    await Answer.deleteMany({});
+    // for (let ans in await Answer.find({})) {
+    //   await Answer.findByIdAndDelete(ans._id);
+    // }
     // await Comment.deleteMany({});
-    // await LikeDislike.deleteMany({});
+    await LikeDislike.deleteMany({});
     console.log('deleted data successfully😉😉😉');
   } catch (err) {
     console.log(err);

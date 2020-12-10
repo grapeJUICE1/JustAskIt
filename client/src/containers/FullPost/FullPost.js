@@ -1,39 +1,41 @@
 import React, { Component, Fragment } from 'react';
+import { Container } from 'react-bootstrap';
+import { connect } from 'react-redux';
+
 import Question from './Question/Question';
 import { withRouter } from 'react-router';
 import Answers from './Answers/Answers';
-import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
-import { Spinner, Container } from 'react-bootstrap';
+import Loader from '../../components/UI/Loader/Loader';
+import checkAuth from '../../hoc/checkAuth';
 
 class FullPost extends Component {
   state = {
     post: {},
   };
   componentDidMount() {
-    if (this.props.match.params.id)
-      this.props.onFetchFullPost(this.props.match.params.id);
+    this.props.onFetchFullPost(this.props.match.params.id);
   }
+
   render() {
-    let lol;
-    if (!this.props.post.id) {
-      lol = (
-        <Spinner
-          animation="border"
-          role="status"
-          className="spinner-round mx-auto my-5"
-        >
-          <span className="sr-only">Loading...</span>
-        </Spinner>
-      );
+    let post;
+    if (this.props.error) {
+      // post = <h1>{this.props.error.message}</h1>;
+      if (this.props.post.id) {
+        post = <Question post={this.props.post} />;
+      } else {
+        post = <h1>{this.props.error.message}</h1>;
+      }
+    } else if (this.props.loading) {
+      post = <Loader />;
     } else {
-      lol = <Answers />;
+      post = <Question post={this.props.post} />;
     }
     return (
       <Fragment>
         <Container className="d-flex flex-column justify-content-between pt-5 mt-5 mr-lg-4">
-          <Question post={this.props.post} />
-          {lol}
+          {post}
+          <Answers postId={this.props.match.params.id} />
         </Container>
       </Fragment>
     );
@@ -44,6 +46,8 @@ const mapStateToProps = (state) => {
   return {
     post: state.fullPost.post,
     error: state.fullPost.error,
+    loading: state.fullPost.loading,
+    user: state.auth.user,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -54,4 +58,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(FullPost));
+)(withRouter(checkAuth(FullPost)));

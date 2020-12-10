@@ -67,15 +67,28 @@ postSchema.pre('save', async function (next) {
   //checks if tags accosiated with the post exist in the database
   //if it doesn't exists , save the tag and continue
   //if it does , don't save the tag and continue
+  // console.log(
+  //   await this.model('Post').collection.dropIndex({ tags_1: [['tags', 1]] })
+  // );
+  if (new Set(this.tags).size !== this.tags.length) {
+    let validationError = new mongoose.Error.ValidationError(null);
+    validationError.addError(
+      'tags',
+      new mongoose.Error.ValidatorError({ message: 'Invalid' })
+    );
+    return next(validationError);
+  }
   for (const tag of this.tags) {
     if (!(await Tag.findOne({ name: tag }))) {
       Tag.create({ name: tag });
     }
   }
+
   //populating the slug  as the title of the post
   this.slug = slugify(this.title, { lower: true });
   //populating createdAt as the current date if the created post is new
   if (this.isNew) this.createdAt = Date.now();
+
   next();
 });
 

@@ -13,6 +13,7 @@ router.get('/:id', userController.getOneUser);
 //route to login and signup
 router.post('/sign-up', authController.signUp);
 router.post('/login', authController.login);
+router.post('/logout', authController.logout);
 
 //route for updating user data except password
 router.patch(

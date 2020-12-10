@@ -26,6 +26,13 @@ answerSchema.pre('save', async function (next) {
   }
   next();
 });
+answerSchema.post('save', async function () {
+  const post = await Post.findById(this.post);
+  post.answerCount = await this.model('Answer').countDocuments({
+    post: this.post,
+  });
+  post.save();
+});
 
 answerSchema.pre(/^find/, function (next) {
   //populating postedBy
@@ -33,6 +40,15 @@ answerSchema.pre(/^find/, function (next) {
   // this.populate({ path: 'post' });
   next();
 });
+answerSchema.pre(
+  'deleteOne',
+  { document: true, query: false },
+  async function (next) {
+    const post = await Post.findById(this.post);
+    post.answerCount -= 1;
+    next();
+  }
+);
 
 //initializing and exporting Answer model
 const Answer = mongoose.model('Answer', answerSchema);

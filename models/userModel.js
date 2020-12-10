@@ -59,6 +59,7 @@ userSchema.pre('save', async function (next) {
   //checking if the password was modified or updated
   //if password was not modified , break out of this function and save the user
   //else continue
+  console.log(this.isModified('password'));
   if (!this.isModified('password')) return next();
 
   //hashing users Password
@@ -70,8 +71,8 @@ userSchema.pre('save', async function (next) {
 });
 
 //this instance method checks if two passwords match
-userSchema.methods.comparePassword = async function (givenPass, realPass) {
-  return await bcrypt.compare(givenPass, realPass);
+userSchema.methods.comparePassword = async function (candidatePass, userPass) {
+  return await bcrypt.compare(candidatePass, userPass);
 };
 
 //this instance methods checks if password was changed recently compared to the jwt timestamp

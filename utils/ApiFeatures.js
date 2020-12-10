@@ -4,7 +4,7 @@ class APIFeatures {
     this.queryString = queryString;
   }
 
-  filter() {
+  filter(isCount = null) {
     const queryObj = { ...this.queryString };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
@@ -13,7 +13,9 @@ class APIFeatures {
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    this.query = this.query.find(JSON.parse(queryStr));
+    this.query = isCount
+      ? this.query.countDocuments(JSON.parse(queryStr))
+      : this.query.find(JSON.parse(queryStr));
 
     return this;
   }

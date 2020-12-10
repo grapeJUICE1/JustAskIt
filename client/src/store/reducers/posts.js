@@ -6,10 +6,11 @@ const initialState = {
   totalPages: 0,
   posts: [],
   error: null,
+  loading: false,
 };
 
 const fetchPostsStartHandler = (state, action) => {
-  return updateObj(state, { error: null, posts: [] });
+  return updateObj(state, { error: null, posts: [], loading: true });
 };
 const fetchPostsSuccessHandler = (state, action) => {
   return updateObj(state, {
@@ -17,10 +18,11 @@ const fetchPostsSuccessHandler = (state, action) => {
     posts: action.posts,
     total: action.total,
     totalPages: action.totalPages,
+    loading: false,
   });
 };
 const fetchPostsFailHandler = (state, action) => {
-  return updateObj(state, { error: action.error });
+  return updateObj(state, { error: action.error, loading: false });
 };
 
 const reducer = (state = initialState, action) => {

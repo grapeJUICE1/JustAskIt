@@ -22,7 +22,7 @@ const commentRouter = require('./routes/commentRoutes');
 
 //initializing express
 const app = express();
-app.use(cors({ origin: true }));
+app.use(cors({ credentials: true, origin: true }));
 
 //logging on dev environment
 if (process.env.NODE_ENV === 'development') {
@@ -33,9 +33,9 @@ if (process.env.NODE_ENV === 'development') {
 app.use(helmet());
 
 const limiter = rateLimit({
-  max: 100,
+  max: 200,
   windowMs: 15 * 60 * 1000,
-  message: 'To many message from this IP | Try again in an hour',
+  message: { message: 'To many requests from this IP | try again in an hour' },
 });
 
 app.use('/api', limiter);

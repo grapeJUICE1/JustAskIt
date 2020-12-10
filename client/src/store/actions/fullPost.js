@@ -1,5 +1,4 @@
-import axiosPosts from '../../axios-instances/axios-post';
-import axiosAnswers from '../../axios-instances/axios-answers';
+import axios from '../../axios-main';
 import * as actionTypes from './actionTypes';
 
 export const fetchFullPostStart = () => {
@@ -24,42 +23,48 @@ export const fetchFullPost = (postId) => {
   return async (dispatch) => {
     dispatch(fetchFullPostStart());
     try {
-      const res = await axiosPosts.get(`/${postId}`);
+      const res = await axios.get(`/posts/${postId}`);
 
       dispatch(fetchFullPostSuccess(res.data.data.doc));
     } catch (err) {
-      dispatch(fetchFullPostFail(err));
+      console.log(err);
+      if (err.response.data.message)
+        dispatch(fetchFullPostFail(err.response.data));
+      // else if (err.response.data) dispatch(fetchAnswersFail(err.response.data));
+      else dispatch(fetchFullPostFail(err));
     }
   };
 };
 
-export const fetchAnswersStart = () => {
+export const LikePostStart = () => {
   return {
-    type: actionTypes.FETCH_ANSWERS_START,
+    type: actionTypes.LIKE_POST_START,
   };
 };
-export const fetchAnswersFail = (error) => {
+export const LikePostFail = (error) => {
   return {
-    type: actionTypes.FETCH_ANSWERS_FAIL,
+    type: actionTypes.LIKE_POST_FAIL,
     error,
   };
 };
-export const fetchAnswersSuccess = (answers, total) => {
+export const LikePostSuccess = (post) => {
   return {
-    type: actionTypes.FETCH_ANSWERS_SUCCESS,
-    answers,
-    total,
+    type: actionTypes.LIKE_POST_SUCCESS,
+    post,
   };
 };
-export const fetchAnswers = (postId) => {
+
+export const LikePost = (postId, likeordislike = 'like') => {
   return async (dispatch) => {
-    dispatch(fetchAnswersStart());
+    dispatch(LikePostStart());
     try {
-      const res = await axiosAnswers.get(`/${postId}/get-answers`);
-      // console.log(res);
-      dispatch(fetchAnswersSuccess(res.data.data.docs, res.data.results));
+      const res = await axios.post(`/posts/${postId}/${likeordislike}`);
+      dispatch(LikePostSuccess(res.data.data.doc));
     } catch (err) {
-      dispatch(fetchAnswersFail(err));
+      console.log(err);
+      if (err.response.data.message) dispatch(LikePostFail(err.response.data));
+      // else if (err.response.data) dispatch(fetchAnswersFail(err.response.data));
+      else dispatch(LikePostFail(err));
     }
   };
 };

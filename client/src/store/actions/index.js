@@ -1,2 +1,4 @@
 export { fetchPosts } from './posts';
-export { fetchFullPost, fetchAnswers } from './fullPost';
+export { fetchFullPost, LikePost } from './fullPost';
+export { fetchAnswers } from './answers';
+export { login, Logout } from './auth';

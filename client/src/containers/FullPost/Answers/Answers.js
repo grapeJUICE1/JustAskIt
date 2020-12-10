@@ -1,44 +1,21 @@
 import React, { Component, Fragment } from 'react';
-import axios from 'axios';
-import { Button, Container, Spinner } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import * as actions from '../../../store/actions/index';
 import { formatDate } from '../../../shared/utils/formatDate';
+import Loader from '../../../components/UI/Loader/Loader';
+import checkAuth from '../../../hoc/checkAuth';
 
 class Answers extends Component {
   componentDidMount() {
-    if (!this.props.answers) {
-      this.props.onFetchAnswers(this.props.post.id);
-    }
+    this.props.onFetchAnswers(this.props.postId);
   }
 
-  async fetchData() {
-    try {
-      if (this.props.post.id) {
-        const res = await axios.get(
-          `http://localhost:7000/api/v1/answers/${this.props.post.id}/get-answers`
-        );
-
-        this.setState({
-          answers: res.data.data.docs,
-          totalAnswers: res.data.results,
-        });
-      }
-    } catch (err) {}
-  }
   render() {
     let answers;
-    if (!this.props.answers) {
-      answers = (
-        <Spinner
-          animation="border"
-          role="status"
-          className="spinner-round mx-auto my-5"
-        >
-          <span className="sr-only">Loading...</span>
-        </Spinner>
-      );
+    if (this.props.loading) {
+      answers = <Loader />;
     } else {
       answers = this.props.answers.map((ans) => (
         <Fragment key={ans._id}>
@@ -72,9 +49,10 @@ class Answers extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    answers: state.fullPost.answers,
-    error: state.fullPost.error,
+    answers: state.answers.answers,
+    error: state.answers.error,
     post: state.fullPost.post,
+    loading: state.answers.loading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -82,4 +60,4 @@ const mapDispatchToProps = (dispatch) => {
     onFetchAnswers: (id) => dispatch(actions.fetchAnswers(id)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Answers);
+export default connect(mapStateToProps, mapDispatchToProps)(checkAuth(Answers));

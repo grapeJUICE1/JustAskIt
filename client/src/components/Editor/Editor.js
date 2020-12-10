@@ -20,12 +20,10 @@ const MainEditor = () => {
     setConvertedContent(currentContentAsHTML);
   }, [editorState]);
   const createMarkup = (html) => {
-    return {
-      __html: DOMPurify.sanitize(html),
-    };
+    return DOMPurify.sanitize(html);
   };
   return (
-    <Container className="d-flex flex-column justify-content-between ml-lg-4 pt-5 mt-5">
+    <Container className="d-flex flex-column justify-content-between pt-5 mt-5 px-5">
       <Editor
         editorState={editorState}
         onEditorStateChange={handleEditorChange}
@@ -36,8 +34,8 @@ const MainEditor = () => {
           options: [
             'inline',
             'blockType',
-            'fontSize',
             'list',
+            'colorPicker',
             'textAlign',
             'link',
             'embedded',
@@ -46,10 +44,11 @@ const MainEditor = () => {
             'remove',
             'history',
           ],
+          colorPicker: { className: 'colorPicker' },
           blockType: {
             options: [
               'Normal',
-              'H2',
+              'Heading 2',
               'H3',
               'H4',
               'H5',

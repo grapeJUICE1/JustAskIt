@@ -1,13 +1,19 @@
-.lol{
+.post{
     background-color: #e1ece7da;
     margin-bottom: 0;
   }
 
-  .tag_inside{
+  .tag{
     display: inline-block;
-    background-color: #fef7e3;
-    border:2px solid #fde09b;
-    color:#b0831b;
+    background-color: #799cf3;
+    border:2px solid #3a518a;
+    color:#001b17;
+    transition: all .2s;
+  }
+  .tag:hover{
+    background-color: #b9cbf6;
+    border:2px solid #1d47b0;
+    color:#284440;
   }
 
 .post_title{

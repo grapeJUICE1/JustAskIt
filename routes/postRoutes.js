@@ -5,6 +5,7 @@ const answerController = require('./../controllers/answerController');
 const postController = require('./../controllers/postController');
 const tagController = require('./../controllers/tagController');
 const commentController = require('./../controllers/commentController');
+const likeDislikeController = require('./../controllers/likeDislikeController');
 
 //initializing express router
 const router = express.Router();
@@ -30,6 +31,11 @@ router
 
 //route to like and dislike post
 router.route('/:id/like').post(authController.protect, postController.like);
+router.get(
+  '/:id/get-all-reactions-of-user',
+  authController.protect,
+  likeDislikeController.getLikeAndDislikesOfPostByUser
+);
 router
   .route('/:id/dislike')
   .post(authController.protect, postController.dislike);

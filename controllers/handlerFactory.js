@@ -23,13 +23,13 @@ exports.createOne = (Model, allowedFields = []) => {
     }
     const newDoc = await Model.create(req.body);
 
-    if (allowedFields.includes('postOfCreatedAnswer')) {
-      const postOfCreatedAnswer = await Post.findById(req.params.id);
-      postOfCreatedAnswer.answerCount = await Model.countDocuments({
-        post: req.params.id,
-      });
-      postOfCreatedAnswer.save();
-    }
+    // if (allowedFields.includes('postOfCreatedAnswer')) {
+    //   const postOfCreatedAnswer = await Post.findById(req.params.id);
+    //   postOfCreatedAnswer.answerCount = await Model.countDocuments({
+    //     post: req.params.id,
+    //   });
+    //   postOfCreatedAnswer.save();
+    // }
     console.log(req.body);
     res.status(201).json({
       status: 'success',
@@ -40,7 +40,7 @@ exports.createOne = (Model, allowedFields = []) => {
   });
 };
 
-exports.getAll = (Model, allowedFields = [], filter = {}) => {
+exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
   return catchAsync(async (req, res, next) => {
     if (allowedFields.includes('usersDoc')) {
       filter.postedBy = req.params.id;
@@ -51,6 +51,11 @@ exports.getAll = (Model, allowedFields = [], filter = {}) => {
     if (allowedFields.includes('postsComments')) {
       filter.doc = req.params.id;
     }
+    if (allowedFields.includes('likeDislike')) {
+      filter.for = forModel;
+      filter.doc = req.params.id;
+      filter.user = req.user.id;
+    }
     //uses the apifeatures.js from util folder to implement
     //pagination , filtering , sorting and limiting
     const features = new ApiFeatures(Model.find(filter), req.query)
@@ -59,7 +64,6 @@ exports.getAll = (Model, allowedFields = [], filter = {}) => {
       .limitFields()
       .paginate();
     const docs = await features.query;
-
     //sending error if no post was found
     if (!docs)
       return next(
@@ -70,8 +74,10 @@ exports.getAll = (Model, allowedFields = [], filter = {}) => {
       );
 
     //sending total number of post in the database with the response
-    const totalNumOfData = allowedFields.includes('totalNumOfData')
-      ? await Model.countDocuments({})
+    let totalNumOfData = allowedFields.includes('totalNumOfData')
+      ? await new ApiFeatures(Model.countDocuments(filter), req.query).filter(
+          true
+        ).query
       : null;
 
     res.status(200).json({
@@ -87,10 +93,11 @@ exports.getAll = (Model, allowedFields = [], filter = {}) => {
 exports.getOne = (Model, allowedFields = []) => {
   return catchAsync(async (req, res, next) => {
     let doc = await Model.findById(req.params.id);
+    if (!doc) return next(new AppError('No doc found with that id', 404));
+
     if (allowedFields.includes('views')) {
       doc.views += 1;
     }
-    if (!doc) return next(new AppError('No doc found with that id', 404));
     doc = await doc.save();
     res.status(200).json({
       status: 'success',
@@ -134,9 +141,9 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
       doc.voteCount = doc.likeCount - doc.dislikeCount;
       await doc.save();
       if (type === 'like') {
-        return res.status(204).json({
+        return res.status(200).json({
           status: 'success',
-          data: {},
+          data: { doc },
         });
       }
     }
@@ -156,9 +163,9 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
       doc.voteCount = doc.likeCount - doc.dislikeCount;
       await doc.save();
       if (type === 'dislike') {
-        return res.status(204).json({
+        return res.status(200).json({
           status: 'success',
-          data: {},
+          data: { doc },
         });
       }
     }
@@ -186,9 +193,9 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
     }
     doc.voteCount = doc.likeCount - doc.dislikeCount;
     await doc.save();
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
-      data: {},
+      data: { doc },
     });
   });
 };

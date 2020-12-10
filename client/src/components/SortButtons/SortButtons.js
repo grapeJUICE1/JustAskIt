@@ -4,11 +4,12 @@ import styles from './SortButtons.module.scss';
 
 const SortButtons = (props) => {
   const sortOptions = [
+    { label: ' All ', func: props.removeFilter },
     { label: 'Newest', func: props.sortNewest },
     { label: 'Oldest', func: props.sortOldest },
-    { label: 'Unanswered', func: props.filterUnanswered },
     { label: 'Votes', func: props.sortByVotes },
     { label: 'Views', func: props.sortByViews },
+    { label: 'Unanswered', func: props.filterUnanswered },
   ];
 
   return (
@@ -20,21 +21,25 @@ const SortButtons = (props) => {
         className="flex-wrap"
         type="radio"
         name="options"
-        defaultValue={0}
+        defaultValue={1}
         size="sm"
       >
-        {sortOptions.map((srtOpt, key) => (
-          <ToggleButton
-            value={key}
-            key={key}
-            variant="outline-secondary"
-            className={'rounded-0 px-1 ' + styles.sort_buttons}
-            size="sm"
-            onClick={srtOpt.func}
-          >
-            {srtOpt.label}
-          </ToggleButton>
-        ))}
+        {sortOptions.map((srtOpt, key) => {
+          if (!srtOpt.func) return null;
+          return (
+            <ToggleButton
+              value={key}
+              key={key}
+              checked
+              variant="outline-secondary"
+              className={'rounded-0 px-1 ' + styles.sort_buttons}
+              size="sm"
+              onClick={srtOpt.func}
+            >
+              {srtOpt.label}
+            </ToggleButton>
+          );
+        })}
       </ToggleButtonGroup>
     </Col>
   );
