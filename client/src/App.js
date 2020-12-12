@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
 import Layout from './components/Layout/Layout';
@@ -9,19 +9,8 @@ import FullPost from './containers/FullPost/FullPost';
 import Login from './containers/Auth/Login/Login';
 import Editor from './components/Editor/Editor';
 import { connect } from 'react-redux';
-import jwt_decode from 'jwt-decode';
 
 function App(props) {
-  useEffect(() => {
-    console.log(document.cookie);
-  });
-  useEffect(() => {
-    if (props.token) {
-      if (Date.now() <= new Date(jwt_decode(props.token).exp)) {
-        console.log('expired');
-      }
-    }
-  });
   return (
     <Layout>
       <Switch>

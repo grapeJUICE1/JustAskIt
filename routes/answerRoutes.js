@@ -3,6 +3,7 @@ const express = require('express');
 const authController = require('./../controllers/authController');
 const answerController = require('./../controllers/answerController');
 const commentController = require('./../controllers/commentController');
+const likeDislikeController = require('./../controllers/likeDislikeController');
 
 //initializing express router
 const router = express.Router();
@@ -23,6 +24,11 @@ router.get('/:id/get-answers-of-user', answerController.getAnswersOfUser);
 router.post('/:id/like', authController.protect, answerController.like);
 router.post('/:id/dislike', authController.protect, answerController.dislike);
 
+router.get(
+  '/:id/get-all-reactions-of-user',
+  authController.protect,
+  likeDislikeController.getLikeAndDislikesOfAnswerByUser
+);
 //route to get , update and delete single answer
 router
   .route('/:id')

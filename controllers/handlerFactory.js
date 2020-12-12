@@ -55,6 +55,14 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
       filter.for = forModel;
       filter.doc = req.params.id;
       filter.user = req.user.id;
+
+      const doc = await Model.findOne(filter);
+      res.status(200).json({
+        status: 'success',
+        data: {
+          doc,
+        },
+      });
     }
     //uses the apifeatures.js from util folder to implement
     //pagination , filtering , sorting and limiting
@@ -184,6 +192,7 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         for: forDoc,
         doc: req.params.id,
       });
+      // doc.userDidLike
     } else if (type === 'dislike') {
       doc.dislikeCount = await LikeDislike.countDocuments({
         type: type,

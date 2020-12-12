@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import Sidebar from '../Sidebar/Sidebar';
 
@@ -11,7 +11,7 @@ const Toolbar = () => {
       fixed="top"
     >
       <Sidebar />
-      <Navbar.Brand href="#home" className="ml-lg-3">
+      <Navbar.Brand href="#home" className="ml-3">
         <h3>JustAskIt</h3>
       </Navbar.Brand>
       <NavigationItems />

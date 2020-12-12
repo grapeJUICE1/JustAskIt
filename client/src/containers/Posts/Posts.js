@@ -76,12 +76,12 @@ class Posts extends Component {
   filterUnanswered = (e) => {
     this.setDefaultCurrentPage();
     this.setState({ sortBy: '-createdAt' });
-    this.setState({ filter: { ...this.state.filter, answerCount: 0 } });
+    this.setState({ filter: { answerCount: 0 } });
   };
   filterByTag = (tag) => {
     this.setDefaultCurrentPage();
     this.setState({ sortBy: '-createdAt' });
-    this.setState({ filter: { ...this.state.filter, tags: tag } });
+    this.setState({ filter: { tags: tag } });
   };
 
   render() {
