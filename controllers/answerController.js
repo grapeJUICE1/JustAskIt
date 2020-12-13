@@ -10,10 +10,25 @@ exports.createAnswer = handlerFactory.createOne(Answer, [
 ]);
 exports.like = handlerFactory.likeDislike(Answer, [], 'like', 'Answer');
 exports.dislike = handlerFactory.likeDislike(Answer, [], 'dislike', 'Answer');
-exports.getAllAnswer = handlerFactory.getAll(Answer, ['totalNumOfData']);
+exports.getAllAnswer = handlerFactory.getAll(
+  Answer,
+  ['totalNumOfData'],
+  {},
+  'Answer'
+);
 exports.getOneAnswer = handlerFactory.getOne(Answer);
-exports.getAnswerOfPost = handlerFactory.getAll(Answer, ['postsDoc']);
-exports.getAnswersOfUser = handlerFactory.getAll(Answer, ['usersDoc']);
+exports.getAnswerOfPost = handlerFactory.getAll(
+  Answer,
+  ['postsDoc'],
+  {},
+  'Answer'
+);
+exports.getAnswersOfUser = handlerFactory.getAll(
+  Answer,
+  ['usersDoc'],
+  {},
+  'Answer'
+);
 exports.deleteAnswer = handlerFactory.deleteOne(Answer, [
   'postOfCreatedAnswer',
 ]);

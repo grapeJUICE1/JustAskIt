@@ -66,7 +66,6 @@ exports.logout = catchAsync(async (req, res, next) => {
   });
 });
 exports.protect = catchAsync(async (req, res, next) => {
-  console.log('murgi', req.cookies);
   let token;
   if (
     req.headers.authorization &&
@@ -74,7 +73,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies.jwt) {
-    console.log('hello its me');
     token = req.cookies.jwt;
     console.log(token, req.cookies.jwt);
   }
@@ -82,13 +80,11 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(
       new AppError('You are not logged in..Please Log in to continue', 401)
     );
-  console.log('success');
   const decodedToken = await promisify(jwt.verify)(
     token,
     process.env.JWT_SECRET
   );
   const currentUser = await User.findById(decodedToken.id);
-  console.log('success');
   if (!currentUser)
     return next(
       new AppError('User belonging to this token no longer exists', 401)
@@ -100,7 +96,6 @@ exports.protect = catchAsync(async (req, res, next) => {
         401
       )
     );
-  console.log('nareul hudo');
   req.user = currentUser;
   next();
 });

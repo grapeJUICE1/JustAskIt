@@ -29,6 +29,7 @@ export const fetchFullPost = (postId) => {
       const res = await axios.get(`/posts/${postId}`);
 
       dispatch(fetchFullPostSuccess(res.data.data.doc));
+      dispatch(checkUsersLikeDislikePost(res.data.data.doc._id));
     } catch (err) {
       console.log(err);
       if (err.response.data.message)
@@ -63,6 +64,7 @@ export const LikeDislikePost = (postId, likeordislike = 'like') => {
     try {
       const res = await axios.post(`/posts/${postId}/${likeordislike}`);
       dispatch(LikeDislikePostSuccess(res.data.data.doc));
+      dispatch(checkUsersLikeDislikePost(postId));
     } catch (err) {
       console.log(err);
       if (err.response.data.message)

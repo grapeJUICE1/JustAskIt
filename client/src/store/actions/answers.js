@@ -27,8 +27,10 @@ export const fetchAnswers = (postId) => {
     dispatch(fetchAnswersStart());
     try {
       const res = await axios.get(`/answers/${postId}/get-answers`);
-      console.log(res);
       dispatch(fetchAnswersSuccess(res.data.data.docs, res.data.results));
+      for (let ans of res.data.data.docs) {
+        dispatch(checkUsersLikeDislikeAnswer(ans._id));
+      }
     } catch (err) {
       console.log(err);
       if (err.response) dispatch(fetchAnswersFail(err.response.data));
@@ -62,9 +64,13 @@ export const LikeDislikeAnswer = (postId, likeordislike = 'like') => {
     try {
       const res = await axios.post(`/answers/${postId}/${likeordislike}`);
       dispatch(LikeDislikeAnswerSuccess(res.data.data.doc));
+      dispatch(checkUsersLikeDislikeAnswer(postId));
     } catch (err) {
       console.log(err);
-      if (err.response) dispatch(LikeDislikeAnswerFail(err.response.data));
+      if (err.response) {
+        if (!err.response.data.error.statusCode === 401)
+          dispatch(LikeDislikeAnswerFail(err.response.data));
+      }
       // else if (err.response.data) dispatch(fetchAnswersFail(err.response.data));
       else dispatch(LikeDislikeAnswerFail(err));
     }

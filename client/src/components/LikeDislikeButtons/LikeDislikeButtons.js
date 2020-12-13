@@ -33,7 +33,6 @@ const LikeDislikeButtons = (props) => {
           } else {
             await props.onLikeDislikePost(props.post._id, 'like');
           }
-          await props.getUsersFormerReactions(props.post);
         }}
       >
         <i className="fas fa-angle-up"></i>
@@ -51,7 +50,6 @@ const LikeDislikeButtons = (props) => {
           } else {
             await props.onLikeDislikePost(props.post._id, 'dislike');
           }
-          await props.getUsersFormerReactions(props.post);
         }}
       >
         <i className="fas fa-angle-down"></i>

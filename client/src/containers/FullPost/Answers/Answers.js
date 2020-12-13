@@ -7,45 +7,42 @@ import { formatDate } from '../../../shared/utils/formatDate';
 import Loader from '../../../components/UI/Loader/Loader';
 import checkAuth from '../../../hoc/checkAuth';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
+import { useAlert } from 'react-alert';
+
+import styles from './Answers.module.scss';
 
 const Answers = (props) => {
-  const getUsersFormerReactionsOnThisPost = async (ans = null) => {
-    if (!ans) {
-      for (let ans of props.answers) {
-        await props.onCheckUserDidLikeDislike(ans._id);
-      }
-    } else {
-      await props.onCheckUserDidLikeDislike(ans._id);
-    }
-  };
-
   useEffect(() => {
     props.onFetchAnswers(props.postId);
   }, []);
-
-  useEffect(() => {
-    getUsersFormerReactionsOnThisPost();
-  }, []);
+  const alert = useAlert();
   let answers;
-
-  if (props.loading) {
+  if (props.error) {
+    alert.error('OOps .... Error occured ... try again later');
+    answers = <h3>OOps .... Error occured ... try again later</h3>;
+  } else if (props.loading) {
     answers = <Loader />;
   } else {
     // getUsersFormerReactionsOnThisPost();
     answers = props.answers.map((ans) => (
       <Fragment key={ans._id}>
-        <h5>
-          <span>
-            <LikeDislikeButtons
-              userDidLike={ans.userDidLike}
-              userDidDislike={ans.userDidDislike}
-              onLikeDislikePost={props.onLikeDislikeAnswer}
-              post={ans}
-              getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
-            />
-          </span>
-          {ans.content}
-        </h5>
+        <h3>
+          <strong>
+            {props.total} {props.total > 1 ? 'Answers' : 'Answer'}
+          </strong>
+        </h3>
+        <br />
+        <hr />
+        <LikeDislikeButtons
+          userDidLike={ans.userDidLike}
+          userDidDislike={ans.userDidDislike}
+          onLikeDislikePost={props.onLikeDislikeAnswer}
+          post={ans}
+          // getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
+        />
+
+        <p className={`ml-5 ${styles.ans_content}`}>{ans.content}</p>
+
         <br />
         <p
           className="ml-auto"
@@ -80,6 +77,7 @@ const mapStateToProps = (state) => {
     error: state.answers.error,
     post: state.fullPost.post,
     loading: state.answers.loading,
+    total: state.answers.total,
     userDidLike: state.answers.userDidLike,
     userDidDislike: state.answers.userDidDislike,
   };

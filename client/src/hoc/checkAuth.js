@@ -26,8 +26,14 @@ const checkAuth = (Wrapped) => {
             case 429:
               alert.error(error.response.data.message);
               break;
-            default:
+            case 500:
+              alert.error('OOps .... Error occured ... try again later');
               break;
+            case 404:
+              alert.error(error.response.data.message);
+              break;
+            default:
+              alert.error('OOps .... Error occured ... try again later');
           }
           return Promise.reject(error);
         }

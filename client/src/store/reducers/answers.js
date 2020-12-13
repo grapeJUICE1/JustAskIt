@@ -7,6 +7,7 @@ const initialState = {
   loading: false,
   userDidLike: false,
   userDidDislike: false,
+  total: 0,
 };
 
 const fetchAnswersStartHandler = (state, action) => {
@@ -17,6 +18,7 @@ const fetchAnswersSuccessHandler = (state, action) => {
     error: null,
     answers: action.answers,
     loading: false,
+    total: action.total,
   });
 };
 const fetchAnswersFailHandler = (state, action) => {
@@ -90,6 +92,7 @@ const reducer = (state = initialState, action) => {
       return checkUsersLikeDislikeAnswer(state, action);
     case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_FAIL:
       return checkUsersLikeDislikeAnswerFail(state, action);
+
     default:
       return state;
   }
