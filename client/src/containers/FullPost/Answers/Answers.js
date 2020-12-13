@@ -9,6 +9,7 @@ import checkAuth from '../../../hoc/checkAuth';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
 import { useAlert } from 'react-alert';
 
+import Comments from '../Comments/Comments';
 import styles from './Answers.module.scss';
 
 const Answers = (props) => {
@@ -23,49 +24,59 @@ const Answers = (props) => {
   } else if (props.loading) {
     answers = <Loader />;
   } else {
-    // getUsersFormerReactionsOnThisPost();
-    answers = props.answers.map((ans) => (
-      <Fragment key={ans._id}>
-        <h3>
-          <strong>
-            {props.total} {props.total > 1 ? 'Answers' : 'Answer'}
-          </strong>
-        </h3>
-        <br />
-        <hr />
-        <LikeDislikeButtons
-          userDidLike={ans.userDidLike}
-          userDidDislike={ans.userDidDislike}
-          onLikeDislikePost={props.onLikeDislikeAnswer}
-          post={ans}
-          // getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
-        />
+    answers = props.answers.map((ans) => {
+      return (
+        <Fragment key={ans._id}>
+          <LikeDislikeButtons
+            userDidLike={ans.userDidLike}
+            userDidDislike={ans.userDidDislike}
+            onLikeDislikePost={props.onLikeDislikeAnswer}
+            post={ans}
+            // getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
+          />
 
-        <p className={`ml-5 ${styles.ans_content}`}>{ans.content}</p>
+          <p className={`ml-5 ${styles.ans_content}`}>{ans.content}</p>
 
-        <br />
-        <p
-          className="ml-auto"
-          style={{ fontWeight: 'bold', color: 'rgb(59, 59, 85)' }}
-        >
-          answered {formatDate(ans.createdAt)}
-        </p>
-        <p className="ml-auto">
-          <Button className="mr-0 mt-0 pt-0" variant="link" size="sm">
+          <br />
+          <p
+            className="ml-auto"
+            style={{
+              fontWeight: 'bold',
+              color: 'rgb(59, 59, 85)',
+              fontSize: '0.8rem',
+            }}
+          >
+            answered {formatDate(ans.createdAt)}
+          </p>
+          <Button className="mr-0 mt-0 pt-0 ml-auto" variant="link" size="sm">
             {ans.postedBy.name}
           </Button>
-        </p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </Fragment>
-    ));
+          <Comments
+            id={ans._id}
+            comments={ans.comments}
+            forDoc="answer"
+            fetchComments={props.onFetchComments}
+          />
+          <br />
+
+          <hr />
+        </Fragment>
+      );
+    });
   }
 
   return (
     <Container className="d-flex flex-column justify-content-between pt-5">
+      <br />
+      <h3>
+        <strong>
+          {props.total} {props.total > 1 ? 'Answers' : 'Answer'}
+        </strong>
+        <br />
+        <br />
+        <hr />
+      </h3>
+
       {answers}
     </Container>
   );
@@ -89,6 +100,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.LikeDislikeAnswer(id, likeordislike)),
     onCheckUserDidLikeDislike: (id) =>
       dispatch(actions.checkUsersLikeDislikeAnswer(id)),
+    onFetchComments: (id, forDoc) =>
+      dispatch(actions.fetchComments(id, forDoc)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(checkAuth(Answers));

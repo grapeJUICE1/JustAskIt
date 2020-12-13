@@ -10,3 +10,4 @@ export {
   checkUsersLikeDislikeAnswer,
 } from './answers';
 export { login, Logout } from './auth';
+export { fetchComments } from './comments';

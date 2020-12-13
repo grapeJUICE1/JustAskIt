@@ -6,6 +6,7 @@ import styles from './Question.module.scss';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
 
 import * as actions from '../../../store/actions/index';
+import Comments from '../Comments/Comments';
 const Question = (props) => {
   const getUsersFormerReactionsOnThisPost = async () => {
     if (!props.post.id) return;
@@ -39,6 +40,12 @@ const Question = (props) => {
         getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
       />
       <p className={`ml-5 ${styles.post_content}`}>{props.post.content}</p>
+
+      <Comments
+        id={props.post._id}
+        forDoc="post"
+        fetchComments={props.onFetchComments}
+      />
     </Container>
   );
 };
@@ -56,6 +63,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.LikeDislikePost(id, likeordislike)),
     onCheckUserDidLikeDislike: (id) =>
       dispatch(actions.checkUsersLikeDislikePost(id)),
+    onFetchComments: (id, forDoc) =>
+      dispatch(actions.fetchComments(id, forDoc)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Question);

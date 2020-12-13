@@ -3,7 +3,10 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   post: {},
+  comments: [],
   error: null,
+  commentError: null,
+  loadingComments: null,
   loading: false,
   userDidLike: false,
   userDidDislike: false,
@@ -63,6 +66,24 @@ const checkUsersLikeDislikePostFail = (state, action) => {
     userDidDislike: false,
   });
 };
+const fetchCommentsStart = (state, action) => {
+  return updateObj(state, {
+    loadingComments: true,
+    commentError: null,
+  });
+};
+const fetchCommentsFail = (state, action) => {
+  return updateObj(state, {
+    commentError: action.error,
+    loadingComments: false,
+  });
+};
+const fetchCommentsSuccess = (state, action) => {
+  return updateObj(state, {
+    comments: action.comments,
+    loadingComments: false,
+  });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -82,6 +103,12 @@ const reducer = (state = initialState, action) => {
       return checkUsersLikeDislikePost(state, action);
     case actionTypes.CHECK_USER_LIKE_DISLIKE_POST_FAIL:
       return checkUsersLikeDislikePostFail(state, action);
+    case actionTypes.FETCH_POST_COMMENTS_START:
+      return fetchCommentsStart(state, action);
+    case actionTypes.FETCH_POST_COMMENTS_FAIL:
+      return fetchCommentsFail(state, action);
+    case actionTypes.FETCH_POST_COMMENTS_SUCCESS:
+      return fetchCommentsSuccess(state, action);
     default:
       return state;
   }

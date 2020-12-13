@@ -171,7 +171,24 @@ const importData = async () => {
     // }
 
     const answers = await Answer.find({});
-    for (let i = 0; i < 200; i++) {
+    // for (let i = 0; i < 200; i++) {
+    //   let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
+    //   let doc;
+    //   if (forModel === 'Post') {
+    //     doc = posts[Math.floor(Math.random() * posts.length)].id;
+    //   } else {
+    //     doc = answers[Math.floor(Math.random() * answers.length)].id;
+    //   }
+
+    //   await LikeDislike.create({
+    //     type: ['like', 'dislike'][Math.floor(Math.random() * 2)],
+    //     user: users[Math.floor(Math.random() * users.length)].id,
+    //     for: forModel,
+    //     doc,
+    //   });
+    // }
+
+    for (let i = 0; i < 80; i++) {
       let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
       let doc;
       if (forModel === 'Post') {
@@ -179,15 +196,18 @@ const importData = async () => {
       } else {
         doc = answers[Math.floor(Math.random() * answers.length)].id;
       }
-
-      await LikeDislike.create({
-        type: ['like', 'dislike'][Math.floor(Math.random() * 2)],
-        user: users[Math.floor(Math.random() * users.length)].id,
+      const post = posts[Math.floor(Math.random() * posts.length)];
+      const comment = await Comment.create({
         for: forModel,
         doc,
+        content: faker.lorem.sentence(),
+        postedBy: users[Math.floor(Math.random() * users.length)].id,
       });
-    }
 
+      // post.answerCount = await Answer.countDocuments({ post: post.id });
+      // // console.log(post);
+      // await post.save();
+    }
     console.log('Data successfully loaded!');
   } catch (err) {
     console.log(err);

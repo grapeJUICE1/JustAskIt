@@ -74,6 +74,33 @@ const checkUsersLikeDislikeAnswerFail = (state, action) => {
   });
 };
 
+const fetchCommentsStart = (state, action) => {
+  return updateObj(state, {
+    loadingComments: true,
+    commentError: null,
+  });
+};
+const fetchCommentsFail = (state, action) => {
+  return updateObj(state, {
+    commentError: action.error,
+    loadingComments: false,
+  });
+};
+const fetchCommentsSuccess = (state, action) => {
+  let answersCopy = [...state.answers];
+  let updatedAnswerIndex = answersCopy.findIndex(
+    (obj) => obj._id === action.id
+  );
+
+  answersCopy[updatedAnswerIndex].comments = action.comments;
+  console.log(answersCopy);
+  return updateObj(state, {
+    comments: action.comments,
+    loadingComments: false,
+    answers: answersCopy,
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_ANSWERS_START:
@@ -92,6 +119,12 @@ const reducer = (state = initialState, action) => {
       return checkUsersLikeDislikeAnswer(state, action);
     case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_FAIL:
       return checkUsersLikeDislikeAnswerFail(state, action);
+    // case actionTypes.FETCH_ANSWER_COMMENTS_START:
+    //   return fetchCommentsStart(state, action);
+    // case actionTypes.FETCH_ANSWER_COMMENTS_FAIL:
+    //   return fetchCommentsFail(state, action);
+    case actionTypes.FETCH_ANSWER_COMMENTS_SUCCESS:
+      return fetchCommentsSuccess(state, action);
 
     default:
       return state;

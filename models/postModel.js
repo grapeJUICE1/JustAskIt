@@ -94,8 +94,8 @@ postSchema.pre('save', async function (next) {
 
 postSchema.pre(/^find/, async function (next) {
   //populating postedBy
-  console.log(await Tag.countDocuments({}));
   this.populate({ path: 'postedBy', select: '-__v -passwordChangedAt' });
+  // console.log(await this.model.find({}));
   next();
 });
 
