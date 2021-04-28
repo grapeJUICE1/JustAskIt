@@ -1,6 +1,5 @@
 import axios from '../../axios-main';
 import * as actionTypes from './actionTypes';
-import { fetchComments } from './comments';
 //importing axios because main instance has an error handling interceptor
 //when i get user reactions , i dont want to trigger that
 import axiosGetLikesDislikes from 'axios';

@@ -18,7 +18,6 @@ exports.createOne = (Model, allowedFields = []) => {
       req.body.doc = req.params.id;
     }
     if (allowedFields.includes('postedBy')) {
-      console.log('hahaha');
       req.body.postedBy = req.user.id;
     }
     const newDoc = await Model.create(req.body);
@@ -30,7 +29,7 @@ exports.createOne = (Model, allowedFields = []) => {
     //   });
     //   postOfCreatedAnswer.save();
     // }
-    console.log(req.body);
+
     res.status(201).json({
       status: 'success',
       data: {

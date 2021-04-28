@@ -44,6 +44,7 @@ const Question = (props) => {
       <Comments
         id={props.post._id}
         forDoc="post"
+        comments={props.comments}
         fetchComments={props.onFetchComments}
       />
     </Container>
@@ -53,6 +54,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
     userDidLike: state.fullPost.userDidLike,
+    comments: state.fullPost.comments,
     userDidDislike: state.fullPost.userDidDislike,
   };
 };

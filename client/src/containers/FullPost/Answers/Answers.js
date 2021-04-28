@@ -98,8 +98,8 @@ const mapDispatchToProps = (dispatch) => {
     onFetchAnswers: (id) => dispatch(actions.fetchAnswers(id)),
     onLikeDislikeAnswer: (id, likeordislike) =>
       dispatch(actions.LikeDislikeAnswer(id, likeordislike)),
-    onCheckUserDidLikeDislike: (id) =>
-      dispatch(actions.checkUsersLikeDislikeAnswer(id)),
+    // onCheckUserDidLikeDislike: (id) =>
+    //   dispatch(actions.checkUsersLikeDislikeAnswer(id)),
     onFetchComments: (id, forDoc) =>
       dispatch(actions.fetchComments(id, forDoc)),
   };

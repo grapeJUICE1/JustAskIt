@@ -2,6 +2,8 @@ const express = require('express');
 
 const authController = require('./../controllers/authController');
 const commentController = require('./../controllers/commentController');
+const likeDislikeController = require('./../controllers/likeDislikeController');
+
 // const answerController = require('./../controllers/answerController');
 
 //initializing express router
@@ -25,7 +27,11 @@ router.post(
   authController.protect,
   commentController.createComment
 );
-
+router.get(
+  '/:id/get-all-reactions-of-user',
+  authController.protect,
+  likeDislikeController.getLikeAndDislikesOfCommentByUser
+);
 //route to like dislike comments
 router.post('/:id/like', authController.protect, commentController.like);
 router.post('/:id/dislike', authController.protect, commentController.dislike);

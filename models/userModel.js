@@ -59,7 +59,7 @@ userSchema.pre('save', async function (next) {
   //checking if the password was modified or updated
   //if password was not modified , break out of this function and save the user
   //else continue
-  console.log(this.isModified('password'));
+
   if (!this.isModified('password')) return next();
 
   //hashing users Password

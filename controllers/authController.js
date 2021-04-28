@@ -74,7 +74,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
-    console.log(token, req.cookies.jwt);
   }
   if (!token)
     return next(
@@ -113,9 +112,7 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  console.log(req.user._id);
   const currentUser = await User.findById(req.user.id).select('+password');
-  console.log(currentUser);
 
   if (!currentUser)
     return next(
@@ -123,7 +120,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     );
 
   const { currentPassword, passwordNew, confirmPasswordNew } = req.body;
-  console.log(currentPassword, passwordNew, confirmPasswordNew);
+
   if (!currentPassword || !passwordNew || !confirmPasswordNew)
     return next(
       new AppError(
@@ -131,9 +128,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
         400
       )
     );
-  console.log(
-    await currentUser.comparePassword(currentPassword, currentUser.password)
-  );
+
   if (
     !(await currentUser.comparePassword(currentPassword, currentUser.password))
   )

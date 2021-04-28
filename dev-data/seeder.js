@@ -188,8 +188,9 @@ const importData = async () => {
     //   });
     // }
 
-    for (let i = 0; i < 80; i++) {
-      let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
+    for (let i = 0; i < 60; i++) {
+      // let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
+      let forModel = 'Answer';
       let doc;
       if (forModel === 'Post') {
         doc = posts[Math.floor(Math.random() * posts.length)].id;

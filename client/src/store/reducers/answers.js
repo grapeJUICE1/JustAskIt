@@ -5,8 +5,7 @@ const initialState = {
   answers: [],
   error: null,
   loading: false,
-  userDidLike: false,
-  userDidDislike: false,
+
   total: 0,
 };
 
@@ -30,11 +29,15 @@ const likeAnswerStartHandler = (state, action) => {
 };
 const likeAnswerSuccessHandler = (state, action) => {
   let answer = action.answer;
+  // let answer = action.answer;
   let answersCopy = [...state.answers];
   let updatedAnswerIndex = answersCopy.findIndex(
     (obj) => obj._id === answer._id
   );
-  answersCopy[updatedAnswerIndex] = answer;
+  answersCopy[updatedAnswerIndex].likeCount = answer.likeCount;
+  answersCopy[updatedAnswerIndex].dislikeCount = answer.dislikeCount;
+  answersCopy[updatedAnswerIndex].voteCount =
+    answer.likeCount - answer.dislikeCount;
   return updateObj(state, {
     error: null,
     loading: false,
@@ -74,6 +77,42 @@ const checkUsersLikeDislikeAnswerFail = (state, action) => {
   });
 };
 
+const checkUsersLikeDislikeComment = (state, action) => {
+  let answersCopy = [...state.answers];
+
+  let updatedAnswerIndex = answersCopy.findIndex(
+    (obj) => obj._id === action.ansId
+  );
+
+  let commentsCopy = [...answersCopy[updatedAnswerIndex].comments];
+  let updatedCommentIndex = commentsCopy.findIndex(
+    (obj) => obj._id === action.id
+  );
+
+  if (action.response.doc) {
+    if (action.response.doc.type === 'like') {
+      commentsCopy[updatedCommentIndex].userDidLike = true;
+      commentsCopy[updatedCommentIndex].userDidDislike = false;
+    } else if (action.response.doc.type === 'dislike') {
+      commentsCopy[updatedCommentIndex].userDidDislike = true;
+      commentsCopy[updatedCommentIndex].userDidLike = false;
+    }
+  } else {
+    commentsCopy[updatedCommentIndex].userDidLike = false;
+    commentsCopy[updatedCommentIndex].userDidDislike = false;
+  }
+  answersCopy[updatedAnswerIndex].comments = commentsCopy;
+  return updateObj(state, {
+    answers: answersCopy,
+  });
+};
+const checkUsersLikeDislikeCommentFail = (state, action) => {
+  return updateObj(state, {
+    userDidLike: false,
+    userDidDislike: false,
+  });
+};
+
 const fetchCommentsStart = (state, action) => {
   return updateObj(state, {
     loadingComments: true,
@@ -93,9 +132,42 @@ const fetchCommentsSuccess = (state, action) => {
   );
 
   answersCopy[updatedAnswerIndex].comments = action.comments;
-  console.log(answersCopy);
+
   return updateObj(state, {
     comments: action.comments,
+    loadingComments: false,
+    answers: answersCopy,
+  });
+};
+
+const likeDislikeCommentStart = (state, action) => {
+  return updateObj(state, {
+    loadingComments: true,
+    commentError: null,
+  });
+};
+const likeDislikeCommentFail = (state, action) => {
+  return updateObj(state, {
+    commentError: action.error,
+    loadingComments: false,
+  });
+};
+const likeDislikeCommentSuccess = (state, action) => {
+  let answersCopy = JSON.parse(JSON.stringify(state.answers));
+  let updatedAnswerIndex = answersCopy.findIndex(
+    (obj) => obj._id === action.comments.doc
+  );
+
+  let answersComments = answersCopy[updatedAnswerIndex].comments;
+  let updatedAnswerCommentIndex = answersComments.findIndex(
+    (obj) => obj._id === action.comments._id
+  );
+
+  answersComments[updatedAnswerCommentIndex] = action.comments;
+
+  answersCopy[updatedAnswerIndex].comments = answersComments;
+
+  return updateObj(state, {
     loadingComments: false,
     answers: answersCopy,
   });
@@ -119,12 +191,22 @@ const reducer = (state = initialState, action) => {
       return checkUsersLikeDislikeAnswer(state, action);
     case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_FAIL:
       return checkUsersLikeDislikeAnswerFail(state, action);
-    // case actionTypes.FETCH_ANSWER_COMMENTS_START:
-    //   return fetchCommentsStart(state, action);
-    // case actionTypes.FETCH_ANSWER_COMMENTS_FAIL:
-    //   return fetchCommentsFail(state, action);
+    case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_COMMENT:
+      return checkUsersLikeDislikeComment(state, action);
+    case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_COMMENT_FAIL:
+      return checkUsersLikeDislikeCommentFail(state, action);
+    case actionTypes.FETCH_ANSWER_COMMENTS_START:
+      return fetchCommentsStart(state, action);
+    case actionTypes.FETCH_ANSWER_COMMENTS_FAIL:
+      return fetchCommentsFail(state, action);
     case actionTypes.FETCH_ANSWER_COMMENTS_SUCCESS:
       return fetchCommentsSuccess(state, action);
+    case actionTypes.LIKE_DISLIKE_ANSWER_COMMENT_START:
+      return likeDislikeCommentStart(state, action);
+    case actionTypes.LIKE_DISLIKE_ANSWER_COMMENT_FAIL:
+      return likeDislikeCommentFail(state, action);
+    case actionTypes.LIKE_DISLIKE_ANSWER_COMMENT_SUCCESS:
+      return likeDislikeCommentSuccess(state, action);
 
     default:
       return state;
