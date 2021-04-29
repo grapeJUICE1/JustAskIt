@@ -1,26 +1,28 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
-import styles from './Login.module.scss';
-import classnames from 'classnames';
-import { connect } from 'react-redux';
 
+import { connect } from 'react-redux';
 import loginSignupBox from '../../../components/auth/loginSignupBox';
+
 import * as actions from '../../../store/actions/index';
 
-class Login extends Component {
+class Signup extends Component {
   state = {
     spanStyle: {},
     submitButtonStyle: {},
     feedbackStyle: {},
     inputStyle: {},
+    name: '',
     email: '',
     password: '',
+    passwordConfirm: '',
   };
   authenticate = async () => {
-    await this.props.onLogin({
+    await this.props.onSignup({
+      name: this.state.name,
       email: this.state.email,
       password: this.state.password,
+      passwordConfirm: this.state.passwordConfirm,
     });
   };
 
@@ -29,8 +31,10 @@ class Login extends Component {
     return loginSignupBox({
       data,
       inputs: [
+        ['name', 'name'],
         ['email', 'email'],
         ['password', 'password'],
+        ['passwordConfirm', 'passwordConfirm'],
       ],
     });
   }
@@ -45,8 +49,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLogin: (data) => dispatch(actions.login(data)),
+    onSignup: (data) => dispatch(actions.signup(data)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signup));

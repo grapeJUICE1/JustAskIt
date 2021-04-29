@@ -32,6 +32,7 @@ const userSchema = mongoose.Schema({
       validator: function (el) {
         return el === this.password;
       },
+      message: 'passwords dont match',
     },
   },
   bio: {

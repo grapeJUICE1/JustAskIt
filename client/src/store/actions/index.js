@@ -9,5 +9,5 @@ export {
   LikeDislikeAnswer,
   checkUsersLikeDislikeAnswer,
 } from './answers';
-export { login, Logout } from './auth';
+export { login, Logout, signup } from './auth';
 export { fetchComments, likeDislikeComments } from './comments';

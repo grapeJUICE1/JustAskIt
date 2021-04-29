@@ -6,9 +6,14 @@ const handleCastErrorDB = (err) => {
 //function to return duplicate fields error
 const handleDuplicateFieldsDB = (err) => {
   return new AppError(
-    `Duplicate Field:${err.keyValue.name}..Please try another value`,
+    `${
+      err.keyValue.name || err.keyValue.email
+    } is already registered..Please try another value`,
     400
   );
+};
+const PasswordNotSameError = (err) => {
+  return new AppError("passwords don't match", 400);
 };
 //function to return validation error in production
 const handleValidationErrorDB = (err) => {
@@ -65,10 +70,13 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   //sending errors in production
-  if (process.env.NODE_ENV === 'production') {
+  if (
+    process.env.NODE_ENV === 'production' ||
+    process.env.NODE_ENV === 'development'
+  ) {
     let error = { ...err };
     error.message = err.message;
-
+    console.log('hello', err.error);
     //sending errors for invalid mongodb ids
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
@@ -76,6 +84,8 @@ module.exports = (err, req, res, next) => {
       error = handleValidationErrorDB(error);
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
+    if (error.message.includes('passwordConfirm'))
+      error = PasswordNotSameError();
 
     //sending errors in production
     sendErrProd(error, req, res);
