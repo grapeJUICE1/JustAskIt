@@ -2,6 +2,7 @@ import { Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { Fragment } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 // import * as actions from '../../../store/actions/index'
 
 import * as actions from '../../../store/actions/index';
@@ -38,7 +39,13 @@ const Comments = ({
               <small>{cmnt.content}</small>
 
               <Button variant="link" size="sm" className="text-info text">
-                <small> - {cmnt.postedBy.name} </small>
+                <small>
+                  {' '}
+                  -{' '}
+                  <Link to={`/profile/${cmnt.postedBy._id}`}>
+                    {cmnt.postedBy.name}
+                  </Link>{' '}
+                </small>
               </Button>
               <small className="text-muted">{formatDate(cmnt.createdAt)}</small>
               <hr />

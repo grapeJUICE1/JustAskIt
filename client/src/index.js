@@ -14,6 +14,7 @@ import postsReducer from './store/reducers/posts';
 import fullPostReducer from './store/reducers/fullPost';
 import answersReducer from './store/reducers/answers';
 import authReducer from './store/reducers/auth';
+import profileReducer from './store/reducers/profile';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:7000/api/v1';
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   posts: postsReducer,
   fullPost: fullPostReducer,
   answers: answersReducer,
+  profile: profileReducer,
   auth: authReducer,
 });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

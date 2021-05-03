@@ -1,6 +1,7 @@
 import React, { useEffect, Fragment } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import * as actions from '../../../store/actions/index';
 import { formatDate } from '../../../shared/utils/formatDate';
@@ -49,7 +50,7 @@ const Answers = (props) => {
             answered {formatDate(ans.createdAt)}
           </p>
           <Button className="mr-0 mt-0 pt-0 ml-auto" variant="link" size="sm">
-            {ans.postedBy.name}
+            <Link to={`/profile/${ans.postedBy._id}`}>{ans.postedBy.name}</Link>
           </Button>
           <Comments
             id={ans._id}

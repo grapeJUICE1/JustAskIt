@@ -40,15 +40,23 @@ h3{
 }
 .ratio {
   display: grid;
+
   & > * {
     grid-area: 1/1;
   }
 }
 
+.profilePostsMarginRight{
+  margin-right: -240px !important;
+  @media screen and (max-width: 992px) {
+    margin-right: -15px !important;
+  }
+}
 
 
-
-
+.paddingLeftImportant{
+  padding-left: 0  !important;
+}
 
 
 

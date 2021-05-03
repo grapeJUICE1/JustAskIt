@@ -9,14 +9,12 @@ import styles from './Posts.module.scss';
 import * as actions from '../../store/actions/index';
 import Loader from '../../components/UI/Loader/Loader';
 import checkAuth from '../../hoc/checkAuth';
+import classNames from 'classnames';
 
 class Posts extends Component {
-  PER_PAGE = 10;
+  PER_PAGE = this.props.isProfile ? 5 : 10;
   state = {
-    currentPage:
-      typeof window.localStorage !== 'undefined'
-        ? localStorage.getItem('currentPage') || 1
-        : 1,
+    currentPage: 1,
     total: 0,
     totalPages: 0,
     sortBy: '-createdAt',
@@ -28,7 +26,8 @@ class Posts extends Component {
       this.state.sortBy,
       this.state.filter,
       this.state.currentPage,
-      this.PER_PAGE
+      this.PER_PAGE,
+      this.props.userId
     );
   }
   componentDidUpdate(_, prevState) {
@@ -37,20 +36,16 @@ class Posts extends Component {
       prevState.filter !== this.state.filter ||
       prevState.currentPage !== this.state.currentPage
     ) {
-      localStorage.setItem('currentPage', this.state.currentPage);
       this.props.onFetchPosts(
         this.state.sortBy,
         this.state.filter,
         this.state.currentPage,
-        this.PER_PAGE
+        this.PER_PAGE,
+        this.props.userId
       );
     }
   }
 
-  setDefaultCurrentPage = () => {
-    this.setState({ currentPage: 0 });
-    localStorage.setItem('currentPage', 0);
-  };
   handlePageClick = ({ selected }) => {
     this.setState({ currentPage: selected + 1 });
   };
@@ -59,27 +54,21 @@ class Posts extends Component {
   };
   sortByViews = (e) => {
     this.setState({ sortBy: '-views' });
-    this.setDefaultCurrentPage();
   };
   sortByVotes = (e) => {
     this.setState({ sortBy: '-voteCount' });
-    this.setDefaultCurrentPage();
   };
   sortNewest = (e) => {
     this.setState({ sortBy: '-createdAt' });
-    this.setDefaultCurrentPage();
   };
   sortOldest = (e) => {
     this.setState({ sortBy: 'createdAt' });
-    this.setDefaultCurrentPage();
   };
   filterUnanswered = (e) => {
-    this.setDefaultCurrentPage();
     this.setState({ sortBy: '-createdAt' });
     this.setState({ filter: { answerCount: 0 } });
   };
   filterByTag = (tag) => {
-    this.setDefaultCurrentPage();
     this.setState({ sortBy: '-createdAt' });
     this.setState({ filter: { tags: tag } });
   };
@@ -91,6 +80,7 @@ class Posts extends Component {
     let title;
     let sortButtons = (
       <SortButtons
+        isProfile={this.props.isProfile}
         removeFilter={this.removeFilter}
         sortNewest={this.sortNewest}
         sortOldest={this.sortOldest}
@@ -107,6 +97,8 @@ class Posts extends Component {
       );
     } else if (this.state.filter.answerCount === 0) {
       title = <h2 className="mt-4">Unanswered Questions</h2>;
+    } else if (this.props.isProfile) {
+      title = <h4 className="mt-4">Questions asked by the user</h4>;
     } else {
       title = <h2 className="mt-4">All Questions</h2>;
     }
@@ -117,8 +109,13 @@ class Posts extends Component {
     } else {
       posts = (
         <Fragment>
-          <Row className="ratio">
-            <Col lg={9} className="App mt-4  ml-0 ">
+          <Row
+            className={classNames({
+              'ratio ': true,
+              profilePostsMarginRight: this.props.isProfile,
+            })}
+          >
+            <Col lg={9} className=" mt-4  ml-0 ">
               {this.props.posts.map((post) => {
                 return (
                   <Post
@@ -133,11 +130,7 @@ class Posts extends Component {
           <ReactPaginate
             previousLabel={'<<'}
             nextLabel={'>>'}
-            initialPage={
-              localStorage.getItem('currentPage') - 1 >= 0
-                ? localStorage.getItem('currentPage') - 1
-                : 0
-            }
+            initialPage={0}
             pageCount={pageCount}
             onPageChange={this.handlePageClick}
             containerClassName={`${styles.pagination} pb-5 text-center ml-lg-4`}
@@ -151,7 +144,13 @@ class Posts extends Component {
     }
 
     return (
-      <Container className="d-flex flex-column justify-content-between ml-lg-4 pt-5 mt-5">
+      <Container
+        className={classNames({
+          'd-flex flex-column  ': true,
+          'ml-lg-4 pt-5 mt-5 ': !this.props.isProfile,
+          paddingLeftImportant: this.props.isProfile,
+        })}
+      >
         {!this.props.error && (
           <Row>
             <Col lg={5} className="l">
@@ -178,8 +177,10 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchPosts: (sortBy, filter, currentPage, perPagePosts) =>
-      dispatch(actions.fetchPosts(sortBy, filter, currentPage, perPagePosts)),
+    onFetchPosts: (sortBy, filter, currentPage, perPagePosts, userId) =>
+      dispatch(
+        actions.fetchPosts(sortBy, filter, currentPage, perPagePosts, userId)
+      ),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(checkAuth(Posts));

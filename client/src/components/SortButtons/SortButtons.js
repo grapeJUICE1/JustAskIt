@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react';
 import { Col, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 import styles from './SortButtons.module.scss';
@@ -15,7 +16,11 @@ const SortButtons = (props) => {
   return (
     <Col
       lg={7}
-      className={`pt-lg-5 ${styles.col_sort_buttons} mt-lg-4 d-flex justify-content-lg-end`}
+      className={classNames({
+        'pt-lg-5 mt-lg-4 d-flex justify-content-lg-end': true,
+        [`${styles.col_sort_buttons}`]: !props.isProfile,
+        [`${styles.col_sort_buttons_for_profile}`]: props.isProfile,
+      })}
     >
       <ToggleButtonGroup
         className="flex-wrap"

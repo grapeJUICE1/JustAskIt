@@ -4,6 +4,7 @@ import { timeSince } from '../../shared/utils/formatDate';
 import styles from './Post.module.scss';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const Post = (props) => {
   return (
@@ -71,7 +72,9 @@ const Post = (props) => {
             {`Asked ${timeSince(props.post.createdAt)} ago `}
           </small>
           <Button className="ml-auto" variant="link" size="sm">
-            {props.post.postedBy.name}
+            <Link to={`/profile/${props.post.postedBy._id}`}>
+              {props.post.postedBy.name}
+            </Link>
           </Button>
         </div>
       </div>

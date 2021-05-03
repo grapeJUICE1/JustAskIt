@@ -21,11 +21,22 @@ export const fetchPostsSuccess = (posts, total, totalPages) => {
   };
 };
 
-export const fetchPosts = (sortBy, filter, currentPage, perPagePosts) => {
+export const fetchPosts = (
+  sortBy,
+  filter,
+  currentPage,
+  perPagePosts,
+  userId
+) => {
   return async (dispatch) => {
     dispatch(fetchPostsStart());
     try {
-      const res = await axios.get('/posts', {
+      let link = '/posts';
+      if (userId) {
+        link = `/posts/${userId}/get-posts-of-user`;
+      }
+
+      const res = await axios.get(link, {
         params: {
           sort: sortBy,
           limit: perPagePosts,

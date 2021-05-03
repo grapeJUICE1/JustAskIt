@@ -11,3 +11,4 @@ export {
 } from './answers';
 export { login, Logout, signup } from './auth';
 export { fetchComments, likeDislikeComments } from './comments';
+export { getUserData } from './profile';
