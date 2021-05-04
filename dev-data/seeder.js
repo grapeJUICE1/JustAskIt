@@ -136,57 +136,57 @@ const importData = async () => {
       console.log(i);
       return i;
     }
-    // for (let i = 0; i < 40; i++) {
-    //   await User.create({
-    //     name: faker.name.findName(),
-    //     email: faker.internet.email(),
-    //     password: 'test1234',
-    //     passwordConfirm: 'test1234',
-    //     bio: faker.lorem.sentences(4),
-    //   });
-    // }
+    for (let i = 0; i < 40; i++) {
+      await User.create({
+        name: faker.name.findName(),
+        email: faker.internet.email(),
+        password: 'test1234',
+        passwordConfirm: 'test1234',
+        bio: faker.lorem.sentences(4),
+      });
+    }
     const users = await User.find({});
-    // for (let i = 0; i < 60; i++) {
-    //   await Post.create({
-    //     title: faker.lorem.sentence(),
-    //     content: faker.lorem.paragraph(5),
-    //     postedBy: users[Math.floor(Math.random() * users.length)].id,
-    //     tags: genTag(),
-    //   });
-    // }
+    for (let i = 0; i < 60; i++) {
+      await Post.create({
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraph(5),
+        postedBy: users[Math.floor(Math.random() * users.length)].id,
+        tags: genTag(),
+      });
+    }
 
     const posts = await Post.find({});
 
-    // for (let i = 0; i < 40; i++) {
-    //   const post = posts[Math.floor(Math.random() * posts.length)];
-    //   const answer = await Answer.create({
-    //     content: faker.lorem.paragraph(5),
-    //     postedBy: users[Math.floor(Math.random() * users.length)].id,
-    //     post: post.id,
-    //   });
+    for (let i = 0; i < 40; i++) {
+      const post = posts[Math.floor(Math.random() * posts.length)];
+      const answer = await Answer.create({
+        content: faker.lorem.paragraph(5),
+        postedBy: users[Math.floor(Math.random() * users.length)].id,
+        post: post.id,
+      });
 
-    //   // post.answerCount = await Answer.countDocuments({ post: post.id });
-    //   // // console.log(post);
-    //   // await post.save();
-    // }
+      post.answerCount = await Answer.countDocuments({ post: post.id });
+      // console.log(post);
+      await post.save();
+    }
 
     const answers = await Answer.find({});
-    // for (let i = 0; i < 200; i++) {
-    //   let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
-    //   let doc;
-    //   if (forModel === 'Post') {
-    //     doc = posts[Math.floor(Math.random() * posts.length)].id;
-    //   } else {
-    //     doc = answers[Math.floor(Math.random() * answers.length)].id;
-    //   }
+    for (let i = 0; i < 200; i++) {
+      let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
+      let doc;
+      if (forModel === 'Post') {
+        doc = posts[Math.floor(Math.random() * posts.length)].id;
+      } else {
+        doc = answers[Math.floor(Math.random() * answers.length)].id;
+      }
 
-    //   await LikeDislike.create({
-    //     type: ['like', 'dislike'][Math.floor(Math.random() * 2)],
-    //     user: users[Math.floor(Math.random() * users.length)].id,
-    //     for: forModel,
-    //     doc,
-    //   });
-    // }
+      await LikeDislike.create({
+        type: ['like', 'dislike'][Math.floor(Math.random() * 2)],
+        user: users[Math.floor(Math.random() * users.length)].id,
+        for: forModel,
+        doc,
+      });
+    }
 
     for (let i = 0; i < 60; i++) {
       // let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
@@ -197,7 +197,7 @@ const importData = async () => {
       } else {
         doc = answers[Math.floor(Math.random() * answers.length)].id;
       }
-      const post = posts[Math.floor(Math.random() * posts.length)];
+
       const comment = await Comment.create({
         for: forModel,
         doc,
@@ -218,12 +218,12 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    // await User.deleteMany({});
-    // await Post.deleteMany({});
-    // for (let ans in await Answer.find({})) {
-    //   await Answer.findByIdAndDelete(ans._id);
-    // }
-    // await Comment.deleteMany({});
+    await User.deleteMany({});
+    await Post.deleteMany({});
+    for (let ans in await Answer.find({})) {
+      await Answer.findByIdAndDelete(ans._id);
+    }
+    await Comment.deleteMany({});
     await LikeDislike.deleteMany({});
     console.log('deleted data successfully😉😉😉');
   } catch (err) {
