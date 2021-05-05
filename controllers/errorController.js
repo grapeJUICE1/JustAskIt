@@ -3,6 +3,12 @@ const AppError = require('./../utils/AppError');
 const handleCastErrorDB = (err) => {
   return new AppError(`Invalid ${err.path}:${err.value}`, 400);
 };
+const handleValidationErrorUrl = (err) => {
+  return new AppError(
+    "Pls enter a valid URL , don't forget to add protocols (http , https)",
+    400
+  );
+};
 //function to return duplicate fields error
 const handleDuplicateFieldsDB = (err) => {
   return new AppError(
@@ -76,16 +82,20 @@ module.exports = (err, req, res, next) => {
   ) {
     let error = { ...err };
     error.message = err.message;
+    console.log(err.name);
     console.log('hello', err.error);
     //sending errors for invalid mongodb ids
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
-    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name === 'ValidationError')
-      error = handleValidationErrorDB(error);
-    if (error.name === 'JsonWebTokenError') error = handleJWTError();
-    if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
-    if (error.message.includes('passwordConfirm'))
+    else if (error.message.includes('passwordConfirm'))
       error = PasswordNotSameError();
+    else if (error.message.includes('valid URL'))
+      error = handleValidationErrorUrl();
+    else if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    else if (error._message === 'Validation failed')
+      error = handleValidationErrorDB(error);
+    else if (error.name === 'JsonWebTokenError') error = handleJWTError();
+    else if (error.name === 'TokenExpiredError')
+      error = handleJWTExpiredError();
 
     //sending errors in production
     sendErrProd(error, req, res);

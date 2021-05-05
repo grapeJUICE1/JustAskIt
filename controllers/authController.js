@@ -75,6 +75,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
+  // console.log(token);
   if (!token)
     return next(
       new AppError('You are not logged in..Please Log in to continue', 401)
@@ -96,6 +97,14 @@ exports.protect = catchAsync(async (req, res, next) => {
       )
     );
   req.user = currentUser;
+  if (req.body.type === 'autoLogin') {
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: currentUser,
+      },
+    });
+  }
   next();
 });
 

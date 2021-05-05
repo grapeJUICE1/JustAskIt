@@ -5,12 +5,12 @@ const initialState = {
   profile: '',
   error: null,
   loading: false,
+  modalLoading: false,
 };
 const getUserDataHandler = (state, action) => {
-  return updateObj(state, { error: null, answers: [], loading: true });
+  return updateObj(state, { error: null, loading: true });
 };
 const getUserDataFailHandler = (state, action) => {
-  console.log(action);
   return updateObj(state, { error: action.err, loading: false });
 };
 
@@ -22,6 +22,35 @@ const getUserDataSuccessHandler = (state, action) => {
     total: action.total,
   });
 };
+const editUserDataStartHandler = (state, action) => {
+  return updateObj(state, { error: null, modalLoading: true });
+};
+const editUserDataFailHandler = (state, action) => {
+  return updateObj(state, { modalLoading: false });
+};
+
+const editUserDataSuccessHandler = (state, action) => {
+  return updateObj(state, {
+    error: null,
+    modalLoading: false,
+    profile: action.user,
+  });
+};
+const uploadPhotoStartHandler = (state, action) => {
+  return updateObj(state, { error: null, modalLoading: true });
+};
+const uploadPhotoFailHandler = (state, action) => {
+  console.log(action);
+  return updateObj(state, { modalLoading: false });
+};
+
+const uploadPhotoSuccessHandler = (state, action) => {
+  return updateObj(state, {
+    error: null,
+    modalLoading: false,
+    profile: action.user,
+  });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -31,6 +60,18 @@ const reducer = (state = initialState, action) => {
       return getUserDataSuccessHandler(state, action);
     case actionTypes.GET_USER_DATA_FAIL:
       return getUserDataFailHandler(state, action);
+    case actionTypes.EDIT_USER_DATA_START:
+      return editUserDataStartHandler(state, action);
+    case actionTypes.EDIT_USER_DATA_SUCCESS:
+      return editUserDataSuccessHandler(state, action);
+    case actionTypes.EDIT_USER_DATA_FAIL:
+      return editUserDataFailHandler(state, action);
+    case actionTypes.UPLOAD_PHOTO_START:
+      return uploadPhotoStartHandler(state, action);
+    case actionTypes.UPLOAD_PHOTO_SUCCESS:
+      return uploadPhotoSuccessHandler(state, action);
+    case actionTypes.UPLOAD_PHOTO_FAIL:
+      return uploadPhotoFailHandler(state, action);
 
     default:
       return state;

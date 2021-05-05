@@ -9,6 +9,6 @@ export {
   LikeDislikeAnswer,
   checkUsersLikeDislikeAnswer,
 } from './answers';
-export { login, Logout, signup } from './auth';
+export { login, Logout, signup, autoLogin } from './auth';
 export { fetchComments, likeDislikeComments } from './comments';
-export { getUserData } from './profile';
+export { getUserData, editUserData, uploadPhoto } from './profile';

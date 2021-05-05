@@ -143,16 +143,24 @@ const importData = async () => {
         password: 'test1234',
         passwordConfirm: 'test1234',
         bio: faker.lorem.sentences(4),
+        links: {
+          github: '',
+          website: '',
+          instagram: '',
+          facebook: '',
+          twitter: '',
+        },
       });
     }
     const users = await User.find({});
     for (let i = 0; i < 60; i++) {
-      await Post.create({
+      const p = await Post.create({
         title: faker.lorem.sentence(),
         content: faker.lorem.paragraph(5),
         postedBy: users[Math.floor(Math.random() * users.length)].id,
         tags: genTag(),
       });
+      console.log(p);
     }
 
     const posts = await Post.find({});
@@ -166,7 +174,7 @@ const importData = async () => {
       });
 
       post.answerCount = await Answer.countDocuments({ post: post.id });
-      // console.log(post);
+
       await post.save();
     }
 
@@ -189,25 +197,17 @@ const importData = async () => {
     }
 
     for (let i = 0; i < 60; i++) {
-      // let forModel = ['Post', 'Answer'][Math.floor(Math.random() * 2)];
       let forModel = 'Answer';
       let doc;
-      if (forModel === 'Post') {
-        doc = posts[Math.floor(Math.random() * posts.length)].id;
-      } else {
-        doc = answers[Math.floor(Math.random() * answers.length)].id;
-      }
 
-      const comment = await Comment.create({
+      doc = answers[Math.floor(Math.random() * answers.length)].id;
+
+      await Comment.create({
         for: forModel,
         doc,
         content: faker.lorem.sentence(),
         postedBy: users[Math.floor(Math.random() * users.length)].id,
       });
-
-      // post.answerCount = await Answer.countDocuments({ post: post.id });
-      // // console.log(post);
-      // await post.save();
     }
     console.log('Data successfully loaded!');
   } catch (err) {

@@ -1,18 +1,42 @@
 import React, { Component } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
+import UploadImage from './uploadImageModal/UploadImage';
 
 import Posts from '../Posts/Posts';
 import { formatDate } from '../../shared/utils/formatDate';
 
 import './profile.css';
+import EditModal from './ProfileEditModal/EditModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faGithub,
+  faInstagram,
+  faFacebook,
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 class profile extends Component {
   componentDidMount() {
     this.props.onFetchUserData(this.props.match.params.userID);
     // window.scrollTo(0, 0);
   }
+  state = {
+    show: false,
+  };
+
+  handleClose = () => this.setState({ show: false });
+  handleShow = () => this.setState({ show: true });
+
+  iconToLink = {
+    github: faGithub,
+    website: faGlobe,
+    facebook: faFacebook,
+    twitter: faTwitter,
+    instagram: faInstagram,
+  };
   render() {
     let profile = (
       <Container>
@@ -23,11 +47,13 @@ class profile extends Component {
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                      src={this.props.profile.photo}
                       alt="Admin"
                       className="rounded-circle"
                       width={150}
                     />
+                    <UploadImage />
+
                     <div className="mt-3">
                       <h4>{this.props.profile.name}</h4>
                       <p className="text-secondary mb-1">
@@ -37,36 +63,30 @@ class profile extends Component {
                       <p className="text-secondary mb-1">
                         Joined at {formatDate(this.props.profile.joinedAt)}
                       </p>
-                      <button className="btn btn-primary">Follow</button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="card mt-3">
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 className="mb-0">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={24}
-                        height={24}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-globe mr-2 icon-inline"
-                      >
-                        <circle cx={12} cy={12} r={10} />
-                        <line x1={2} y1={12} x2={22} y2={12} />
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                      </svg>
-                      Website
-                    </h6>
-                    <span className="text-secondary">https://bootdey.com</span>
-                  </li>
-                </ul>
+              <br />
+              <div className="text-center">
+                {this.props.profile.links &&
+                  Object.keys(this.props.profile.links).map((val, id) => {
+                    if (this.props.profile.links[val]) {
+                      return (
+                        <>
+                          <Button
+                            as="a"
+                            key={id}
+                            variant="secondary"
+                            href={this.props.profile.links[val]}
+                          >
+                            <FontAwesomeIcon icon={this.iconToLink[val]} />
+                          </Button>
+                          &nbsp;
+                        </>
+                      );
+                    }
+                  })}
               </div>
             </div>
             <div className="col-md-8 ml-0 ">
@@ -99,6 +119,16 @@ class profile extends Component {
                     </div>
                   </div>
                 </div>
+
+                {this.props.loggedInUser ? (
+                  this.props.loggedInUser._id === this.props.profile._id ? (
+                    <EditModal />
+                  ) : (
+                    ''
+                  )
+                ) : (
+                  ''
+                )}
               </div>
               {this.props.profile._id &&
                 this.props.match.params.userID === this.props.profile._id && (
@@ -122,6 +152,7 @@ const mapStateToProps = (state) => {
     profile: state.profile.profile,
     error: state.profile.error,
     loading: state.profile.loading,
+    loggedInUser: state.auth.user,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -129,4 +160,5 @@ const mapDispatchToProps = (dispatch) => {
     onFetchUserData: (id) => dispatch(actions.getUserData(id)),
   };
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(profile);

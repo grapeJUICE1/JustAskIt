@@ -1,8 +1,19 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-
 //initializing user schema
+
+const URLvalidator = {
+  validator: (value) => {
+    // Check if value is empty then return true.
+    if (value === '') {
+      return true;
+    }
+
+    return validator.isURL(value, { require_protocol: true });
+  },
+  message: 'Pls enter a valid URL',
+};
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -39,6 +50,14 @@ const userSchema = mongoose.Schema({
     type: String,
     default: 'None',
   },
+  workStatus: {
+    type: String,
+    default: 'None',
+  },
+  Company: {
+    type: String,
+    default: 'None',
+  },
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -46,6 +65,28 @@ const userSchema = mongoose.Schema({
   },
   active: {
     type: String,
+  },
+  links: {
+    github: {
+      type: String,
+      validate: URLvalidator,
+    },
+    website: {
+      type: String,
+      validate: URLvalidator,
+    },
+    instagram: {
+      type: String,
+      validate: URLvalidator,
+    },
+    facebook: {
+      type: String,
+      validate: URLvalidator,
+    },
+    twitter: {
+      type: String,
+      validate: URLvalidator,
+    },
   },
   joinedAt: Date,
   passwordChangedAt: Date,

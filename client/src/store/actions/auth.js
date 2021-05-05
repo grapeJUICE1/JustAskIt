@@ -1,4 +1,7 @@
 import axios from '../../axios-main';
+//importing axios because main instance has an error handling interceptor
+//when i auto login , i dont want to trigger that
+import axiosAutoLogin from 'axios';
 import * as actionTypes from './actionTypes';
 
 export const loginStart = () => {
@@ -12,10 +15,10 @@ export const loginFail = (error) => {
     error,
   };
 };
-export const loginSuccess = (token, user) => {
+export const loginSuccess = (user) => {
   return {
     type: actionTypes.LOGIN_SUCCESS,
-    token,
+
     user,
   };
 };
@@ -30,8 +33,8 @@ export const login = (data) => {
     dispatch(loginStart());
     try {
       const res = await axios.post(`/users/login`, data);
-
-      dispatch(loginSuccess(res.data.token, res.data.data.user));
+      console.log(res);
+      dispatch(loginSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
       if (err.response.data.message) dispatch(loginFail(err.response.data));
@@ -52,10 +55,10 @@ export const signUpFail = (error) => {
     error,
   };
 };
-export const signUpSuccess = (token, user) => {
+export const signUpSuccess = (user) => {
   return {
     type: actionTypes.SIGNUP_SUCCESS,
-    token,
+
     user,
   };
 };
@@ -66,7 +69,7 @@ export const signup = (data) => {
     try {
       const res = await axios.post(`/users/sign-up`, data);
 
-      dispatch(signUpSuccess(res.data.token, res.data.data.user));
+      dispatch(signUpSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
       if (err.response.data.message) dispatch(signUpFail(err.response.data));
@@ -81,6 +84,20 @@ export const Logout = (data) => {
     try {
       const res = await axios.post(`/users/logout`);
       dispatch(logout());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const autoLogin = () => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosAutoLogin.post('/users/verify', {
+        type: 'autoLogin',
+      });
+
+      dispatch(loginSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
     }

@@ -2,7 +2,6 @@ import updateObj from '../../shared/utils/updateObj';
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  token: null,
   user: null,
   loading: false,
   error: null,
@@ -18,7 +17,6 @@ const loginSuccessHandler = (state, action) => {
   return updateObj(state, {
     error: null,
     user: action.user,
-    token: action.token,
     loading: false,
   });
 };
@@ -26,7 +24,6 @@ const signUpSuccessHandler = (state, action) => {
   return updateObj(state, {
     error: null,
     user: action.user,
-    token: action.token,
     loading: false,
   });
 };

@@ -39,6 +39,7 @@ const Question = (props) => {
         post={props.post}
         getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
       />
+      <br />
       <p className={`ml-5 ${styles.post_content}`}>{props.post.content}</p>
 
       <Comments

@@ -20,7 +20,6 @@ class Posts extends Component {
     sortBy: '-createdAt',
     filter: {},
   };
-
   componentDidMount() {
     this.props.onFetchPosts(
       this.state.sortBy,
@@ -36,6 +35,7 @@ class Posts extends Component {
       prevState.filter !== this.state.filter ||
       prevState.currentPage !== this.state.currentPage
     ) {
+      localStorage.setItem('currentPage', this.state.currentPage);
       this.props.onFetchPosts(
         this.state.sortBy,
         this.state.filter,
@@ -45,30 +45,40 @@ class Posts extends Component {
       );
     }
   }
-
+  setDefaultCurrentPage = () => {
+    this.setState({ currentPage: 0 });
+    // localStorage.setItem('currentPage', 0);
+  };
   handlePageClick = ({ selected }) => {
     this.setState({ currentPage: selected + 1 });
+    // localStorage.setItem('currentPage', 0);
   };
   removeFilter = (e) => {
     this.setState({ filter: {} });
   };
   sortByViews = (e) => {
     this.setState({ sortBy: '-views' });
+    this.setDefaultCurrentPage();
   };
   sortByVotes = (e) => {
     this.setState({ sortBy: '-voteCount' });
+    this.setDefaultCurrentPage();
   };
   sortNewest = (e) => {
     this.setState({ sortBy: '-createdAt' });
+    this.setDefaultCurrentPage();
   };
   sortOldest = (e) => {
     this.setState({ sortBy: 'createdAt' });
+    this.setDefaultCurrentPage();
   };
   filterUnanswered = (e) => {
+    this.setDefaultCurrentPage();
     this.setState({ sortBy: '-createdAt' });
     this.setState({ filter: { answerCount: 0 } });
   };
   filterByTag = (tag) => {
+    this.setDefaultCurrentPage();
     this.setState({ sortBy: '-createdAt' });
     this.setState({ filter: { tags: tag } });
   };
@@ -106,6 +116,8 @@ class Posts extends Component {
       posts = <h1 className="text-center py-5">{this.props.error.message}</h1>;
     } else if (this.props.loading) {
       posts = <Loader />;
+    } else if (this.props.isProfile && this.props.posts.length === 0) {
+      posts = <h4 className="mt-4">No questions asked yet</h4>;
     } else {
       posts = (
         <Fragment>
@@ -130,8 +142,14 @@ class Posts extends Component {
           <ReactPaginate
             previousLabel={'<<'}
             nextLabel={'>>'}
-            initialPage={0}
             pageCount={pageCount}
+            initialPage={
+              !this.props.isProfile
+                ? localStorage.getItem('currentPage') - 1 >= 0
+                  ? localStorage.getItem('currentPage') - 1
+                  : 0
+                : 0
+            }
             onPageChange={this.handlePageClick}
             containerClassName={`${styles.pagination} pb-5 text-center ml-lg-4`}
             previousLinkClassName={`${styles.pagination__link}`}

@@ -33,7 +33,9 @@ const checkAuth = (Wrapped) => {
               alert.error(error.response.data.message);
               break;
             default:
-              alert.error('OOps .... Error occured ... try again later');
+              if (error.response.data.message)
+                alert.error(error.response.data.message);
+              else alert.error('OOps .... Error occured ... try again later');
           }
           return Promise.reject(error);
         }

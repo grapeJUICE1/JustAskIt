@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
 import Layout from './components/Layout/Layout';
@@ -11,8 +11,12 @@ import Signup from './containers/Auth/signup/signup';
 import Profile from './containers/profile/profile';
 import Editor from './components/Editor/Editor';
 import { connect } from 'react-redux';
+import * as actions from './store/actions/index';
 
 function App(props) {
+  useEffect(() => {
+    props.onAutoLogin();
+  }, []);
   return (
     <Layout>
       <Switch>
@@ -30,9 +34,9 @@ function App(props) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    token: state.auth.token,
+    onAutoLogin: () => dispatch(actions.autoLogin()),
   };
 };
-export default connect(mapStateToProps)(withRouter(App));
+export default connect(null, mapDispatchToProps)(withRouter(App));

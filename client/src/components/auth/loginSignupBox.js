@@ -55,6 +55,7 @@ function loginSignupBox({ data, inputs }) {
       });
     }
   };
+
   return (
     <Container className="d-flex flex-column justify-content-between ml-lg-4 pt-5 mt-5">
       <form className={styles.login} onSubmit={submitHandler}>
