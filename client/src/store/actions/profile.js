@@ -52,7 +52,7 @@ export const editUserData = (data) => {
       dispatch(editUserDataSuccess(res.data.data.user));
     } catch (err) {
       console.log(err.response.data.message);
-      dispatch(editUserDataFail(err.response.data.message));
+      dispatch(editUserDataFail(err.response.data));
     }
   };
 };

@@ -5,6 +5,7 @@ import styles from './Post.module.scss';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Image } from 'cloudinary-react';
 
 const Post = (props) => {
   return (
@@ -68,14 +69,24 @@ const Post = (props) => {
       </div>
       <div className="d-flex flex-row-reverse flex-end pt-3">
         <div className="d-flex flex-column">
-          <small className="text-muted">
+          <small className="text-muted ml-auto">
             {`Asked ${timeSince(props.post.createdAt)} ago `}
           </small>
-          <Button className="ml-auto" variant="link" size="sm">
-            <Link to={`/profile/${props.post.postedBy._id}`}>
-              {props.post.postedBy.name}
-            </Link>
-          </Button>
+          <span>
+            <Image
+              cloudName="grapecluster"
+              publicId={props.post.postedBy.photo}
+              width="30"
+              height="30"
+              className="rounded-circle"
+              crop="scale"
+            />
+            <Button className="ml-auto" variant="link" size="sm">
+              <Link to={`/profile/${props.post.postedBy._id}`}>
+                {props.post.postedBy.name}
+              </Link>
+            </Button>
+          </span>
         </div>
       </div>
     </div>

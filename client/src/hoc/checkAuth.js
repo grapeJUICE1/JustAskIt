@@ -55,7 +55,7 @@ const checkAuth = (Wrapped) => {
   };
   const mapDispatchToProps = (dispatch) => {
     return {
-      onLogout: () => dispatch(actions.Logout()),
+      onLogout: () => dispatch(actions.logout()),
     };
   };
 

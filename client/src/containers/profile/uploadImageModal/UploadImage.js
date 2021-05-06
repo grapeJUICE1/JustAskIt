@@ -21,10 +21,17 @@ class EditModal extends Component {
     const formData = new FormData();
     formData.append('photo', this.btnRef.current.files[0]);
     await this.props.onUploadPhoto(formData);
+
     this.handleClose();
   };
   _onChange = () => {
     var file = this.btnRef.current.files[0];
+    if (!file) {
+      this.setState({
+        imgSrc: '',
+      });
+      return;
+    }
     var reader = new FileReader();
     var url = reader.readAsDataURL(file);
 
@@ -33,7 +40,6 @@ class EditModal extends Component {
         imgSrc: [reader.result],
       });
     }.bind(this);
-    console.log(this.btnRef.current.files[0]); // Would see a path?
   };
 
   render() {

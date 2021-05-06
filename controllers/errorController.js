@@ -82,9 +82,8 @@ module.exports = (err, req, res, next) => {
   ) {
     let error = { ...err };
     error.message = err.message;
-    console.log(err.name);
-    console.log('hello', err.error);
-    //sending errors for invalid mongodb ids
+    console.log(err);
+    // sending errors for invalid mongodb ids
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
     else if (error.message.includes('passwordConfirm'))
       error = PasswordNotSameError();
@@ -96,7 +95,7 @@ module.exports = (err, req, res, next) => {
     else if (error.name === 'JsonWebTokenError') error = handleJWTError();
     else if (error.name === 'TokenExpiredError')
       error = handleJWTExpiredError();
-
+    error.isOperational = true;
     //sending errors in production
     sendErrProd(error, req, res);
   } else if (process.env.NODE_ENV === 'development') {

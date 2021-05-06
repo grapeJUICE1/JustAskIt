@@ -5,16 +5,26 @@ const userController = require('./../controllers/userController');
 
 const multer = require('multer');
 
-const { uploader, cloudinaryConfig } = require('../cloudinaryConfig');
+const { cloudinaryConfig } = require('../cloudinaryConfig');
 
 const storage = multer.memoryStorage();
-const multerUploads = multer({ storage }).single('photo');
+
+const imageFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images', 400));
+  }
+};
+const multerUploads = multer({ storage, fileFilter: imageFilter }).single(
+  'photo'
+);
 
 // initializing express router
 const router = express.Router();
 
 //rouutes to do read operation on users
-router.get('/get-all-users', userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 router.get('/:id', userController.getOneUser);
 
 //route to login and signup

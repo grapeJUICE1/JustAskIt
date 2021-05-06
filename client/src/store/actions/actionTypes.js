@@ -29,6 +29,7 @@ export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 export const SIGNUP_FAIL = 'SIGNUP_FAIL';
 
 export const LOGOUT = 'LOGOUT';
+export const LOGOUT_FAIL = 'LOGOUT_FAIL';
 
 //action types for like and dislike
 export const LIKE_DISLIKE_POST_START = 'LIKE_DISLIKE_POST_START';

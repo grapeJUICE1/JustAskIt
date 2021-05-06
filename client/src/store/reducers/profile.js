@@ -17,16 +17,17 @@ const getUserDataFailHandler = (state, action) => {
 const getUserDataSuccessHandler = (state, action) => {
   return updateObj(state, {
     error: null,
+    testErr: false,
     profile: action.data,
     loading: false,
     total: action.total,
   });
 };
 const editUserDataStartHandler = (state, action) => {
-  return updateObj(state, { error: null, modalLoading: true });
+  return updateObj(state, { error: null, modalLoading: true, testErr: null });
 };
 const editUserDataFailHandler = (state, action) => {
-  return updateObj(state, { modalLoading: false });
+  return updateObj(state, { modalLoading: false, testErr: action.error });
 };
 
 const editUserDataSuccessHandler = (state, action) => {

@@ -23,7 +23,9 @@ class EditModal extends Component {
   };
   onSubmit = async () => {
     await this.props.onEditData(this.state.editableFields);
-    this.handleClose();
+    if (!this.props.testErr) {
+      this.handleClose();
+    }
   };
   render() {
     return (
@@ -45,6 +47,11 @@ class EditModal extends Component {
           <Modal.Body>
             <Form>
               <Modal.Title>User Data</Modal.Title>
+              {this.props.testErr ? (
+                <h4 style={{ color: 'red' }}>{this.props.testErr.message}</h4>
+              ) : (
+                ''
+              )}
               <hr />
               {Object.keys(this.state.editableFields).map((val, id) => {
                 const editableFields = this.state.editableFields;
@@ -123,6 +130,7 @@ class EditModal extends Component {
 const mapStateToProps = (state) => {
   return {
     profile: state.profile.profile,
+    testErr: state.profile.testErr,
     error: state.profile.error,
     user: state.auth.user,
   };

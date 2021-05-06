@@ -33,8 +33,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use(helmet());
 
 const limiter = rateLimit({
-  max: 200,
-  windowMs: 5 * 60 * 1000,
+  max: 300,
+  windowMs: 15 * 60 * 1000,
   message: { message: 'To many requests from this IP | try again in an hour' },
 });
 

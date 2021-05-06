@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   loading: false,
   error: null,
+  logoutError: null,
 };
 
 const loginStartHandler = (state, action) => {
@@ -36,6 +37,9 @@ const signUpFailHandler = (state, action) => {
 const logoutHandler = (state, action) => {
   return updateObj(state, initialState);
 };
+const logoutFailHandler = (state, action) => {
+  return updateObj(state, { logoutError: action.error });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -53,6 +57,8 @@ const reducer = (state = initialState, action) => {
       return signUpFailHandler(state, action);
     case actionTypes.LOGOUT:
       return logoutHandler(state, action);
+    case actionTypes.LOGOUT_FAIL:
+      return logoutFailHandler(state, action);
     default:
       return state;
   }

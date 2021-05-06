@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 import UploadImage from './uploadImageModal/UploadImage';
+import { Image } from 'cloudinary-react';
 
 import Posts from '../Posts/Posts';
 import { formatDate } from '../../shared/utils/formatDate';
@@ -46,13 +47,29 @@ class profile extends Component {
               <div className="card">
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
-                    <img
+                    {/* <img
                       src={this.props.profile.photo}
                       alt="Admin"
                       className="rounded-circle"
                       width={150}
+                    /> */}
+                    <Image
+                      cloudName="grapecluster"
+                      publicId={this.props.profile.photo}
+                      width="150"
+                      height="150"
+                      className="rounded-circle"
+                      crop="scale"
                     />
-                    <UploadImage />
+                    {this.props.user ? (
+                      this.props.user._id === this.props.profile._id ? (
+                        <UploadImage />
+                      ) : (
+                        ''
+                      )
+                    ) : (
+                      ''
+                    )}
 
                     <div className="mt-3">
                       <h4>{this.props.profile.name}</h4>
@@ -73,20 +90,21 @@ class profile extends Component {
                   Object.keys(this.props.profile.links).map((val, id) => {
                     if (this.props.profile.links[val]) {
                       return (
-                        <>
+                        <Fragment key={id}>
                           <Button
                             as="a"
-                            key={id}
                             variant="secondary"
                             href={this.props.profile.links[val]}
                           >
                             <FontAwesomeIcon icon={this.iconToLink[val]} />
                           </Button>
                           &nbsp;
-                        </>
+                        </Fragment>
                       );
                     }
+                    return '';
                   })}
+                &nbsp;
               </div>
             </div>
             <div className="col-md-8 ml-0 ">
@@ -120,8 +138,8 @@ class profile extends Component {
                   </div>
                 </div>
 
-                {this.props.loggedInUser ? (
-                  this.props.loggedInUser._id === this.props.profile._id ? (
+                {this.props.user ? (
+                  this.props.user._id === this.props.profile._id ? (
                     <EditModal />
                   ) : (
                     ''
@@ -152,7 +170,7 @@ const mapStateToProps = (state) => {
     profile: state.profile.profile,
     error: state.profile.error,
     loading: state.profile.loading,
-    loggedInUser: state.auth.user,
+    user: state.auth.user,
   };
 };
 const mapDispatchToProps = (dispatch) => {

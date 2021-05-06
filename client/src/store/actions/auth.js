@@ -23,11 +23,6 @@ export const loginSuccess = (user) => {
   };
 };
 
-export const logout = () => {
-  return {
-    type: actionTypes.LOGOUT,
-  };
-};
 export const login = (data) => {
   return async (dispatch) => {
     dispatch(loginStart());
@@ -79,13 +74,26 @@ export const signup = (data) => {
   };
 };
 
-export const Logout = (data) => {
+export const logoutSuccess = () => {
+  return {
+    type: actionTypes.LOGOUT,
+  };
+};
+
+export const logoutFail = (err) => {
+  return {
+    type: actionTypes.LOGOUT_FAIL,
+    error: err,
+  };
+};
+export const logout = () => {
   return async (dispatch) => {
     try {
-      const res = await axios.post(`/users/logout`);
-      dispatch(logout());
+      await axios.post(`/users/logout`);
+      dispatch(logoutSuccess());
     } catch (err) {
       console.log(err);
+      dispatch(logoutFail(err));
     }
   };
 };
