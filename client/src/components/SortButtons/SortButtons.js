@@ -17,9 +17,11 @@ const SortButtons = (props) => {
     <Col
       lg={7}
       className={classNames({
-        'pt-lg-5 mt-lg-4 d-flex justify-content-lg-end': true,
+        'mt-lg-4 d-flex justify-content-lg-end': true,
+        'pt-lg-5 ': !props.isUser,
         [`${styles.col_sort_buttons}`]: !props.isProfile,
         [`${styles.col_sort_buttons_for_profile}`]: props.isProfile,
+        [`${styles.col_sort_buttons_for_users_page}`]: props.isUser,
       })}
     >
       <ToggleButtonGroup

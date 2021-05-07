@@ -17,7 +17,7 @@ const dataUri = (req) =>
 
 exports.getAllUsers = handlerFactory.getAll(
   User,
-  ['totalNumOfData'],
+  ['totalNumOfData', 'nameSearch'],
   {},
   'User'
 );

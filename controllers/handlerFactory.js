@@ -50,6 +50,19 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
     if (allowedFields.includes('postsComments')) {
       filter.doc = req.params.id;
     }
+    if (allowedFields.includes('nameSearch')) {
+      filter.name = {
+        $regex: req.query.search,
+        $options: 'i',
+      };
+    }
+    if (allowedFields.includes('titleSearch')) {
+      filter.title = {
+        $regex: req.query.search,
+        $options: 'i',
+      };
+    }
+
     if (allowedFields.includes('likeDislike')) {
       filter.for = forModel;
       filter.doc = req.params.id;
@@ -65,6 +78,7 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
     }
     //uses the apifeatures.js from util folder to implement
     //pagination , filtering , sorting and limiting
+
     const features = new ApiFeatures(Model.find(filter), req.query)
       .filter()
       .sort()

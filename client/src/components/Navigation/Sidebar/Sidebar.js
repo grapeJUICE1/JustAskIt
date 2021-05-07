@@ -31,7 +31,7 @@ const Sidebar = () => {
         id="users"
         onClick={handleCloseMenu}
         className="menu-item"
-        to="/posts"
+        to="/users"
       >
         Users
       </Link>

@@ -3,7 +3,7 @@ import styles from './loginSignupBox.module.scss';
 import { Container } from 'react-bootstrap';
 import classnames from 'classnames';
 
-function loginSignupBox({ data, inputs }) {
+function loginSignupBox({ data, inputs, title }) {
   const inputChangeHandler = (evt, field) => {
     evt.preventDefault();
     data.setState({ [field]: evt.target.value });
@@ -60,7 +60,7 @@ function loginSignupBox({ data, inputs }) {
     <Container className="d-flex flex-column justify-content-between ml-lg-4 pt-5 mt-5">
       <form className={styles.login} onSubmit={submitHandler}>
         <fieldset>
-          <legend className={styles.legend}>Signup</legend>
+          <legend className={styles.legend}>{title}</legend>
           {inputs.map((inp, ind) => (
             <div key={ind} className={styles.input}>
               <input

@@ -12,12 +12,12 @@ export const fetchPostsFail = (error) => {
     error,
   };
 };
-export const fetchPostsSuccess = (posts, total, totalPages) => {
+export const fetchPostsSuccess = (posts, total, totalPosts) => {
   return {
     type: actionTypes.FETCH_POSTS_SUCCESS,
     posts,
     total,
-    totalPages,
+    totalPosts,
   };
 };
 

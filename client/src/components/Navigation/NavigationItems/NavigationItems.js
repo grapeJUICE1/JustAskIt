@@ -38,7 +38,7 @@ function NavigationItems(props) {
           <Nav.Link onClick={(e) => props.history.push('/login')}>
             Login
           </Nav.Link>
-          <Nav.Link onClick={(e) => props.history.push('/login')}>
+          <Nav.Link onClick={(e) => props.history.push('/signup')}>
             Signup
           </Nav.Link>
           {redirect}

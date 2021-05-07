@@ -9,6 +9,7 @@ import FullPost from './containers/FullPost/FullPost';
 import Login from './containers/Auth/Login/Login';
 import Signup from './containers/Auth/signup/signup';
 import Profile from './containers/profile/profile';
+import Users from './containers/Users/Users';
 import Editor from './components/Editor/Editor';
 import { connect } from 'react-redux';
 import * as actions from './store/actions/index';
@@ -16,6 +17,7 @@ import * as actions from './store/actions/index';
 function App(props) {
   useEffect(() => {
     props.onAutoLogin();
+    //eslint-disable-next-line
   }, []);
   return (
     <Layout>
@@ -25,6 +27,7 @@ function App(props) {
         <Route path="/login" exact component={Login} />
         <Route path="/signup" exact component={Signup} />
         <Route path="/profile/:userID" exact component={Profile} />
+        <Route path="/users" exact component={Users} />
         <Route path="/posts/post/:id/:slug?" component={FullPost} />
         <Route path="/" exact>
           <Redirect to="/posts" />

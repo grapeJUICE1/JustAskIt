@@ -12,3 +12,4 @@ export {
 export { login, logout, signup, autoLogin } from './auth';
 export { fetchComments, likeDislikeComments } from './comments';
 export { getUserData, editUserData, uploadPhoto } from './profile';
+export { fetchUsers } from './users';

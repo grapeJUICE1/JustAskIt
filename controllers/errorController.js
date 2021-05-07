@@ -24,7 +24,7 @@ const PasswordNotSameError = (err) => {
 //function to return validation error in production
 const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
-  return new AppError(`Invalid input data :${errors.join('. ')}`, 400);
+  return new AppError(`${errors.join('. ')} , `, 400);
 };
 
 //function to return jwt error in production
@@ -91,6 +91,8 @@ module.exports = (err, req, res, next) => {
       error = handleValidationErrorUrl();
     else if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     else if (error._message === 'Validation failed')
+      error = handleValidationErrorDB(error);
+    else if (error._message === 'User validation failed')
       error = handleValidationErrorDB(error);
     else if (error.name === 'JsonWebTokenError') error = handleJWTError();
     else if (error.name === 'TokenExpiredError')

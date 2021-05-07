@@ -3,8 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import SortButtons from '../../components/SortButtons/SortButtons';
 import Post from '../../components/Post/Post';
+import SubmitPost from '../../components/SubmitModals/SubmitPostAnswer/SubmitPostAnswer';
 import { connect } from 'react-redux';
-import styles from './Posts.module.scss';
 
 import * as actions from '../../store/actions/index';
 import Loader from '../../components/UI/Loader/Loader';
@@ -16,7 +16,6 @@ class Posts extends Component {
   state = {
     currentPage: 1,
     total: 0,
-    totalPages: 0,
     sortBy: '-createdAt',
     filter: {},
   };
@@ -35,7 +34,6 @@ class Posts extends Component {
       prevState.filter !== this.state.filter ||
       prevState.currentPage !== this.state.currentPage
     ) {
-      localStorage.setItem('currentPage', this.state.currentPage);
       this.props.onFetchPosts(
         this.state.sortBy,
         this.state.filter,
@@ -47,11 +45,9 @@ class Posts extends Component {
   }
   setDefaultCurrentPage = () => {
     this.setState({ currentPage: 0 });
-    // localStorage.setItem('currentPage', 0);
   };
   handlePageClick = ({ selected }) => {
     this.setState({ currentPage: selected + 1 });
-    // localStorage.setItem('currentPage', 0);
   };
   removeFilter = (e) => {
     this.setState({ filter: {} });
@@ -84,7 +80,7 @@ class Posts extends Component {
   };
 
   render() {
-    const pageCount = Math.ceil(this.props.totalPages / this.PER_PAGE);
+    const pageCount = Math.ceil(this.props.totalUsers / this.PER_PAGE);
 
     let posts;
     let title;
@@ -144,18 +140,14 @@ class Posts extends Component {
             nextLabel={'>>'}
             pageCount={pageCount}
             initialPage={
-              !this.props.isProfile
-                ? localStorage.getItem('currentPage') - 1 >= 0
-                  ? localStorage.getItem('currentPage') - 1
-                  : 0
-                : 0
+              this.state.currentPage ? this.state.currentPage - 1 : 0
             }
             onPageChange={this.handlePageClick}
-            containerClassName={`${styles.pagination} pb-5 text-center ml-lg-4`}
-            previousLinkClassName={`${styles.pagination__link}`}
-            nextLinkClassName={`${styles.pagination__link}`}
-            disabledClassName={`${styles.pagination__link__disabled}`}
-            activeClassName={`${styles.pagination__link__active}`}
+            containerClassName={`pagination pb-5 text-center ml-lg-4`}
+            previousLinkClassName={`pagination__link`}
+            nextLinkClassName={`pagination__link`}
+            disabledClassName={`pagination__link__disabled`}
+            activeClassName={`pagination__link__active`}
           />
         </Fragment>
       );
@@ -171,9 +163,9 @@ class Posts extends Component {
       >
         {!this.props.error && (
           <Row>
-            <Col lg={5} className="l">
+            <Col lg={5}>
               {title}
-              <h3 className="mt-4">{this.props.totalPages} questions</h3>
+              <h3 className="mt-4">{this.props.totalUsers} questions</h3>
             </Col>
             {sortButtons}
           </Row>
@@ -187,7 +179,7 @@ class Posts extends Component {
 const mapStateToProps = (state) => {
   return {
     total: state.posts.total,
-    totalPages: state.posts.totalPages,
+    totalUsers: state.posts.totalUsers,
     posts: state.posts.posts,
     error: state.posts.error,
     loading: state.posts.loading,

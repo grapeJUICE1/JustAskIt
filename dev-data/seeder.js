@@ -134,7 +134,7 @@ const importData = async () => {
         i.push(lol[Math.floor(Math.random() * lol.length)]);
       }
       console.log(i);
-      return i;
+      return [...new Set(i)];
     }
     for (let i = 0; i < 40; i++) {
       await User.create({
@@ -143,6 +143,9 @@ const importData = async () => {
         password: 'test1234',
         passwordConfirm: 'test1234',
         bio: faker.lorem.sentences(4),
+        location: `${faker.address.city()}, ${faker.address.country()}`,
+        workStatus: faker.name.jobTitle(),
+        company: faker.company.companyName(),
         links: {
           github: '',
           website: '',
@@ -160,7 +163,6 @@ const importData = async () => {
         postedBy: users[Math.floor(Math.random() * users.length)].id,
         tags: genTag(),
       });
-      console.log(p);
     }
 
     const posts = await Post.find({});

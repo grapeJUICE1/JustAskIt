@@ -18,7 +18,10 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, 'please provide your name'],
+    maxLength: [25, "name can't be greater than 25 words"],
+    minLength: [3, "name can't be smaller than 3 words"],
     unique: true,
+    trim: true,
   },
   email: {
     type: String,
@@ -28,12 +31,13 @@ const userSchema = mongoose.Schema({
   },
   photo: {
     type: String,
-    default: 'default.jpg',
+    default:
+      'https://res.cloudinary.com/grapecluster/image/upload/v1620383267/default.jpg',
   },
   password: {
     type: String,
     required: [true, 'please provide a password '],
-    min: [8, 'password must be greater than 8 characters'],
+    minLength: [8, 'password must be greater than 8 characters'],
     select: false,
   },
   passwordConfirm: {
@@ -48,15 +52,18 @@ const userSchema = mongoose.Schema({
   },
   bio: {
     type: String,
-    default: 'None',
+    default: 'No bio',
+    maxLength: [300, "bio can't be greater than 300 words"],
   },
   workStatus: {
     type: String,
-    default: 'None',
+    maxLength: [50, "work can't be greater than 50 words"],
+    default: 'No work status given',
   },
-  Company: {
+  company: {
     type: String,
     default: 'None',
+    default: 'No company given',
   },
   role: {
     type: String,
@@ -88,6 +95,12 @@ const userSchema = mongoose.Schema({
       validate: URLvalidator,
     },
   },
+  location: {
+    type: String,
+    maxLength: [70, "location can't be greater than 70 words"],
+    default: 'no location given',
+  },
+
   joinedAt: Date,
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -109,6 +122,8 @@ userSchema.pre('save', async function (next) {
 
   //making passwordConfirm undefined so that it doesn't get revealed
   this.passwordConfirm = undefined;
+
+  this.photo = `https://ui-avatars.com/api/?name=${this.name}`;
   next();
 });
 

@@ -71,10 +71,13 @@ postSchema.pre('save', async function (next) {
   //   await this.model('Post').collection.dropIndex({ tags_1: [['tags', 1]] })
   // );
   if (new Set(this.tags).size !== this.tags.length) {
+    console.log(this.tags.length, new Set(this.tags).size, this.tags);
     let validationError = new mongoose.Error.ValidationError(null);
     validationError.addError(
       'tags',
-      new mongoose.Error.ValidatorError({ message: 'Invalid' })
+      new mongoose.Error.ValidatorError({
+        message: 'You cant add the same tag twice',
+      })
     );
     return next(validationError);
   }

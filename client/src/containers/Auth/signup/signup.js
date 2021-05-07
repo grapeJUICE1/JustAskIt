@@ -36,13 +36,14 @@ class Signup extends Component {
         ['password', 'password'],
         ['passwordConfirm', 'passwordConfirm'],
       ],
+      title: 'Signup',
     });
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token != null,
+    isAuthenticated: state.auth.user,
     error: state.auth.error,
   };
 };

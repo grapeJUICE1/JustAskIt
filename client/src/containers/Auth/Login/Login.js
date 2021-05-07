@@ -32,13 +32,14 @@ class Login extends Component {
         ['email', 'email'],
         ['password', 'password'],
       ],
+      title: 'Login',
     });
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.user != null,
+    isAuthenticated: state.auth.user,
     error: state.auth.error,
   };
 };

@@ -3,7 +3,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   total: 0,
-  totalPages: 0,
+  totalPosts: 0,
   posts: [],
   error: null,
   loading: false,
@@ -17,7 +17,7 @@ const fetchPostsSuccessHandler = (state, action) => {
     error: null,
     posts: action.posts,
     total: action.total,
-    totalPages: action.totalPages,
+    totalPosts: action.totalPosts,
     loading: false,
   });
 };
