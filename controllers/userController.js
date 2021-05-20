@@ -31,6 +31,11 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     'links',
   ]);
   console.log(filteredBody);
+  if (filteredBody.name === req.user.name) {
+    filteredBody.name = req.user.name;
+  } else if (filteredBody.email === req.user.email) {
+    filteredBody.email = req.user.email;
+  }
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
