@@ -28,7 +28,7 @@ export const login = (data) => {
     dispatch(loginStart());
     try {
       const res = await axios.post(`/users/login`, data);
-
+      console.log(res);
       dispatch(loginSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
@@ -101,12 +101,9 @@ export const logout = () => {
 export const autoLogin = () => {
   return async (dispatch) => {
     try {
-      const res = await axiosAutoLogin.post(
-        'https://just-ask-it.herokuapp.com/api/v1/users/verify',
-        {
-          type: 'autoLogin',
-        }
-      );
+      const res = await axiosAutoLogin.post('/users/verify', {
+        type: 'autoLogin',
+      });
 
       dispatch(loginSuccess(res.data.data.user));
     } catch (err) {

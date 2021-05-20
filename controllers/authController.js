@@ -10,12 +10,12 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, res, req) => {
   const token = signToken(user.id);
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + 50 * 24 * 60 * 60 * 1000),
-    // httpOnly: true,
-    // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    httpOnly: false,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   });
   user.password = undefined;
 
@@ -37,7 +37,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
   req.user = newUser;
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201, res, req);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -53,7 +53,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
   req.user = user;
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, res, req);
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
@@ -77,9 +77,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   // console.log(token);
 
-  if (!token && req.variable === 'checkIfexist') {
-    return next();
-  }
+  // if (!token && req.variable === 'checkIfexist') {
+  //   return next();
+  // }
   if (!token) {
     return next(
       new AppError('You are not logged in..Please Log in to continue', 401)
@@ -166,5 +166,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await currentUser.save();
 
-  createSendToken(currentUser, 200, res);
+  createSendToken(currentUser, 200, res, req);
 });
