@@ -210,18 +210,18 @@ class Posts extends Component {
                     onResetEditSuccess={this.props.onResetEditSuccess}
                     newPostUrl={this.props.newPostUrl}
                   />
-                  <FormControl
-                    size="lg"
-                    className="mt-3 mb-3"
-                    style={{ width: '60%' }}
-                    placeholder="search a post"
-                    value={this.state.searchBy}
-                    onChange={(e) =>
-                      this.setState({ searchBy: e.target.value, filter: {} })
-                    }
-                  />
                 </>
               )}
+              <FormControl
+                size="lg"
+                className="mt-3 mb-3"
+                style={{ width: '60%' }}
+                placeholder="search a post"
+                value={this.state.searchBy}
+                onChange={(e) =>
+                  this.setState({ searchBy: e.target.value, filter: {} })
+                }
+              />
             </Col>
             {sortButtons}
           </Row>

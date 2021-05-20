@@ -16,12 +16,12 @@ const checkAuth = (Wrapped) => {
         },
         async (error) => {
           switch (error.response.status) {
-            case 401:
-              alert.error(error.response.data.message);
-              if (props.user) {
-                await props.onLogout();
-              }
-              break;
+            // case 401:
+            //   alert.error(error.response.data.message);
+            //   if (props.user) {
+            //     await props.onLogout();
+            //   }
+            //   break;
             case 429:
               alert.error(error.response.data.message);
               break;
