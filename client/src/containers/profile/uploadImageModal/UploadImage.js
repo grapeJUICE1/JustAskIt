@@ -42,7 +42,7 @@ class UploadImage extends Component {
       return;
     }
     let reader = new FileReader();
-    let url = reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
 
     reader.onloadend = function (e) {
       this.setState({

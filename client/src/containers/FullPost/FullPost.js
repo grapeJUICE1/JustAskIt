@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import Question from './Question/Question';
@@ -8,7 +8,6 @@ import Answers from './Answers/Answers';
 import * as actions from '../../store/actions/index';
 import Loader from '../../components/UI/Loader/Loader';
 import checkAuth from '../../hoc/checkAuth';
-import SubmitPostAnswer from '../../components/SubmitModals/SubmitPostAnswer/SubmitPostAnswer';
 
 class FullPost extends Component {
   state = {

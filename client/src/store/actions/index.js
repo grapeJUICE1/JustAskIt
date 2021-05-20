@@ -2,7 +2,6 @@ export { fetchPosts } from './posts';
 export {
   fetchFullPost,
   LikeDislikePost,
-  checkUsersLikeDislikePost,
   submitPost,
   resetEditSuccess,
   deletePost,

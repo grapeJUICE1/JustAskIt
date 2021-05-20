@@ -14,9 +14,15 @@ export const getUserDataFail = (err) => {
     err,
   };
 };
+export const getUserDataStart = () => {
+  return {
+    type: actionTypes.GET_USER_DATA_START,
+  };
+};
 
 export const getUserData = (userID) => {
   return async (dispatch) => {
+    dispatch(getUserDataStart());
     try {
       const res = await axios.get(`/users/${userID}`);
 

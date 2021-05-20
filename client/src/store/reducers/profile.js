@@ -9,7 +9,7 @@ const initialState = {
   modalLoading: false,
   editSuccessful: false,
 };
-const getUserDataHandler = (state, action) => {
+const getUserDataHandlerStart = (state, action) => {
   return updateObj(state, { error: null, loading: true });
 };
 const getUserDataFailHandler = (state, action) => {
@@ -74,8 +74,8 @@ const uploadPhotoSuccessHandler = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_USER_DATA:
-      return getUserDataHandler(state, action);
+    case actionTypes.GET_USER_DATA_START:
+      return getUserDataHandlerStart(state, action);
     case actionTypes.GET_USER_DATA_SUCCESS:
       return getUserDataSuccessHandler(state, action);
     case actionTypes.GET_USER_DATA_FAIL:

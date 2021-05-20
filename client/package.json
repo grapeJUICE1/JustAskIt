@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "proxy": "http://localhost:7000/api/v1",
+  "proxy": "https://just-ask-it.herokuapp.com/api/v1/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

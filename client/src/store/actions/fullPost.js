@@ -2,7 +2,6 @@ import axios from '../../axios-main';
 import * as actionTypes from './actionTypes';
 //importing axios because main instance has an error handling interceptor
 //when i get user reactions , i dont want to trigger that
-import axiosGetLikesDislikes from 'axios';
 
 export const fetchFullPostStart = () => {
   return {
@@ -69,19 +68,6 @@ export const LikeDislikePost = (postId, likeordislike = 'like') => {
         dispatch(LikeDislikePostFail(err.response.data));
       // else if (err.response.data) dispatch(fetchAnswersFail(err.response.data));
       else dispatch(LikeDislikePostFail(err));
-    }
-  };
-};
-
-export const checkUsersLikeDislikePost = (postId) => {
-  return async (dispatch) => {
-    try {
-      const res = await axiosGetLikesDislikes.get(
-        `/posts/${postId}/get-all-reactions-of-user`,
-        { withCredentials: true }
-      );
-    } catch (err) {
-      console.log(err);
     }
   };
 };

@@ -9,12 +9,12 @@ import * as actions from '../../../store/actions/index';
 
 function NavigationItems(props) {
   const alert = useAlert();
-  const [redirect, setRedirect] = useState('');
+  const [redirect, setRedirect] = useState(null);
 
   // useEffect(() => {}, [redirect]);
   return (
     <>
-      {/* <Redirect to={redirect} /> */}
+      {redirect ? <Redirect to={redirect} /> : ''}
       <Nav className="ml-auto  flex-nowrap">
         {props.user ? (
           <>

@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
-import styles from './Login.module.scss';
-import classnames from 'classnames';
+
 import { connect } from 'react-redux';
 
 import loginSignupBox from '../../../components/auth/loginSignupBox';

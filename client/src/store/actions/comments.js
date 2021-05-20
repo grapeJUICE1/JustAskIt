@@ -34,7 +34,6 @@ export const fetchComments = (docId, forDoc) => {
       dispatch(fetchCommentsSuccess(res.data.data.docs, forDoc, docId));
     } catch (err) {
       console.log(err);
-      // dispatch(checkUsersLikeDislikeAnswerFail());
     }
   };
 };
@@ -64,7 +63,6 @@ export const likeDislikeComments = (docId, forDoc, likeordislike = 'like') => {
       dispatch(likeDislikeCommentsSuccess(res.data.data.doc, forDoc, docId));
     } catch (err) {
       console.log(err);
-      // dispatch(checkUsersLikeDislikeAnswerFail());
     }
   };
 };

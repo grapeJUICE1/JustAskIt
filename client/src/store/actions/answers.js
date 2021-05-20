@@ -60,7 +60,6 @@ export const LikeDislikeAnswer = (postId, likeordislike = 'like') => {
     try {
       const res = await axios.post(`/answers/${postId}/${likeordislike}`);
       dispatch(LikeDislikeAnswerSuccess(res.data.data.doc));
-      // dispatch(checkUsersLikeDislikeAnswer(postId));
     } catch (err) {
       console.log(err);
       if (err.response) {
