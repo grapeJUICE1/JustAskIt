@@ -9,6 +9,17 @@ const checkAuth = (Wrapped) => {
   function CheckAuth(props) {
     const alert = useAlert();
     useEffect(() => {
+      const reqInt = axios.interceptors.request.use(
+        (request) => {
+          const token = localStorage.getItem('jwt');
+          request.authorization = token ? `Bearer ${token}` : '';
+          return request;
+        },
+        (error) => {
+          console.log(error);
+          return Promise.reject(error);
+        }
+      );
       const resInt = axios.interceptors.response.use(
         (response) => {
           // Do something with response data
@@ -36,6 +47,7 @@ const checkAuth = (Wrapped) => {
 
       return function cleanup() {
         axios.interceptors.response.eject(resInt);
+        axios.interceptors.request.eject(reqInt);
       };
     });
 

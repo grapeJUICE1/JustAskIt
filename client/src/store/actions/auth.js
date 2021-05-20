@@ -28,7 +28,7 @@ export const login = (data) => {
     dispatch(loginStart());
     try {
       const res = await axios.post(`/users/login`, data);
-      console.log(res);
+      localStorage.setItem('jwt', res.data.token);
       dispatch(loginSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
@@ -63,7 +63,7 @@ export const signup = (data) => {
     dispatch(signUpStart());
     try {
       const res = await axios.post(`/users/sign-up`, data);
-
+      localStorage.setItem('jwt', res.data.token);
       dispatch(signUpSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
@@ -90,6 +90,7 @@ export const logout = () => {
   return async (dispatch) => {
     try {
       await axios.post(`/users/logout`);
+      localStorage.setItem('jwt', '');
       dispatch(logoutSuccess());
     } catch (err) {
       console.log(err);
