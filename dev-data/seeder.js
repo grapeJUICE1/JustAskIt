@@ -14,18 +14,9 @@ const Comment = require('../models/commentModel');
 const LikeDislike = require('../models/likeDislikeModel');
 
 dotenv.config({ path: '../config.env' });
-let databaseURI = '';
-console.log(process.env.NODE_ENV);
-if (process.env.NODE_ENV === 'development')
-  databaseURI = process.env.DATABASE_LOCAL;
-else if (process.env.NODE_ENV === 'production')
-  databaseURI = process.env.DATABASE_PROD;
-else {
-  databaseURI = process.env.DATABASE_PROD;
-}
 
 mongoose
-  .connect(databaseURI, {
+  .connect(process.env.DATABASE_PROD, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
