@@ -33,18 +33,20 @@ if (process.env.NODE_ENV === 'development') {
 //middlewares related to secuirity
 app.use(helmet());
 
-// const limiter = rateLimit({
-//   max: 300,
-//   windowMs: 5 * 60 * 1000,
-//   message: { message: 'To many requests from this IP | try again in an hour' },
-// });
-
-// app.use('/api', limiter);
-
 //initializing body parser and more secuirity middlewares
 app.use(express.json({ limit: '20kb' }));
 app.use(cookieParser());
 app.use(mongoSanitize());
+
+app.use(function (req, res, next) {
+  res.header('Content-Type', 'application/json;charset=UTF-8');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
 
 //middlewares for routes in api
 app.use('/api/v1/posts', postRouter);
