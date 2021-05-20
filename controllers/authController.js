@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
 const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, 'process.env.JWT_SECRET', {
     expiresIn: '3d',
   });
 };
@@ -88,7 +88,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const decodedToken = await promisify(jwt.verify)(
     token,
-    process.env.JWT_SECRET
+    'process.env.JWT_SECRET'
   );
   const currentUser = await User.findById(decodedToken.id);
   if (!currentUser) {
