@@ -21,6 +21,7 @@ const createSendToken = (user, statusCode, res) => {
 
   return res.status(statusCode).json({
     status: 'success',
+    ll: new Date(Date.now() + 50 * 24 * 60 * 60 * 1000),
     token,
     data: {
       user,
