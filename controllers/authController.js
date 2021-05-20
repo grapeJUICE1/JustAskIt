@@ -16,8 +16,9 @@ const createSendToken = (user, statusCode, res, req) => {
     expires: new Date(Date.now() + 50 * 24 * 60 * 60 * 1000),
     httpOnly: true,
     sameSite: 'None',
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   });
-  // res.set('SameSite', 'None');
+  res.set('SameSite', 'None');
   user.password = undefined;
 
   return res.status(statusCode).json({
