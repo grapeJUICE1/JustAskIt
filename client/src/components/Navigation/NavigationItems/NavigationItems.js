@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Nav, Button } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 import { withRouter, Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import { useAlert } from 'react-alert';
@@ -13,38 +13,40 @@ function NavigationItems(props) {
 
   // useEffect(() => {}, [redirect]);
   return (
-    <Nav className="ml-auto  flex-nowrap">
-      {props.user ? (
-        <>
-          <Nav.Link
-            onClick={(e) => props.history.push(`/profile/${props.user._id}`)}
-          >
-            Profile
-          </Nav.Link>
-          <Nav.Link
-            onClick={() => {
-              props.onLogout();
-              alert.info('logging out');
-              setTimeout(() => {
-                setRedirect(<Redirect to="/login" />);
-              }, 1000);
-            }}
-          >
-            Logout
-          </Nav.Link>
-        </>
-      ) : (
-        <>
-          <Nav.Link onClick={(e) => props.history.push('/login')}>
-            Login
-          </Nav.Link>
-          <Nav.Link onClick={(e) => props.history.push('/signup')}>
-            Signup
-          </Nav.Link>
-          {redirect}
-        </>
-      )}
-    </Nav>
+    <>
+      {/* <Redirect to={redirect} /> */}
+      <Nav className="ml-auto  flex-nowrap">
+        {props.user ? (
+          <>
+            <Nav.Link
+              onClick={(e) => props.history.push(`/profile/${props.user._id}`)}
+            >
+              Profile
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                props.onLogout();
+                alert.info('logging out');
+                setTimeout(() => {
+                  setRedirect('/login');
+                }, 1000);
+              }}
+            >
+              Logout
+            </Nav.Link>
+          </>
+        ) : (
+          <>
+            <Nav.Link onClick={(e) => props.history.push('/login')}>
+              Login
+            </Nav.Link>
+            <Nav.Link onClick={(e) => props.history.push('/signup')}>
+              Signup
+            </Nav.Link>
+          </>
+        )}
+      </Nav>
+    </>
   );
 }
 

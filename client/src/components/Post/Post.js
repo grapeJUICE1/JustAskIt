@@ -60,7 +60,7 @@ const Post = (props) => {
           <div
             key={tag}
             onClick={(e) => props.onFilterTag(tag)}
-            className={styles.tag + ' px-1 py-1 mr-1 mb-1'}
+            className="tag px-1 py-1 mr-1 mb-1"
             role="button"
           >
             {tag}

@@ -1,61 +1,96 @@
 import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
-import { Container } from 'react-bootstrap';
-import { timeSince } from '../../../shared/utils/formatDate';
+import React from 'react';
+import { Container, Button } from 'react-bootstrap';
+import { Image } from 'cloudinary-react';
+import { formatDate, timeSince } from '../../../shared/utils/formatDate';
 import styles from './Question.module.scss';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
 
 import * as actions from '../../../store/actions/index';
-import Comments from '../Comments/Comments';
+import { Link, withRouter } from 'react-router-dom';
 const Question = (props) => {
-  const getUsersFormerReactionsOnThisPost = async () => {
-    if (!props.post.id) return;
-    await props.onCheckUserDidLikeDislike(props.post.id);
-  };
-
-  useEffect(() => {
-    getUsersFormerReactionsOnThisPost();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.post.id]);
-
   return (
-    <Container
-      className={'d-flex flex-column justify-content-between flex-wrap '}
-    >
-      <h2 className={styles.Question}>
-        <strong> {props.post.title} </strong>
-      </h2>
+    <>
+      {props.post ? (
+        <Container
+          className={'d-flex flex-column justify-content-between flex-wrap '}
+        >
+          <h2 className={styles.Question}>
+            <strong> {props.post.title} </strong>
+          </h2>
+          <br />
+          <h6>
+            Asked <strong>{timeSince(props.post.createdAt)} ago</strong>
+            &nbsp; &nbsp; &nbsp; Viewed{' '}
+            <strong>{props.post.views} times</strong>
+          </h6>
+          <hr />
+          <div style={{ display: 'flex' }}>
+            <LikeDislikeButtons
+              userDidLike={props.post.userDidLike}
+              userDidDislike={props.post.userDidDislike}
+              onLikeDislikePost={props.onLikeDislikePost}
+              post={props.post}
+            />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `${props.post.content}`,
+              }}
+            ></div>
+          </div>
+          <div className="pt-5">
+            {props.post.tags?.map((tag) => (
+              <div
+                key={tag}
+                onClick={(e) =>
+                  props.history.push(`/posts?tag=${encodeURIComponent(tag)}`)
+                }
+                className="tag px-1 py-1 mr-1 mb-1"
+                role="button"
+              >
+                {tag}
+              </div>
+            ))}
+          </div>
+          <br />
+          <span className="ml-auto">
+            <p
+              style={{
+                fontWeight: 'bold',
+                color: 'rgb(59, 59, 85)',
+                fontSize: '0.8rem',
+              }}
+            >
+              asked {formatDate(props.post.createdAt)}
+            </p>
+            <Image
+              cloudName="grapecluster"
+              publicId={props.post.postedBy?.photo}
+              width="30"
+              height="30"
+              className="rounded-circle"
+              crop="scale"
+            />
+            <Button className="mr-0 mt-0 pt-0 ml-auto" variant="link" size="sm">
+              <Link to={`/profile/${props.post.postedBy?._id}`}>
+                {props.post.postedBy?.name}
+              </Link>
+            </Button>
+          </span>
+        </Container>
+      ) : (
+        ''
+      )}
       <br />
-      <h6>
-        Asked <strong>{timeSince(props.post.createdAt)} ago</strong>
-        &nbsp; &nbsp; &nbsp; Viewed <strong>{props.post.views} times</strong>
-      </h6>
-      <hr />
-
-      <LikeDislikeButtons
-        userDidLike={props.userDidLike}
-        userDidDislike={props.userDidDislike}
-        onLikeDislikePost={props.onLikeDislikePost}
-        post={props.post}
-        getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
-      />
-      <br />
-      <p className={`ml-5 ${styles.post_content}`}>{props.post.content}</p>
-
-      <Comments
-        id={props.post._id}
-        forDoc="post"
-        comments={props.comments}
-        fetchComments={props.onFetchComments}
-      />
-    </Container>
+      <div></div>
+    </>
   );
 };
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
     userDidLike: state.fullPost.userDidLike,
-    comments: state.fullPost.comments,
     userDidDislike: state.fullPost.userDidDislike,
   };
 };
@@ -64,10 +99,32 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onLikeDislikePost: (id, likeordislike) =>
       dispatch(actions.LikeDislikePost(id, likeordislike)),
-    onCheckUserDidLikeDislike: (id) =>
-      dispatch(actions.checkUsersLikeDislikePost(id)),
     onFetchComments: (id, forDoc) =>
       dispatch(actions.fetchComments(id, forDoc)),
+    onResetEditSuccess: () => dispatch(actions.resetEditSuccess()),
+    onSubmitPost: (
+      title,
+      content,
+      userId,
+      tags,
+      contentWordCount,
+      type,
+      postId
+    ) =>
+      dispatch(
+        actions.submitPost(
+          title,
+          content,
+          userId,
+          tags,
+          contentWordCount,
+          type,
+          postId
+        )
+      ),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Question);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Question));

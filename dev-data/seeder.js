@@ -14,9 +14,18 @@ const Comment = require('../models/commentModel');
 const LikeDislike = require('../models/likeDislikeModel');
 
 dotenv.config({ path: '../config.env' });
+let databaseURI = '';
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development')
+  databaseURI = process.env.DATABASE_LOCAL;
+else if (process.env.NODE_ENV === 'production')
+  databaseURI = process.env.DATABASE_PROD;
+else {
+  databaseURI = process.env.DATABASE_PROD;
+}
 
 mongoose
-  .connect('mongodb://localhost:27017/grape_forum', {
+  .connect(databaseURI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -142,7 +151,7 @@ const importData = async () => {
         email: faker.internet.email(),
         password: 'test1234',
         passwordConfirm: 'test1234',
-        bio: faker.lorem.sentences(4),
+        bio: faker.lorem.sentences(3),
         location: `${faker.address.city()}, ${faker.address.country()}`,
         workStatus: faker.name.jobTitle(),
         company: faker.company.companyName(),
@@ -157,9 +166,11 @@ const importData = async () => {
     }
     const users = await User.find({});
     for (let i = 0; i < 60; i++) {
+      let content = faker.lorem.paragraph(5);
       const p = await Post.create({
         title: faker.lorem.sentence(),
-        content: faker.lorem.paragraph(5),
+        content: content,
+        contentWordCount: content.length,
         postedBy: users[Math.floor(Math.random() * users.length)].id,
         tags: genTag(),
       });
@@ -169,8 +180,10 @@ const importData = async () => {
 
     for (let i = 0; i < 40; i++) {
       const post = posts[Math.floor(Math.random() * posts.length)];
+      let content = faker.lorem.paragraph(5);
       const answer = await Answer.create({
-        content: faker.lorem.paragraph(5),
+        content,
+        contentWordCount: content.length,
         postedBy: users[Math.floor(Math.random() * users.length)].id,
         post: post.id,
       });

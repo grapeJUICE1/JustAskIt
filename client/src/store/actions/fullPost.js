@@ -29,7 +29,6 @@ export const fetchFullPost = (postId) => {
       const res = await axios.get(`/posts/${postId}`);
 
       dispatch(fetchFullPostSuccess(res.data.data.doc));
-      dispatch(checkUsersLikeDislikePost(res.data.data.doc._id));
     } catch (err) {
       console.log(err);
       if (err.response.data.message)
@@ -64,7 +63,6 @@ export const LikeDislikePost = (postId, likeordislike = 'like') => {
     try {
       const res = await axios.post(`/posts/${postId}/${likeordislike}`);
       dispatch(LikeDislikePostSuccess(res.data.data.doc));
-      dispatch(checkUsersLikeDislikePost(postId));
     } catch (err) {
       console.log(err);
       if (err.response.data.message)
@@ -75,17 +73,6 @@ export const LikeDislikePost = (postId, likeordislike = 'like') => {
   };
 };
 
-export const checkUsersLikeDislikePostSuccess = (response) => {
-  return {
-    type: actionTypes.CHECK_USER_LIKE_DISLIKE_POST,
-    response,
-  };
-};
-export const checkUsersLikeDislikePostFail = () => {
-  return {
-    type: actionTypes.CHECK_USER_LIKE_DISLIKE_POST_FAIL,
-  };
-};
 export const checkUsersLikeDislikePost = (postId) => {
   return async (dispatch) => {
     try {
@@ -93,10 +80,111 @@ export const checkUsersLikeDislikePost = (postId) => {
         `/posts/${postId}/get-all-reactions-of-user`,
         { withCredentials: true }
       );
-      dispatch(checkUsersLikeDislikePostSuccess(res.data.data));
     } catch (err) {
       console.log(err);
-      dispatch(checkUsersLikeDislikePostFail());
+    }
+  };
+};
+
+export const submitPostStart = (resetAfterEdit = false) => {
+  return {
+    type: actionTypes.SUBMIT_POST_START,
+    resetAfterEdit,
+  };
+};
+export const submitPostFail = (error) => {
+  return {
+    type: actionTypes.SUBMIT_POST_FAIL,
+    error,
+  };
+};
+export const submitPostSuccess = (post, submittedPostType) => {
+  return {
+    type: actionTypes.SUBMIT_POST_SUCCESS,
+    post,
+    submittedPostType,
+  };
+};
+
+export const resetEditSuccess = () => {
+  return (dispatch) => {
+    dispatch(submitPostStart(true));
+  };
+};
+export const submitPost = (
+  title,
+  content,
+  userId,
+  tags,
+  contentWordCount,
+  type = undefined,
+  postId = undefined,
+  forDoc = undefined
+) => {
+  return async (dispatch) => {
+    console.log(forDoc);
+    dispatch(submitPostStart());
+    try {
+      let data = {
+        title,
+        content,
+        userId,
+        tags,
+        contentWordCount,
+        for: forDoc,
+      };
+      console.log(data);
+      let res;
+      if (type === 'edit') {
+        res = await axios.patch(`/posts/${postId}`, data);
+      } else if (type === 'answer') {
+        res = await axios.post(`/answers/${postId}/create-answer`, data);
+      } else if (type === 'answer-edit') {
+        res = await axios.patch(`/answers/${postId}`, data);
+      } else if (type === 'comment') {
+        res = await axios.post(`/comments/${postId}/create-comment`, data);
+      } else if (type === 'comment-edit') {
+        res = await axios.patch(`/comments/${postId}`, data);
+      } else {
+        res = await axios.post(`/posts/create-post`, data);
+      }
+      console.log(res);
+      dispatch(submitPostSuccess(res?.data?.data?.doc, type));
+    } catch (err) {
+      console.log(err);
+      if (err.response.data.message)
+        dispatch(submitPostFail(err?.response?.data?.message));
+    }
+  };
+};
+
+export const deletePostStart = () => {
+  return {
+    type: actionTypes.DELETE_POST_START,
+  };
+};
+export const deletePostFail = (error) => {
+  return {
+    type: actionTypes.DELETE_POST_FAIL,
+    error,
+  };
+};
+export const deletePostSuccess = (submittedPostType) => {
+  return {
+    type: actionTypes.DELETE_POST_SUCCESS,
+    submittedPostType,
+  };
+};
+
+export const deletePost = (type, postId) => {
+  return async (dispatch) => {
+    dispatch(deletePostStart());
+    try {
+      let link = `/${type}s/${postId}`;
+      await axios.delete(link);
+      dispatch(deletePostSuccess(type));
+    } catch (err) {
+      dispatch(deletePostFail(err));
     }
   };
 };

@@ -12,11 +12,18 @@ const answerSchema = mongoose.Schema({
     type: String,
     required: [true, 'Please provide the content of your answer'],
   },
+  contentWordCount: {
+    type: Number,
+    required: [true, 'Please provide content count for your answer'],
+    min: [25, 'your answer should have atleast 25 words'],
+  },
   likeCount: { type: Number, default: 0 },
   dislikeCount: { type: Number, default: 0 },
   voteCount: { type: Number, default: 0 },
   createdAt: Date,
   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
+  userDidLike: { type: Boolean, default: false },
+  userDidDislike: { type: Boolean, default: false },
 });
 
 answerSchema.pre('save', async function (next) {

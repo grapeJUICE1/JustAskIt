@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 const Tag = require('./tagModel');
 
+const TagValidation = require('../utils/tagValidation');
+const tagValidation = require('../utils/tagValidation');
+
 //initializing post schema
 const postSchema = mongoose.Schema(
   {
@@ -24,12 +27,18 @@ const postSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please provide the content of your post'],
     },
-
+    contentWordCount: {
+      type: Number,
+      required: [true, 'Please provide content count for your post'],
+      min: [25, 'your post should have atleast 25 words'],
+    },
     likeCount: { type: Number, default: 0 },
     dislikeCount: { type: Number, default: 0 },
     voteCount: { type: Number, default: 0 },
     answerCount: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
+    userDidLike: { type: Boolean, default: false },
+    userDidDislike: { type: Boolean, default: false },
     createdAt: Date,
     postedBy: {
       type: mongoose.Schema.ObjectId,
@@ -45,9 +54,9 @@ const postSchema = mongoose.Schema(
       ],
       validate: [
         (val) => {
-          return val.length <= 5;
+          return val.length <= 5 && val.length > 0;
         },
-        "You can't have more than 5 tags",
+        "You need to have atleast 1 tag and can't have more than 5 tags",
       ],
     },
   },
@@ -64,29 +73,7 @@ postSchema.virtual('answers', {
 });
 
 postSchema.pre('save', async function (next) {
-  //checks if tags accosiated with the post exist in the database
-  //if it doesn't exists , save the tag and continue
-  //if it does , don't save the tag and continue
-  // console.log(
-  //   await this.model('Post').collection.dropIndex({ tags_1: [['tags', 1]] })
-  // );
-  if (new Set(this.tags).size !== this.tags.length) {
-    console.log(this.tags.length, new Set(this.tags).size, this.tags);
-    let validationError = new mongoose.Error.ValidationError(null);
-    validationError.addError(
-      'tags',
-      new mongoose.Error.ValidatorError({
-        message: 'You cant add the same tag twice',
-      })
-    );
-    return next(validationError);
-  }
-  for (const tag of this.tags) {
-    if (!(await Tag.findOne({ name: tag }))) {
-      Tag.create({ name: tag });
-    }
-  }
-
+  tagValidation(this.tags, next, Post);
   //populating the slug  as the title of the post
   this.slug = slugify(this.title, { lower: true });
   //populating createdAt as the current date if the created post is new
@@ -95,10 +82,22 @@ postSchema.pre('save', async function (next) {
   next();
 });
 
+postSchema.pre('findOneAndDelete', async function (next) {
+  let postToBeDeleted = await this.model.findOne(this.getQuery());
+  for (const tag of postToBeDeleted?.tags) {
+    let tagDocument = await Tag.findOne({ name: tag });
+    tagDocument.postCount -= 1;
+    tagDocument.save();
+  }
+  return;
+  next();
+});
+
 postSchema.pre(/^find/, async function (next) {
   //populating postedBy
   this.populate({ path: 'postedBy', select: '-__v -passwordChangedAt' });
-  // console.log(await this.model.find({}));
+  // console.log(this)
+  // console.log(await this.model.find(this.getQuery()));
   next();
 });
 

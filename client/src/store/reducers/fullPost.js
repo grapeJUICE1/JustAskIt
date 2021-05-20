@@ -3,13 +3,18 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   post: {},
-  comments: [],
   error: null,
-  commentError: null,
-  loadingComments: null,
   loading: false,
   userDidLike: false,
   userDidDislike: false,
+  submitError: null,
+  submitLoading: false,
+  submitSuccessful: false,
+  deleteError: null,
+  deleteLoading: false,
+  deleteSuccessful: false,
+  editSuccessful: false,
+  newPostUrl: null,
 };
 
 const fetchFullPostStartHandler = (state, action) => {
@@ -39,49 +44,77 @@ const likePostFailHandler = (state, action) => {
   return updateObj(state, { error: action.error, loading: false });
 };
 
-const checkUsersLikeDislikePost = (state, action) => {
-  let userDidLike = state.userDidLike;
-  let userDidDislike = state.userDidDislike;
-
-  if (action.response.doc) {
-    if (action.response.doc.type === 'like') {
-      userDidLike = true;
-      userDidDislike = false;
-    } else if (action.response.doc.type === 'dislike') {
-      userDidDislike = true;
-      userDidLike = false;
-    }
-  } else {
-    userDidLike = false;
-    userDidDislike = false;
-  }
+const submitPostsStartHandler = (state, action) => {
   return updateObj(state, {
-    userDidLike: userDidLike,
-    userDidDislike: userDidDislike,
+    submitLoading: action.resetAfterEdit ? false : true,
+    submitSuccessful: false,
+    editSuccessful: false,
+    newPostUrl: null,
+    submitError: null,
+    deleteError: null,
+    deleteLoading: false,
+    deleteSuccessful: false,
   });
 };
-const checkUsersLikeDislikePostFail = (state, action) => {
+const submitPostsSuccessHandler = (state, action) => {
+  console.log(action.submittedPostType);
   return updateObj(state, {
-    userDidLike: false,
-    userDidDislike: false,
+    submitError: null,
+    submitLoading: false,
+    post:
+      action.submittedPostType === 'answer' ||
+      action.submittedPostType === 'answer-edit' ||
+      action.submittedPostType === 'comment' ||
+      action.submittedPostType === 'comment-edit'
+        ? { ...state.post }
+        : action.post,
+    newPostUrl:
+      action.submittedPostType === 'post'
+        ? null
+        : `/posts/post/${action.post._id}/${action.post.slug}`,
+    editSuccessful:
+      action.submittedPostType === 'edit' ||
+      action.submittedPostType === 'answer-edit' ||
+      action.submittedPostType === 'comment-edit'
+        ? true
+        : false,
+    submitSuccessful:
+      action.submittedPostType === 'answer' ||
+      action.submittedPostType === 'comment'
+        ? true
+        : false,
   });
 };
-const fetchCommentsStart = (state, action) => {
+const submitPostsFailHandler = (state, action) => {
   return updateObj(state, {
-    loadingComments: true,
-    commentError: null,
+    submitError: action.error,
+    submitLoading: false,
+    newPostUrl: null,
+    editSuccessful: false,
   });
 };
-const fetchCommentsFail = (state, action) => {
+const deletePostsStartHandler = (state, action) => {
   return updateObj(state, {
-    commentError: action.error,
-    loadingComments: false,
+    deleteError: null,
+    deleteLoading: true,
+    deleteSuccessful: false,
+    post: { ...state.post },
   });
 };
-const fetchCommentsSuccess = (state, action) => {
+const deletePostsSuccessHandler = (state, action) => {
+  console.log(action.submittedPostType);
   return updateObj(state, {
-    comments: action.comments,
-    loadingComments: false,
+    deleteError: null,
+    deleteLoading: false,
+    deleteSuccessful: action.submittedPostType,
+    post: action.submittedPostType === 'post' ? state.post : { ...state.post },
+  });
+};
+const deletePostsFailHandler = (state, action) => {
+  return updateObj(state, {
+    deleteError: action.error,
+    deleteLoading: false,
+    deleteSuccessful: false,
   });
 };
 
@@ -99,16 +132,25 @@ const reducer = (state = initialState, action) => {
       return likePostSuccessHandler(state, action);
     case actionTypes.LIKE_DISLIKE_POST_FAIL:
       return likePostFailHandler(state, action);
-    case actionTypes.CHECK_USER_LIKE_DISLIKE_POST:
-      return checkUsersLikeDislikePost(state, action);
-    case actionTypes.CHECK_USER_LIKE_DISLIKE_POST_FAIL:
-      return checkUsersLikeDislikePostFail(state, action);
-    case actionTypes.FETCH_POST_COMMENTS_START:
-      return fetchCommentsStart(state, action);
-    case actionTypes.FETCH_POST_COMMENTS_FAIL:
-      return fetchCommentsFail(state, action);
-    case actionTypes.FETCH_POST_COMMENTS_SUCCESS:
-      return fetchCommentsSuccess(state, action);
+
+    case actionTypes.SUBMIT_POST_START:
+      return submitPostsStartHandler(state, action);
+    case actionTypes.SUBMIT_POST_SUCCESS:
+      return submitPostsSuccessHandler(state, action);
+    case actionTypes.SUBMIT_POST_FAIL:
+      return submitPostsFailHandler(state, action);
+    case actionTypes.DELETE_POST_START:
+      return deletePostsStartHandler(state, action);
+    case actionTypes.DELETE_POST_SUCCESS:
+      return deletePostsSuccessHandler(state, action);
+    case actionTypes.DELETE_POST_FAIL:
+      return deletePostsFailHandler(state, action);
+    // case actionTypes.FETCH_POST_COMMENTS_START:
+    //   return fetchCommentsStart(state, action);
+    // case actionTypes.FETCH_POST_COMMENTS_FAIL:
+    //   return fetchCommentsFail(state, action);
+    // case actionTypes.FETCH_POST_COMMENTS_SUCCESS:
+    //   return fetchCommentsSuccess(state, action);
     default:
       return state;
   }

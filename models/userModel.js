@@ -76,22 +76,27 @@ const userSchema = mongoose.Schema({
   links: {
     github: {
       type: String,
+      default: '',
       validate: URLvalidator,
     },
     website: {
       type: String,
+      default: '',
       validate: URLvalidator,
     },
     instagram: {
       type: String,
+      default: '',
       validate: URLvalidator,
     },
     facebook: {
       type: String,
+      default: '',
       validate: URLvalidator,
     },
     twitter: {
       type: String,
+      default: '',
       validate: URLvalidator,
     },
   },

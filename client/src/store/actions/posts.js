@@ -26,7 +26,8 @@ export const fetchPosts = (
   filter,
   currentPage,
   perPagePosts,
-  userId
+  userId,
+  searchBy
 ) => {
   return async (dispatch) => {
     dispatch(fetchPostsStart());
@@ -41,6 +42,7 @@ export const fetchPosts = (
           sort: sortBy,
           limit: perPagePosts,
           page: currentPage,
+          search: searchBy,
           ...filter,
         },
       });

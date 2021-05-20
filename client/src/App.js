@@ -10,7 +10,8 @@ import Login from './containers/Auth/Login/Login';
 import Signup from './containers/Auth/signup/signup';
 import Profile from './containers/profile/profile';
 import Users from './containers/Users/Users';
-import Editor from './components/Editor/Editor';
+
+import TagsPage from './containers/TagsPage/TagsPage';
 import { connect } from 'react-redux';
 import * as actions from './store/actions/index';
 
@@ -22,16 +23,17 @@ function App(props) {
   return (
     <Layout>
       <Switch>
-        <Route path="/posts" exact component={Posts} />
-        <Route path="/ed" exact component={Editor} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/signup" exact component={Signup} />
-        <Route path="/profile/:userID" exact component={Profile} />
-        <Route path="/users" exact component={Users} />
-        <Route path="/posts/post/:id/:slug?" component={FullPost} />
         <Route path="/" exact>
           <Redirect to="/posts" />
         </Route>
+
+        <Route path="/posts" exact component={Posts} />
+        <Route path="/posts/post/:id/:slug?" component={FullPost} />
+        <Route path="/tags" component={TagsPage} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/profile/:userID" component={Profile} />
+        <Route path="/users" component={Users} />
       </Switch>
     </Layout>
   );

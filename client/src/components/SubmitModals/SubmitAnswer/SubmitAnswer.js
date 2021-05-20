@@ -11,6 +11,7 @@ import Loader from '../../UI/Loader/Loader';
 import { Redirect } from 'react-router';
 
 function SubmitPostAnswer(props) {
+  const [show, setShow] = useState(false);
   const [redirect, setRedirect] = useState(null);
   const [content, setContent] = useState('');
   const [contentWordCount, setContentWordCount] = useState(0);
@@ -28,8 +29,13 @@ function SubmitPostAnswer(props) {
 
   const alert = useAlert();
 
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
   const handleSubmit = async () => {
-    console.log(content, props.type);
     await props.onSubmitPost(
       title,
       DOMPurify.sanitize(content),
@@ -41,23 +47,21 @@ function SubmitPostAnswer(props) {
     );
   };
   if (props.editSuccessful || props.submitSuccessful) {
-    alert.success(
-      `${
-        props.type === 'answer-edit' || props.type === 'edit'
-          ? 'edited'
-          : 'posted'
-      } Succesfully`
-    );
+    console.log(props.type);
+    alert.success(`${props.type === 'edit' ? 'edited' : 'posted'} Succesfully`);
+    setTimeout(() => {
+      handleClose();
+    }, 100);
     props.onResetEditSuccess();
-    props.handleClose();
   }
   if (props.newPostUrl) {
     alert.success('Post Submitted Succesfully');
     props.onResetEditSuccess();
     setTimeout(() => {
-      props.handleClose();
+      handleClose();
       setRedirect(props.newPostUrl);
     }, 100);
+    // setAlertShown(true);
   }
 
   const addTags = (e) => {
@@ -70,12 +74,38 @@ function SubmitPostAnswer(props) {
     setTags([...tags.filter((_, id) => id !== idToRemove)]);
   };
 
+  let button = (
+    <Button variant="primary" onClick={handleShow}>
+      {'Submit Post'}
+    </Button>
+  );
+  if (props.type === 'edit' || props.type === 'answer-edit') {
+    button = (
+      <Button
+        size="sm"
+        className="ml-3"
+        variant="outline-secondary"
+        onClick={handleShow}
+      >
+        edit
+      </Button>
+    );
+  }
+  if (props.type === 'answer') {
+    button = (
+      <Button variant="outline-dark" size="lg" onClick={handleShow}>
+        Submit Answer
+      </Button>
+    );
+  }
   return (
     <>
       {redirect ? <Redirect to={redirect} /> : ''}
+      {button}
+      {console.log('koibar')}
       <Modal
-        show={props.show}
-        onHide={props.handleClose}
+        show={show}
+        onHide={handleClose}
         dialogClassName="submitModal"
         size="xl"
       >
@@ -86,9 +116,7 @@ function SubmitPostAnswer(props) {
                 ? 'Edit post'
                 : props.type === 'answer-edit'
                 ? 'Edit Answer'
-                : props.type === 'answer'
-                ? 'Submit Answer'
-                : 'Submit post'}
+                : `Submit post`}
             </strong>
           </Modal.Title>
         </Modal.Header>
@@ -131,7 +159,7 @@ function SubmitPostAnswer(props) {
                   setEditorState={setEditorState}
                 />
                 <Form.Text className="text-muted">
-                  your content should be atleast 25 words
+                  your content should be atleast 50 words
                 </Form.Text>
               </Form.Group>
               <br />

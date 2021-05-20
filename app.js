@@ -19,6 +19,7 @@ const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
 const answerRouter = require('./routes/answerRoutes');
 const commentRouter = require('./routes/commentRoutes');
+const tagRouter = require('./routes/tagRoutes');
 
 //initializing express
 const app = express();
@@ -32,25 +33,25 @@ if (process.env.NODE_ENV === 'development') {
 //middlewares related to secuirity
 app.use(helmet());
 
-const limiter = rateLimit({
-  max: 300,
-  windowMs: 15 * 60 * 1000,
-  message: { message: 'To many requests from this IP | try again in an hour' },
-});
+// const limiter = rateLimit({
+//   max: 300,
+//   windowMs: 5 * 60 * 1000,
+//   message: { message: 'To many requests from this IP | try again in an hour' },
+// });
 
-app.use('/api', limiter);
+// app.use('/api', limiter);
 
 //initializing body parser and more secuirity middlewares
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: '20kb' }));
 app.use(cookieParser());
 app.use(mongoSanitize());
-app.use(xss());
 
 //middlewares for routes in api
 app.use('/api/v1/posts', postRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/users', xss(), userRouter);
 app.use('/api/v1/answers', answerRouter);
-app.use('/api/v1/comments', commentRouter);
+app.use('/api/v1/comments', xss(), commentRouter);
+app.use('/api/v1/tags', xss(), tagRouter);
 
 //middleware for handling unknown routes
 app.all('*', (req, res, next) => {

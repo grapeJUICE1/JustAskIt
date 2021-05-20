@@ -6,9 +6,11 @@ import { Link } from 'react-router-dom';
 import { Image } from 'cloudinary-react';
 import ReactPaginate from 'react-paginate';
 import SortButtons from '../../components/SortButtons/SortButtons';
+import checkAuth from '../../hoc/checkAuth';
+import Loader from '../../components/UI/Loader/Loader';
 
 class Users extends Component {
-  PER_PAGE = 15;
+  PER_PAGE = 25;
   state = {
     currentPage: 1,
     total: 0,
@@ -26,6 +28,10 @@ class Users extends Component {
     );
   }
   componentDidUpdate(_, prevState) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     if (
       prevState.sortBy !== this.state.sortBy ||
       prevState.filter !== this.state.filter ||
@@ -66,9 +72,9 @@ class Users extends Component {
           <Row>
             <Col lg={5}>
               <h2 className="mt-4">All Users</h2>
-              <h3 className="ml-auto mr-5 pr-5 mt-4">
+              <h6 className="ml-auto mr-5 pr-5 mt-4">
                 {this.props.totalUsers || 0} users
-              </h3>
+              </h6>
             </Col>
           </Row>
           <Row>
@@ -94,38 +100,42 @@ class Users extends Component {
           </Row>
 
           <br />
-          <Row>
-            {this.props.users ? (
-              this.props.users.map((user, id) => {
-                return (
-                  <Col xl={3} lg={4} xs={12} md={4} sm={6}>
-                    &nbsp;
-                    <Row className="no-gutters">
-                      <Col className="p-0" lg={2}>
-                        <Image
-                          cloudName="grapecluster"
-                          publicId={user.photo}
-                          width="40"
-                          height="40"
-                          className="rounded-circle"
-                          crop="scale"
-                        />
-                      </Col>
-                      <Col className="p-0" lg={7}>
-                        <Link to={`/profile/${user._id}`}>{user.name}</Link>
-                        <br />
-                        <small>{user.location}</small>
-                        <br />
-                        <small>{user.workStatus}</small>
-                      </Col>
-                    </Row>
-                  </Col>
-                );
-              })
-            ) : (
-              <h1>No Users</h1>
-            )}
-          </Row>
+          {!this.props.loading ? (
+            <Row>
+              {this.props.users ? (
+                this.props.users.map((user, id) => {
+                  return (
+                    <Col xl={3} lg={4} xs={12} md={4} sm={6}>
+                      &nbsp;
+                      <Row className="no-gutters">
+                        <Col className="p-0" lg={2}>
+                          <Image
+                            cloudName="grapecluster"
+                            publicId={user.photo}
+                            width="40"
+                            height="40"
+                            className="rounded-circle"
+                            crop="scale"
+                          />
+                        </Col>
+                        <Col className="p-0" lg={7}>
+                          <Link to={`/profile/${user._id}`}>{user.name}</Link>
+                          <br />
+                          <small>{user.location}</small>
+                          <br />
+                          <small>{user.workStatus}</small>
+                        </Col>
+                      </Row>
+                    </Col>
+                  );
+                })
+              ) : (
+                <h1>No Users</h1>
+              )}
+            </Row>
+          ) : (
+            <Loader />
+          )}
           <ReactPaginate
             previousLabel={'<<'}
             nextLabel={'>>'}
@@ -164,4 +174,4 @@ const mapDispatchToProps = (dispatch) => {
       ),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Users);
+export default connect(mapStateToProps, mapDispatchToProps)(checkAuth(Users));

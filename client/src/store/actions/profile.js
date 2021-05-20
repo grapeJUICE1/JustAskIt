@@ -19,10 +19,10 @@ export const getUserData = (userID) => {
   return async (dispatch) => {
     try {
       const res = await axios.get(`/users/${userID}`);
-
+      console.log(res);
       dispatch(getUserDataSuccess(res.data.data.user));
     } catch (err) {
-      dispatch(getUserDataFail(err.message));
+      dispatch(getUserDataFail(err.response.data.message));
     }
   };
 };
@@ -48,11 +48,11 @@ export const editUserData = (data) => {
   return async (dispatch) => {
     dispatch(editUserDataStart());
     try {
+      console.log(data);
       const res = await axios.patch('/users/update-me', data);
       dispatch(editUserDataSuccess(res.data.data.user));
     } catch (err) {
-      console.log(err.response.data.message);
-      dispatch(editUserDataFail(err.response.data));
+      dispatch(editUserDataFail(err.response.data.message));
     }
   };
 };
@@ -82,7 +82,6 @@ export const uploadPhoto = (data) => {
       const res = await axios.patch('/users/upload-photo', data);
       dispatch(uploadPhotoSuccess(res.data.data.user));
     } catch (err) {
-      console.log(err.response.data.message);
       dispatch(uploadPhotoFail(err.response.data.message));
     }
   };

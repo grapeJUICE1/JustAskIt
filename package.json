@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon server.js --ignore client/",
+    "server": "NODE_ENV=production nodemon server.js --ignore client/",
     "client": "cd client/ && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
@@ -28,6 +28,7 @@
     "dotenv": "^8.5.1",
     "draft-convert": "^2.1.11",
     "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
     "express": "^4.17.1",
     "express-mongo-sanitize": "^2.0.2",
     "express-rate-limit": "^5.2.6",

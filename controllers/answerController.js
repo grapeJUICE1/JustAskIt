@@ -6,7 +6,7 @@ exports.createAnswer = handlerFactory.createOne(Answer, [
   'post',
   'content',
   'postedBy',
-  'postOfCreatedAnswer',
+  'contentWordCount',
 ]);
 exports.like = handlerFactory.likeDislike(Answer, [], 'like', 'Answer');
 exports.dislike = handlerFactory.likeDislike(Answer, [], 'dislike', 'Answer');
@@ -19,7 +19,7 @@ exports.getAllAnswer = handlerFactory.getAll(
 exports.getOneAnswer = handlerFactory.getOne(Answer);
 exports.getAnswerOfPost = handlerFactory.getAll(
   Answer,
-  ['postsDoc'],
+  ['postsDoc', 'checkIfUserLikeDisliked'],
   {},
   'Answer'
 );
@@ -32,7 +32,11 @@ exports.getAnswersOfUser = handlerFactory.getAll(
 exports.deleteAnswer = handlerFactory.deleteOne(Answer, [
   'postOfCreatedAnswer',
 ]);
-exports.updateAnswer = handlerFactory.updateOne(Answer, ['content']);
+exports.updateAnswer = handlerFactory.updateOne(Answer, [
+  'content',
+  'contentWordCount',
+]);
+exports.addVarToMiddleware = handlerFactory.addVarToMiddleware('checkIfexist');
 
 exports.deleteAnswersOfPost = catchAsync(async (req, res, next) => {
   await Answer.deleteMany({ post: req.params.id });

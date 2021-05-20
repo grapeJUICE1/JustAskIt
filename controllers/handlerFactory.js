@@ -3,14 +3,15 @@ const AppError = require('../utils/AppError');
 const ApiFeatures = require('../utils/ApiFeatures');
 const filterObj = require('../utils/filterObj');
 const Post = require('../models/postModel');
+const Tag = require('../models/tagModel');
 const LikeDislike = require('../models/likeDislikeModel');
+const tagValidation = require('../utils/tagValidation');
 
 exports.createOne = (Model, allowedFields = []) => {
   return catchAsync(async (req, res, next) => {
-    console.log(allowedFields, allowedFields.includes('postedBy'));
-    if (allowedFields.includes('tags')) {
-      req.body.tags = req.body.tags.trim().split(' ');
-    }
+    console.log(req.body);
+    req.body = filterObj(req.body, allowedFields);
+    console.log(req.body);
     if (allowedFields.includes('post')) {
       req.body.post = req.params.id;
     }
@@ -20,17 +21,10 @@ exports.createOne = (Model, allowedFields = []) => {
     if (allowedFields.includes('postedBy')) {
       req.body.postedBy = req.user.id;
     }
+    console.log(req.body);
     const newDoc = await Model.create(req.body);
 
-    // if (allowedFields.includes('postOfCreatedAnswer')) {
-    //   const postOfCreatedAnswer = await Post.findById(req.params.id);
-    //   postOfCreatedAnswer.answerCount = await Model.countDocuments({
-    //     post: req.params.id,
-    //   });
-    //   postOfCreatedAnswer.save();
-    // }
-
-    res.status(201).json({
+    return res.status(201).json({
       status: 'success',
       data: {
         doc: newDoc,
@@ -58,7 +52,13 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
     }
     if (allowedFields.includes('titleSearch')) {
       filter.title = {
-        $regex: req.query.search,
+        $regex: req.query.search || '',
+        $options: 'i',
+      };
+    }
+    if (allowedFields.includes('tagSearch')) {
+      filter.name = {
+        $regex: req.query.search || '',
         $options: 'i',
       };
     }
@@ -69,7 +69,7 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
       filter.user = req.user.id;
 
       const doc = await Model.findOne(filter);
-      res.status(200).json({
+      return res.status(200).json({
         status: 'success',
         data: {
           doc,
@@ -84,7 +84,7 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
       .sort()
       .limitFields()
       .paginate();
-    const docs = await features.query;
+    let docs = await features.query;
     //sending error if no post was found
     if (!docs)
       return next(
@@ -101,7 +101,7 @@ exports.getAll = (Model, allowedFields = [], filter = {}, forModel = null) => {
         ).query
       : null;
 
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       totalNumOfData: totalNumOfData || null,
       results: docs.length,
@@ -120,7 +120,7 @@ exports.getOne = (Model, allowedFields = []) => {
       doc.views += 1;
     }
     doc = await doc.save();
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       data: {
         doc,
@@ -160,6 +160,8 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         doc: req.params.id,
       });
       doc.voteCount = doc.likeCount - doc.dislikeCount;
+      doc.userDidLike = false;
+      doc.userDidDisLike = false;
       await doc.save();
       if (type === 'like') {
         return res.status(200).json({
@@ -182,6 +184,8 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         doc: req.params.id,
       });
       doc.voteCount = doc.likeCount - doc.dislikeCount;
+      doc.userDidLike = false;
+      doc.userDidDisLike = false;
       await doc.save();
       if (type === 'dislike') {
         return res.status(200).json({
@@ -205,17 +209,22 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         for: forDoc,
         doc: req.params.id,
       });
-      // doc.userDidLike
+      doc.userDidLike = true;
+      doc.userDidDisLike = false;
     } else if (type === 'dislike') {
+      console.log('lmao bitches');
       doc.dislikeCount = await LikeDislike.countDocuments({
         type: type,
         for: forDoc,
         doc: req.params.id,
       });
+      doc.userDidDislike = true;
+      doc.userDidLike = false;
+      console.log(doc);
     }
     doc.voteCount = doc.likeCount - doc.dislikeCount;
     await doc.save();
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       data: { doc },
     });
@@ -234,7 +243,7 @@ exports.deleteOne = (Model, allowedFields = []) => {
         )
       );
     await Model.findByIdAndDelete(req.params.id);
-    res.status(204).json({
+    return res.status(204).json({
       status: 'success',
     });
   });
@@ -242,7 +251,8 @@ exports.deleteOne = (Model, allowedFields = []) => {
 
 exports.updateOne = (Model, allowedFields = []) => {
   return catchAsync(async (req, res, next) => {
-    const filteredReq = filterObj(req.body, ...allowedFields);
+    const filteredReq = filterObj(req.body, allowedFields);
+    console.log(req.body, filteredReq);
     const doc = await Model.findById(req.params.id);
     if (!doc) return next(new AppError('No document found with that id', 404));
     if (doc.postedBy.id !== req.user.id)
@@ -252,9 +262,24 @@ exports.updateOne = (Model, allowedFields = []) => {
           401
         )
       );
-    await Model.findByIdAndUpdate(req.params.id, filteredReq);
-    res.status(204).json({
+    const updatedDoc = await Model.findByIdAndUpdate(
+      req.params.id,
+      filteredReq,
+      { new: true, runValidators: true }
+    );
+    if (updatedDoc.tags) {
+      // TODO:
+      tagValidation(updatedDoc.tags, next, Post);
+    }
+    return res.status(200).json({
       status: 'success',
+      data: { doc: updatedDoc },
     });
+  });
+};
+exports.addVarToMiddleware = (variable) => {
+  return catchAsync(async (req, res, next) => {
+    req.variable = variable;
+    next();
   });
 };

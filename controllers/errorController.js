@@ -1,4 +1,5 @@
 const AppError = require('./../utils/AppError');
+const mongoose = require('mongoose');
 
 const handleCastErrorDB = (err) => {
   return new AppError(`Invalid ${err.path}:${err.value}`, 400);
@@ -24,7 +25,7 @@ const PasswordNotSameError = (err) => {
 //function to return validation error in production
 const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
-  return new AppError(`${errors.join('. ')} , `, 400);
+  return new AppError(`${errors.join('.')} , `, 400);
 };
 
 //function to return jwt error in production
@@ -43,7 +44,7 @@ const handleJWTExpiredError = () => {
 
 const sendErrDev = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
       status: err.status,
       error: err,
       message: err.message,
@@ -72,9 +73,9 @@ const sendErrProd = (err, req, res) => {
 
 module.exports = (err, req, res, next) => {
   //setting default error codes if not declared
+  console.log();
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
-
   //sending errors in production
   if (
     process.env.NODE_ENV === 'production' ||
@@ -90,9 +91,7 @@ module.exports = (err, req, res, next) => {
     else if (error.message.includes('valid URL'))
       error = handleValidationErrorUrl();
     else if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    else if (error._message === 'Validation failed')
-      error = handleValidationErrorDB(error);
-    else if (error._message === 'User validation failed')
+    else if (err instanceof mongoose.Error.ValidationError)
       error = handleValidationErrorDB(error);
     else if (error.name === 'JsonWebTokenError') error = handleJWTError();
     else if (error.name === 'TokenExpiredError')

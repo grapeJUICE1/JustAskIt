@@ -21,8 +21,17 @@ import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 class profile extends Component {
   componentDidMount() {
+    console.log('hey');
     this.props.onFetchUserData(this.props.match.params.userID);
-    // window.scrollTo(0, 0);
+  }
+  componentDidUpdate(prevProps) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    if (prevProps.match.params.userID !== this.props.match.params.userID) {
+      this.props.onFetchUserData(this.props.match.params.userID);
+    }
   }
   state = {
     show: false,
@@ -47,12 +56,6 @@ class profile extends Component {
               <div className="card">
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
-                    {/* <img
-                      src={this.props.profile.photo}
-                      alt="Admin"
-                      className="rounded-circle"
-                      width={150}
-                    /> */}
                     <Image
                       cloudName="grapecluster"
                       publicId={this.props.profile.photo}
@@ -74,7 +77,10 @@ class profile extends Component {
                     <div className="mt-3">
                       <h4>{this.props.profile.name}</h4>
                       <p className="text-secondary mb-1">
-                        Full Stack Developer
+                        {this.props.profile.workStatus}
+                      </p>
+                      <p className="text-secondary mb-1">
+                        {this.props.profile.location}
                       </p>
 
                       <p className="text-secondary mb-1">
@@ -110,32 +116,22 @@ class profile extends Component {
             <div className="col-md-8 ml-0 ">
               <div className="card mb-3">
                 <div className="card-body">
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Name</h6>
-                    </div>
-                    <div className="col-sm-9 text-secondary">
-                      {this.props.profile.name}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Email</h6>
-                    </div>
-                    <div className="col-sm-9 text-secondary">
-                      {this.props.profile.email}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Bio</h6>
-                    </div>
-                    <div className="col-sm-9 text-secondary">
-                      {this.props.profile.bio}
-                    </div>
-                  </div>
+                  {['name', 'bio', 'location', 'workStatus'].map((val, id) => {
+                    return (
+                      <Fragment key={id}>
+                        {id !== 0 && <hr />}
+
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <h6 className="mb-0">{val}</h6>
+                          </div>
+                          <div className="col-sm-9 text-secondary">
+                            {this.props.profile[val]}
+                          </div>
+                        </div>
+                      </Fragment>
+                    );
+                  })}
                 </div>
 
                 {this.props.user ? (

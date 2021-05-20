@@ -1,65 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import DOMPurify from 'dompurify';
-import { Container } from 'react-bootstrap';
-import { EditorState } from 'draft-js';
+
+import { convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import { convertToHTML } from 'draft-convert';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './Editor.css';
+import draftToHtml from 'draftjs-to-html';
+import axios from 'axios';
 
-const MainEditor = () => {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
-  const [convertedContent, setConvertedContent] = useState(null);
+const MainEditor = (props) => {
+  const [uploadedImages, setUploadedImages] = useState([]);
+
   const handleEditorChange = (state) => {
-    setEditorState(state);
+    props.setEditorState(state);
+  };
+
+  const _uploadImageCallBack = async (file) => {
+    let imagesToUpload = uploadedImages;
+
+    const formData = new FormData();
+    formData.append('photo', file);
+    let res = await axios.post('/users/upload-post-photo', formData);
+    console.log(res);
+
+    const imageObject = {
+      file: file,
+      localSrc: res.data.data.url,
+    };
+
+    imagesToUpload.push(imageObject);
+
+    setUploadedImages(imagesToUpload);
+
+    return new Promise((resolve, reject) => {
+      resolve({ data: { link: imageObject.localSrc } });
+    });
   };
   useEffect(() => {
-    let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
-    setConvertedContent(currentContentAsHTML);
-  }, [editorState]);
-  const createMarkup = (html) => {
-    return DOMPurify.sanitize(html);
-  };
+    let rawContentState = convertToRaw(props.editorState.getCurrentContent());
+    let currentContentAsHTML = draftToHtml(rawContentState);
+
+    let contentWordCount = props.editorState
+      .getCurrentContent()
+      .getPlainText('').length;
+    if (props.onChange) {
+      props.onChange(currentContentAsHTML, contentWordCount);
+    }
+  }, [props.editorState]);
+
   return (
-    <Container className="d-flex flex-column justify-content-between pt-5 mt-5 px-5">
+    <>
       <Editor
-        editorState={editorState}
+        editorState={props.editorState}
         onEditorStateChange={handleEditorChange}
         wrapperClassName="wrapper-class"
         editorClassName="editor-class"
         toolbarClassName="toolbar-class"
         toolbar={{
+          image: {
+            uploadCallback: _uploadImageCallBack,
+            previewImage: true,
+            alt: { present: true, mandatory: false },
+            inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+          },
           options: [
             'inline',
             'blockType',
+            'fontFamily',
             'list',
-            'colorPicker',
             'textAlign',
             'link',
-            'embedded',
+            'colorPicker',
             'emoji',
             'image',
             'remove',
             'history',
           ],
-          colorPicker: { className: 'colorPicker' },
-          blockType: {
-            options: [
-              'Normal',
-              'Heading 2',
-              'H3',
-              'H4',
-              'H5',
-              'H6',
-              'Blockquote',
-              'Code',
-            ],
-          },
         }}
       />
-    </Container>
+    </>
   );
 };
 export default MainEditor;

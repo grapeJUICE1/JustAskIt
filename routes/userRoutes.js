@@ -10,15 +10,23 @@ const { cloudinaryConfig } = require('../cloudinaryConfig');
 const storage = multer.memoryStorage();
 
 const imageFilter = (req, file, cb) => {
+  console.log(file);
+  // if (req.file.buffer.byteLength >= maxSize) {
+  //   return next(new AppError('image has to be less than 10mbs :(', 400));
+  // }
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {
     cb(new AppError('Not an image! Please upload only images', 400));
   }
 };
-const multerUploads = multer({ storage, fileFilter: imageFilter }).single(
-  'photo'
-);
+
+const limits = { fileSize: 10 * 1024 * 1024 };
+const multerUploads = multer({
+  storage,
+  fileFilter: imageFilter,
+  limits: limits,
+}).single('photo');
 
 // initializing express router
 const router = express.Router();
@@ -47,6 +55,13 @@ router.patch(
   cloudinaryConfig,
   authController.protect,
   userController.uploadPhoto
+);
+router.post(
+  '/upload-post-photo',
+  multerUploads,
+  cloudinaryConfig,
+  authController.protect,
+  userController.uploadPostPhoto
 );
 
 //route for updating password

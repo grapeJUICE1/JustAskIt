@@ -20,7 +20,8 @@ const createSendToken = (user, statusCode, res) => {
     // secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   });
   user.password = undefined;
-  res.status(statusCode).json({
+
+  return res.status(statusCode).json({
     status: 'success',
     token,
     data: {
@@ -36,7 +37,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-
+  req.user = newUser;
   createSendToken(newUser, 201, res);
 });
 
@@ -52,7 +53,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.comparePassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
-
+  req.user = user;
   createSendToken(user, 200, res);
 });
 
@@ -60,7 +61,7 @@ exports.logout = catchAsync(async (req, res, next) => {
   res.cookie('jwt', 'hallelujah', {
     expires: new Date(Date.now() + 5),
   });
-  res.status(204).json({
+  return res.status(204).json({
     status: 'success',
     data: {},
   });
@@ -76,29 +77,47 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.cookies.jwt;
   }
   // console.log(token);
-  if (!token)
+
+  if (!token && req.variable === 'checkIfexist') {
+    return next();
+  }
+  if (!token) {
     return next(
       new AppError('You are not logged in..Please Log in to continue', 401)
     );
+  }
+
   const decodedToken = await promisify(jwt.verify)(
     token,
     process.env.JWT_SECRET
   );
   const currentUser = await User.findById(decodedToken.id);
-  if (!currentUser)
+  if (!currentUser) {
+    if (req.variable === 'checkIfexist') {
+      return next();
+    }
+
     return next(
-      new AppError('User belonging to this token no longer exists', 401)
+      new AppError(
+        'User belonging to this token no longer exists , please Log in again to continue',
+        401
+      )
     );
-  if (currentUser.checkIfPasswordChanged(decodedToken.iat))
+  }
+  if (currentUser.checkIfPasswordChanged(decodedToken.iat)) {
+    if (req.variable === 'checkIfexist') {
+      return next();
+    }
     return next(
       new AppError(
         'You have currently changed password..Please log in again to continue',
         401
       )
     );
+  }
   req.user = currentUser;
   if (req.body.type === 'autoLogin') {
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       data: {
         user: currentUser,

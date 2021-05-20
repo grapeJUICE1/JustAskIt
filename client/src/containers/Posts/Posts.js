@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button, FormControl } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import SortButtons from '../../components/SortButtons/SortButtons';
 import Post from '../../components/Post/Post';
 import SubmitPost from '../../components/SubmitModals/SubmitPostAnswer/SubmitPostAnswer';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 
 import * as actions from '../../store/actions/index';
 import Loader from '../../components/UI/Loader/Loader';
@@ -13,25 +14,36 @@ import classNames from 'classnames';
 
 class Posts extends Component {
   PER_PAGE = this.props.isProfile ? 5 : 10;
+  queryTag = queryString.parse(this.props.location?.search)?.tag;
   state = {
     currentPage: 1,
     total: 0,
     sortBy: '-createdAt',
-    filter: {},
+    filter: { tags: this.queryTag },
+    show: false,
+    showInfo: false,
+    searchBy: '',
   };
   componentDidMount() {
+    this.props.onResetEditSuccess();
     this.props.onFetchPosts(
       this.state.sortBy,
       this.state.filter,
       this.state.currentPage,
       this.PER_PAGE,
-      this.props.userId
+      this.props.userId,
+      this.state.searchBy
     );
   }
   componentDidUpdate(_, prevState) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
     if (
       prevState.sortBy !== this.state.sortBy ||
       prevState.filter !== this.state.filter ||
+      prevState.searchBy !== this.state.searchBy ||
       prevState.currentPage !== this.state.currentPage
     ) {
       this.props.onFetchPosts(
@@ -39,10 +51,19 @@ class Posts extends Component {
         this.state.filter,
         this.state.currentPage,
         this.PER_PAGE,
-        this.props.userId
+        this.props.userId,
+        this.state.searchBy
       );
     }
   }
+
+  handleClose = () => {
+    this.setState({ show: false });
+  };
+  handleShow = () => {
+    this.setState({ show: true });
+  };
+
   setDefaultCurrentPage = () => {
     this.setState({ currentPage: 0 });
   };
@@ -50,7 +71,7 @@ class Posts extends Component {
     this.setState({ currentPage: selected + 1 });
   };
   removeFilter = (e) => {
-    this.setState({ filter: {} });
+    this.setState({ filter: {}, showInfo: false });
   };
   sortByViews = (e) => {
     this.setState({ sortBy: '-views' });
@@ -70,30 +91,32 @@ class Posts extends Component {
   };
   filterUnanswered = (e) => {
     this.setDefaultCurrentPage();
-    this.setState({ sortBy: '-createdAt' });
-    this.setState({ filter: { answerCount: 0 } });
+    this.setState({ filter: { answerCount: 0 }, showInfo: true });
+    this.sortNewest();
   };
   filterByTag = (tag) => {
-    this.setDefaultCurrentPage();
-    this.setState({ sortBy: '-createdAt' });
-    this.setState({ filter: { tags: tag } });
+    this.setState({ filter: { tags: tag }, showInfo: true });
+    this.sortNewest();
   };
 
   render() {
-    const pageCount = Math.ceil(this.props.totalUsers / this.PER_PAGE);
-
+    const pageCount = Math.ceil(this.props.totalPosts / this.PER_PAGE);
     let posts;
     let title;
     let sortButtons = (
-      <SortButtons
-        isProfile={this.props.isProfile}
-        removeFilter={this.removeFilter}
-        sortNewest={this.sortNewest}
-        sortOldest={this.sortOldest}
-        sortByViews={this.sortByViews}
-        sortByVotes={this.sortByVotes}
-        filterUnanswered={this.filterUnanswered}
-      />
+      <>
+        <SortButtons
+          isProfile={this.props.isProfile}
+          removeFilter={this.removeFilter}
+          sortNewest={this.sortNewest}
+          sortOldest={this.sortOldest}
+          filterTag={this.state.filter?.tags}
+          sortByViews={this.sortByViews}
+          sortByVotes={this.sortByVotes}
+          filterUnanswered={this.filterUnanswered}
+          showInfo={this.state.showInfo}
+        />
+      </>
     );
     if (this.state.filter.tags) {
       title = (
@@ -165,7 +188,40 @@ class Posts extends Component {
           <Row>
             <Col lg={5}>
               {title}
-              <h3 className="mt-4">{this.props.totalUsers} questions</h3>
+              <h6 className="mt-4">{this.props.totalPosts} questions</h6>
+              {this.props.user && !this.props.isProfile && (
+                <>
+                  <Button
+                    onClick={() => {
+                      this.handleShow();
+                    }}
+                  >
+                    Submit Post
+                  </Button>
+                  <SubmitPost
+                    onSubmitPost={this.props.onSubmitPost}
+                    userId={this.props.user._id}
+                    error={this.props.submitError}
+                    type="post"
+                    loading={this.props.submitLoading}
+                    show={this.state.show}
+                    handleShow={this.handleShow}
+                    handleClose={() => this.handleClose()}
+                    onResetEditSuccess={this.props.onResetEditSuccess}
+                    newPostUrl={this.props.newPostUrl}
+                  />
+                  <FormControl
+                    size="lg"
+                    className="mt-3 mb-3"
+                    style={{ width: '60%' }}
+                    placeholder="search a post"
+                    value={this.state.searchBy}
+                    onChange={(e) =>
+                      this.setState({ searchBy: e.target.value, filter: {} })
+                    }
+                  />
+                </>
+              )}
             </Col>
             {sortButtons}
           </Row>
@@ -179,17 +235,40 @@ class Posts extends Component {
 const mapStateToProps = (state) => {
   return {
     total: state.posts.total,
-    totalUsers: state.posts.totalUsers,
+    totalPosts: state.posts.totalPosts,
     posts: state.posts.posts,
     error: state.posts.error,
     loading: state.posts.loading,
+    submitError: state.fullPost.submitError,
+    submitLoading: state.fullPost.submitLoading,
+    newPostUrl: state.fullPost.newPostUrl,
+    user: state.auth.user,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchPosts: (sortBy, filter, currentPage, perPagePosts, userId) =>
+    onFetchPosts: (
+      sortBy,
+      filter,
+      currentPage,
+      perPagePosts,
+      userId,
+      searchBy
+    ) =>
       dispatch(
-        actions.fetchPosts(sortBy, filter, currentPage, perPagePosts, userId)
+        actions.fetchPosts(
+          sortBy,
+          filter,
+          currentPage,
+          perPagePosts,
+          userId,
+          searchBy
+        )
+      ),
+    onResetEditSuccess: () => dispatch(actions.resetEditSuccess()),
+    onSubmitPost: (title, content, userId, tags, contentWordCount) =>
+      dispatch(
+        actions.submitPost(title, content, userId, tags, contentWordCount)
       ),
   };
 };

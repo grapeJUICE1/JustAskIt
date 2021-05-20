@@ -4,8 +4,10 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   profile: '',
   error: null,
+  editErr: null,
   loading: false,
   modalLoading: false,
+  editSuccessful: false,
 };
 const getUserDataHandler = (state, action) => {
   return updateObj(state, { error: null, loading: true });
@@ -17,39 +19,57 @@ const getUserDataFailHandler = (state, action) => {
 const getUserDataSuccessHandler = (state, action) => {
   return updateObj(state, {
     error: null,
-    testErr: false,
     profile: action.data,
     loading: false,
     total: action.total,
   });
 };
 const editUserDataStartHandler = (state, action) => {
-  return updateObj(state, { error: null, modalLoading: true, testErr: null });
+  return updateObj(state, {
+    error: null,
+    modalLoading: true,
+    editErr: null,
+    editSuccessful: false,
+  });
 };
 const editUserDataFailHandler = (state, action) => {
-  return updateObj(state, { modalLoading: false, testErr: action.error });
+  return updateObj(state, {
+    modalLoading: false,
+    editErr: action.error,
+    editSuccessful: false,
+  });
 };
 
 const editUserDataSuccessHandler = (state, action) => {
   return updateObj(state, {
-    error: null,
+    editErr: null,
     modalLoading: false,
+    editSuccessful: true,
     profile: action.user,
   });
 };
 const uploadPhotoStartHandler = (state, action) => {
-  return updateObj(state, { error: null, modalLoading: true });
+  return updateObj(state, {
+    editErr: null,
+    modalLoading: true,
+    editSuccessful: false,
+  });
 };
 const uploadPhotoFailHandler = (state, action) => {
   console.log(action);
-  return updateObj(state, { modalLoading: false });
+  return updateObj(state, {
+    editErr: action.error,
+    modalLoading: false,
+    editSuccessful: false,
+  });
 };
 
 const uploadPhotoSuccessHandler = (state, action) => {
   return updateObj(state, {
-    error: null,
+    editErr: null,
     modalLoading: false,
     profile: action.user,
+    editSuccessful: true,
   });
 };
 

@@ -21,19 +21,32 @@ const Sidebar = () => {
     >
       <Link
         id="posts"
+        style={{ color: 'lightgray' }}
         onClick={handleCloseMenu}
         className="menu-item"
         to="/posts"
       >
         Posts
       </Link>
+      <br />
       <Link
         id="users"
+        style={{ color: 'lightgray' }}
         onClick={handleCloseMenu}
         className="menu-item"
         to="/users"
       >
         Users
+      </Link>
+      <br />
+      <Link
+        id="users"
+        style={{ color: 'lightgray' }}
+        onClick={handleCloseMenu}
+        className="menu-item"
+        to="/tags"
+      >
+        Tags
       </Link>
     </Menu>
   );

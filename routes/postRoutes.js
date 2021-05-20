@@ -42,7 +42,13 @@ router
 
 //route to do read operations on posts
 router.route('/:id/get-posts-of-user').get(postController.getPostOfUser);
-router.route('/').get(postController.getAllPost);
-router.get('/getPostsForTag/:tagName', tagController.getPostOfTag);
+router
+  .route('/')
+  .get(
+    postController.addVarToMiddleware,
+    authController.protect,
+    postController.getAllPost
+  );
+// router.get('/get-posts-for-tag/:tagName', tagController.getPostOfTag);
 
 module.exports = router;

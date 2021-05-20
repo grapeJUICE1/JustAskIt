@@ -1,11 +1,22 @@
+$background-color: #94b4a4;
+$black: hsl(200, 40, 10);
+$white: $background-color;
+$base-font-size: 16px;
+$blockquote-font-size: 1.3rem;
+$base-line-height: 1.5rem;
+
+
 *{
   box-sizing: border-box;
+  word-wrap: break-word;   
+  overflow-wrap: break-word;
+  word-break: break-word;
   margin:0;
   padding:0;
   border:0;
 }
 body{
-background-color: #94b4a4;
+background-color: $background-color;
 font-family: 'Open Sans', sans-serif;
 font-weight: 100;
 overflow-x: none;
@@ -13,31 +24,29 @@ min-width: 100%;
 }
 
 html{
-  font-size: 16px;
+  font-size: $base-font-size;
 }
 
 @media(max-width:290px){
   html{
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media(max-width:220px){
   html{
-    font-size: 9px;
+    font-size: 8px;
   }
 }
 @media(max-width:170px){
   html{
-    font-size: 7px;
+    font-size: 6px;
   }
 }
 .container{
   min-width: 100%;
 }
 
-h3{
-  font-size: 1.1rem;
-}
+
 .ratio {
   display: grid;
 
@@ -87,8 +96,52 @@ h3{
   border: 1px solid rgb(198, 197, 202);
 }
 
+code{
+  font-size: 87.5%;
+  background-color: #a09797;
+  color: black;
+  padding: 7px;
+  word-wrap: break-word;
+  font-family: monospace;
+}
+
+strong{
+  font-weight: 800;
+}
+img{
+  max-width: 100%;
+  height: auto;
+}
+
+blockquote{
+  position: relative;
+  padding-left: 1em;
+  border-left: 0.2em solid lighten(#000, 40%);
+  font-family: 'Roboto', serif;
+  font-size: $blockquote-font-size;
+  line-height: $base-line-height;
+  font-weight: 100;
+  &:before, &:after {
+      content: '\201C';
+      font-family: 'Sanchez';
+      color: lighten(#000, 40%);
+   }
+   &:after {
+      content: '\201D';
+   }
+}
 
 
+.tag{
+  display: inline-block;
+  background-color: #799cf3;
+  border:2px solid #3a518a;
+  color:#001b17;
+  transition: all .2s;
 
-
-
+  &:hover{
+    background-color: #b9cbf6;
+    border:2px solid #1d47b0;
+    color:#284440;
+  }
+}

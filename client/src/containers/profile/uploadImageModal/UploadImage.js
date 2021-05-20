@@ -3,26 +3,35 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import Loader from '../../../components/UI/Loader/Loader';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions/index';
+import { withAlert } from 'react-alert';
 
-class EditModal extends Component {
+class UploadImage extends Component {
   state = {
     show: false,
     imgSrc: '',
   };
 
   btnRef = React.createRef();
+
   handleShow = () => {
     this.setState({ show: true });
   };
   handleClose = () => {
     this.setState({ show: false });
   };
+  showSuccessAlert = () => {
+    if (this.props.editSuccessful) {
+      this.props.alert.success('Profile Edited Sucessfully');
+    }
+  };
   onSubmit = async () => {
     const formData = new FormData();
     formData.append('photo', this.btnRef.current.files[0]);
     await this.props.onUploadPhoto(formData);
-
-    this.handleClose();
+    if (!this.props.editErr) {
+      this.handleClose();
+      this.showSuccessAlert();
+    }
   };
   _onChange = () => {
     var file = this.btnRef.current.files[0];
@@ -32,8 +41,8 @@ class EditModal extends Component {
       });
       return;
     }
-    var reader = new FileReader();
-    var url = reader.readAsDataURL(file);
+    let reader = new FileReader();
+    let url = reader.readAsDataURL(file);
 
     reader.onloadend = function (e) {
       this.setState({
@@ -46,7 +55,7 @@ class EditModal extends Component {
     return (
       <>
         <br />
-        <Button variant="primary" onClick={this.handleShow} size="sm">
+        <Button variant="dark" onClick={this.handleShow} size="sm">
           upload image
         </Button>
 
@@ -72,6 +81,7 @@ class EditModal extends Component {
                   Submit
                 </Button>
               </Form>
+              <br />
               <img
                 src={this.state.imgSrc}
                 alt="profile pic"
@@ -93,7 +103,9 @@ class EditModal extends Component {
 const mapStateToProps = (state) => {
   return {
     profile: state.profile.profile,
+    editSuccessful: state.profile.editSuccessful,
     error: state.profile.error,
+    editError: state.profile.editError,
     loading: state.profile.loading,
     modalLoading: state.profile.modalLoading,
     user: state.auth.user,
@@ -104,4 +116,7 @@ const mapDispatchToProps = (dispatch) => {
     onUploadPhoto: (data) => dispatch(actions.uploadPhoto(data)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(EditModal);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAlert()(UploadImage));

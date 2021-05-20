@@ -5,7 +5,7 @@ const commentSchema = mongoose.Schema({
   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
   for: {
     type: String,
-    enums: {
+    enum: {
       values: ['Post', 'Answer'],
       message: 'you can comment either a post or answer',
     },
@@ -20,6 +20,8 @@ const commentSchema = mongoose.Schema({
   dislikeCount: { type: Number, default: 0 },
   voteCount: { type: Number, default: 0 },
   createdAt: Date,
+  userDidLike: { type: Boolean, default: false },
+  userDidDislike: { type: Boolean, default: false },
 });
 
 commentSchema.pre('save', function (next) {

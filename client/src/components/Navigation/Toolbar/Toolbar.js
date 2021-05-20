@@ -11,8 +11,8 @@ const Toolbar = () => {
       fixed="top"
     >
       <Sidebar />
-      <Navbar.Brand href="#home" className="ml-3">
-        <h3>JustAskIt</h3>
+      <Navbar.Brand className="ml-3" href="/posts">
+        <h6>JustAskIt</h6>
       </Navbar.Brand>
       <NavigationItems />
     </Navbar>

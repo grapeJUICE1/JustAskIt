@@ -30,7 +30,6 @@ export const fetchUsers = (
 ) => {
   return async (dispatch) => {
     dispatch(fetchUsersStart());
-    console.log(filter);
     try {
       const res = await axios.get('/users', {
         params: {

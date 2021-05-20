@@ -12,8 +12,18 @@ dotenv.config({ path: './config.env' });
 const app = require('./app');
 
 //initializing mongoose and mongodb
+let databaseURI = '';
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development')
+  databaseURI = process.env.DATABASE_LOCAL;
+else if (process.env.NODE_ENV === 'production')
+  databaseURI = process.env.DATABASE_PROD;
+else {
+  databaseURI = process.env.DATABASE_PROD;
+}
+
 mongoose
-  .connect(process.env.DATABASE_LOCAL, {
+  .connect(databaseURI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -27,7 +37,9 @@ const port = process.env.PORT;
 
 //spinning up the server
 const server = app.listen(port, () => {
-  console.log(`server is up and running at port ${port}`);
+  console.log(
+    `${process.env.NODE_ENV} server is up and running at port ${port}`
+  );
 });
 
 //handling unhandled rejection

@@ -34,10 +34,12 @@ const likeAnswerSuccessHandler = (state, action) => {
   let updatedAnswerIndex = answersCopy.findIndex(
     (obj) => obj._id === answer._id
   );
+  answersCopy[updatedAnswerIndex].userDidLike = answer.userDidLike;
+  answersCopy[updatedAnswerIndex].userDidDislike = answer.userDidDislike;
+  answersCopy[updatedAnswerIndex].voteCount = answer.voteCount;
   answersCopy[updatedAnswerIndex].likeCount = answer.likeCount;
   answersCopy[updatedAnswerIndex].dislikeCount = answer.dislikeCount;
-  answersCopy[updatedAnswerIndex].voteCount =
-    answer.likeCount - answer.dislikeCount;
+
   return updateObj(state, {
     error: null,
     loading: false,
@@ -46,71 +48,6 @@ const likeAnswerSuccessHandler = (state, action) => {
 };
 const likeAnswerFailHandler = (state, action) => {
   return updateObj(state, { error: action.error, loading: false });
-};
-
-const checkUsersLikeDislikeAnswer = (state, action) => {
-  let answersCopy = [...state.answers];
-  let updatedAnswerIndex = answersCopy.findIndex(
-    (obj) => obj._id === action.id
-  );
-
-  if (action.response.doc) {
-    if (action.response.doc.type === 'like') {
-      answersCopy[updatedAnswerIndex].userDidLike = true;
-      answersCopy[updatedAnswerIndex].userDidDislike = false;
-    } else if (action.response.doc.type === 'dislike') {
-      answersCopy[updatedAnswerIndex].userDidDislike = true;
-      answersCopy[updatedAnswerIndex].userDidLike = false;
-    }
-  } else {
-    answersCopy[updatedAnswerIndex].userDidLike = false;
-    answersCopy[updatedAnswerIndex].userDidDislike = false;
-  }
-  return updateObj(state, {
-    answers: answersCopy,
-  });
-};
-const checkUsersLikeDislikeAnswerFail = (state, action) => {
-  return updateObj(state, {
-    userDidLike: false,
-    userDidDislike: false,
-  });
-};
-
-const checkUsersLikeDislikeComment = (state, action) => {
-  let answersCopy = [...state.answers];
-
-  let updatedAnswerIndex = answersCopy.findIndex(
-    (obj) => obj._id === action.ansId
-  );
-
-  let commentsCopy = [...answersCopy[updatedAnswerIndex].comments];
-  let updatedCommentIndex = commentsCopy.findIndex(
-    (obj) => obj._id === action.id
-  );
-
-  if (action.response.doc) {
-    if (action.response.doc.type === 'like') {
-      commentsCopy[updatedCommentIndex].userDidLike = true;
-      commentsCopy[updatedCommentIndex].userDidDislike = false;
-    } else if (action.response.doc.type === 'dislike') {
-      commentsCopy[updatedCommentIndex].userDidDislike = true;
-      commentsCopy[updatedCommentIndex].userDidLike = false;
-    }
-  } else {
-    commentsCopy[updatedCommentIndex].userDidLike = false;
-    commentsCopy[updatedCommentIndex].userDidDislike = false;
-  }
-  answersCopy[updatedAnswerIndex].comments = commentsCopy;
-  return updateObj(state, {
-    answers: answersCopy,
-  });
-};
-const checkUsersLikeDislikeCommentFail = (state, action) => {
-  return updateObj(state, {
-    userDidLike: false,
-    userDidDislike: false,
-  });
 };
 
 const fetchCommentsStart = (state, action) => {
@@ -187,14 +124,7 @@ const reducer = (state = initialState, action) => {
       return likeAnswerSuccessHandler(state, action);
     case actionTypes.LIKE_DISLIKE_ANSWER_FAIL:
       return likeAnswerFailHandler(state, action);
-    case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER:
-      return checkUsersLikeDislikeAnswer(state, action);
-    case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_FAIL:
-      return checkUsersLikeDislikeAnswerFail(state, action);
-    case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_COMMENT:
-      return checkUsersLikeDislikeComment(state, action);
-    case actionTypes.CHECK_USER_LIKE_DISLIKE_ANSWER_COMMENT_FAIL:
-      return checkUsersLikeDislikeCommentFail(state, action);
+
     case actionTypes.FETCH_ANSWER_COMMENTS_START:
       return fetchCommentsStart(state, action);
     case actionTypes.FETCH_ANSWER_COMMENTS_FAIL:

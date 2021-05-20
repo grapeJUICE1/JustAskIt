@@ -16,6 +16,7 @@ import answersReducer from './store/reducers/answers';
 import authReducer from './store/reducers/auth';
 import profileReducer from './store/reducers/profile';
 import usersReducer from './store/reducers/users';
+import tagsReducer from './store/reducers/tags';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:7000/api/v1';
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   auth: authReducer,
   users: usersReducer,
+  tags: tagsReducer,
 });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

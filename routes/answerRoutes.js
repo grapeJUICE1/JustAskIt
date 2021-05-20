@@ -16,8 +16,17 @@ router.post(
 );
 
 //route to do read operations on answers
-router.get('/', answerController.getAllAnswer);
-router.get('/:id/get-answers', answerController.getAnswerOfPost);
+router.get(
+  '/',
+
+  answerController.getAllAnswer
+);
+router.get(
+  '/:id/get-answers',
+  answerController.addVarToMiddleware,
+  authController.protect,
+  answerController.getAnswerOfPost
+);
 router.get('/:id/get-answers-of-user', answerController.getAnswersOfUser);
 
 //route to like and dislike answer

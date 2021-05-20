@@ -6,10 +6,11 @@ exports.createNewPost = handlerFactory.createOne(Post, [
   'content',
   'postedBy',
   'tags',
+  'contentWordCount',
 ]);
 exports.getAllPost = handlerFactory.getAll(
   Post,
-  ['totalNumOfData'],
+  ['totalNumOfData', 'titleSearch'],
   {},
   'Post'
 );
@@ -23,4 +24,10 @@ exports.getPostOfUser = handlerFactory.getAll(
   'Post'
 );
 exports.deletePost = handlerFactory.deleteOne(Post);
-exports.updatePost = handlerFactory.updateOne(Post, ['title', 'content']);
+exports.updatePost = handlerFactory.updateOne(Post, [
+  'title',
+  'content',
+  'tags',
+  'contentWordCount',
+]);
+exports.addVarToMiddleware = handlerFactory.addVarToMiddleware('checkIfexist');
