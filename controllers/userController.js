@@ -32,9 +32,9 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   ]);
   console.log(filteredBody);
   if (filteredBody.name === req.user.name) {
-    filteredBody.name = req.user.name;
+    filteredBody.name = undefined;
   } else if (filteredBody.email === req.user.email) {
-    filteredBody.email = req.user.email;
+    filteredBody.email = undefined;
   }
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
