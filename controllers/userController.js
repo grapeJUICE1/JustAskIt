@@ -38,7 +38,8 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   }
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
-    runValidators: true,
+    upsert: false,
+    // runValidators: true,
   });
   console.log(updatedUser);
 

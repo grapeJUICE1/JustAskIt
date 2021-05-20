@@ -41,7 +41,6 @@ router.post('/verify', authController.protect);
 //route for updating user data except password
 router.patch(
   '/update-me',
-
   authController.protect,
   userController.updateUserData
 );
