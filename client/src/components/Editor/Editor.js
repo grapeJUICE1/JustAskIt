@@ -20,7 +20,6 @@ const MainEditor = (props) => {
     const formData = new FormData();
     formData.append('photo', file);
     let res = await axios.post('/users/upload-post-photo', formData);
-    console.log(res);
 
     const imageObject = {
       file: file,

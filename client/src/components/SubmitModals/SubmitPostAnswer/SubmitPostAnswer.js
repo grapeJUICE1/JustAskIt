@@ -29,7 +29,6 @@ function SubmitPostAnswer(props) {
   const alert = useAlert();
 
   const handleSubmit = async () => {
-    console.log(content, props.type);
     await props.onSubmitPost(
       title,
       DOMPurify.sanitize(content),

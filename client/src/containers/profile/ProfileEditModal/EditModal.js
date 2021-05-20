@@ -25,7 +25,6 @@ class EditModal extends Component {
     this.setState({ show: false });
   };
   onSubmit = async () => {
-    console.log(this.state.editableFields);
     await this.props.onEditData(this.state.editableFields);
     if (!this.props.editErr) {
       this.handleClose();

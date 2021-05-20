@@ -47,7 +47,6 @@ function SubmitPostAnswer(props) {
     );
   };
   if (props.editSuccessful || props.submitSuccessful) {
-    console.log(props.type);
     alert.success(`${props.type === 'edit' ? 'edited' : 'posted'} Succesfully`);
     setTimeout(() => {
       handleClose();
@@ -102,7 +101,7 @@ function SubmitPostAnswer(props) {
     <>
       {redirect ? <Redirect to={redirect} /> : ''}
       {button}
-      {console.log('koibar')}
+
       <Modal
         show={show}
         onHide={handleClose}

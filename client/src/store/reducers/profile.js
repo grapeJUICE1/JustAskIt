@@ -56,7 +56,6 @@ const uploadPhotoStartHandler = (state, action) => {
   });
 };
 const uploadPhotoFailHandler = (state, action) => {
-  console.log(action);
   return updateObj(state, {
     editErr: action.error,
     modalLoading: false,

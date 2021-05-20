@@ -57,7 +57,6 @@ const submitPostsStartHandler = (state, action) => {
   });
 };
 const submitPostsSuccessHandler = (state, action) => {
-  console.log(action.submittedPostType);
   return updateObj(state, {
     submitError: null,
     submitLoading: false,
@@ -102,7 +101,6 @@ const deletePostsStartHandler = (state, action) => {
   });
 };
 const deletePostsSuccessHandler = (state, action) => {
-  console.log(action.submittedPostType);
   return updateObj(state, {
     deleteError: null,
     deleteLoading: false,

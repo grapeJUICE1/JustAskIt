@@ -29,13 +29,8 @@ export const fetchAnswers = (postId) => {
         },
       });
       dispatch(fetchAnswersSuccess(res.data.data.docs, res.data.results));
-      // for (let ans of res.data.data.docs) {
-      //   dispatch(checkUsersLikeDislikeAnswer(ans._id));
-      // }
     } catch (err) {
-      // console.log(err);
       if (err.response) dispatch(fetchAnswersFail(err.response.data));
-      // else if (err.response.data) dispatch(fetchAnswersFail(err.response.data));
       else dispatch(fetchAnswersFail(err));
     }
   };

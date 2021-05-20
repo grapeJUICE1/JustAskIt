@@ -9,9 +9,8 @@ const tagValidation = require('../utils/tagValidation');
 
 exports.createOne = (Model, allowedFields = []) => {
   return catchAsync(async (req, res, next) => {
-    console.log(req.body);
     req.body = filterObj(req.body, allowedFields);
-    console.log(req.body);
+
     if (allowedFields.includes('post')) {
       req.body.post = req.params.id;
     }
@@ -21,7 +20,7 @@ exports.createOne = (Model, allowedFields = []) => {
     if (allowedFields.includes('postedBy')) {
       req.body.postedBy = req.user.id;
     }
-    console.log(req.body);
+
     const newDoc = await Model.create(req.body);
 
     return res.status(201).json({
@@ -212,7 +211,6 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
       doc.userDidLike = true;
       doc.userDidDisLike = false;
     } else if (type === 'dislike') {
-      console.log('lmao bitches');
       doc.dislikeCount = await LikeDislike.countDocuments({
         type: type,
         for: forDoc,
@@ -220,7 +218,6 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
       });
       doc.userDidDislike = true;
       doc.userDidLike = false;
-      console.log(doc);
     }
     doc.voteCount = doc.likeCount - doc.dislikeCount;
     await doc.save();
@@ -252,7 +249,7 @@ exports.deleteOne = (Model, allowedFields = []) => {
 exports.updateOne = (Model, allowedFields = []) => {
   return catchAsync(async (req, res, next) => {
     const filteredReq = filterObj(req.body, allowedFields);
-    console.log(req.body, filteredReq);
+
     const doc = await Model.findById(req.params.id);
     if (!doc) return next(new AppError('No document found with that id', 404));
     if (doc.postedBy.id !== req.user.id)

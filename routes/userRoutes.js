@@ -10,10 +10,6 @@ const { cloudinaryConfig } = require('../cloudinaryConfig');
 const storage = multer.memoryStorage();
 
 const imageFilter = (req, file, cb) => {
-  console.log(file);
-  // if (req.file.buffer.byteLength >= maxSize) {
-  //   return next(new AppError('image has to be less than 10mbs :(', 400));
-  // }
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {

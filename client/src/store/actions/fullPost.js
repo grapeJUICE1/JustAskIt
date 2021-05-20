@@ -122,7 +122,6 @@ export const submitPost = (
   forDoc = undefined
 ) => {
   return async (dispatch) => {
-    console.log(forDoc);
     dispatch(submitPostStart());
     try {
       let data = {
@@ -133,7 +132,7 @@ export const submitPost = (
         contentWordCount,
         for: forDoc,
       };
-      console.log(data);
+
       let res;
       if (type === 'edit') {
         res = await axios.patch(`/posts/${postId}`, data);
@@ -148,7 +147,7 @@ export const submitPost = (
       } else {
         res = await axios.post(`/posts/create-post`, data);
       }
-      console.log(res);
+
       dispatch(submitPostSuccess(res?.data?.data?.doc, type));
     } catch (err) {
       console.log(err);

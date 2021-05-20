@@ -30,7 +30,7 @@ export const fetchTags = (
 ) => {
   return async (dispatch) => {
     dispatch(fetchTagsStart());
-    console.log('kkk');
+
     try {
       const res = await axios.get('/tags', {
         params: {
@@ -41,7 +41,7 @@ export const fetchTags = (
           ...filter,
         },
       });
-      console.log(res);
+
       dispatch(
         fetchTagsSuccess(
           res.data.data.docs,

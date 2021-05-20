@@ -89,15 +89,13 @@ postSchema.pre('findOneAndDelete', async function (next) {
     tagDocument.postCount -= 1;
     tagDocument.save();
   }
-  return;
   next();
 });
 
 postSchema.pre(/^find/, async function (next) {
   //populating postedBy
   this.populate({ path: 'postedBy', select: '-__v -passwordChangedAt' });
-  // console.log(this)
-  // console.log(await this.model.find(this.getQuery()));
+
   next();
 });
 

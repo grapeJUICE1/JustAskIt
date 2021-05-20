@@ -73,7 +73,6 @@ const sendErrProd = (err, req, res) => {
 
 module.exports = (err, req, res, next) => {
   //setting default error codes if not declared
-  console.log();
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
   //sending errors in production
@@ -83,7 +82,6 @@ module.exports = (err, req, res, next) => {
   ) {
     let error = { ...err };
     error.message = err.message;
-    console.log(err);
     // sending errors for invalid mongodb ids
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
     else if (error.message.includes('passwordConfirm'))

@@ -57,7 +57,6 @@ const Comments = (props) => {
             variant="link"
             size="sm"
             onClick={() => {
-              console.log('fuck');
               props.onSubmitPost(
                 undefined,
                 newCmntContent,
@@ -113,7 +112,6 @@ const Comments = (props) => {
                       variant="link"
                       size="sm"
                       onClick={() => {
-                        console.log('fuck');
                         props.onSubmitPost(
                           undefined,
                           edit.content,

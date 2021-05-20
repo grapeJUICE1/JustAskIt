@@ -29,7 +29,7 @@ const SortButtons = (props) => {
         <ButtonGroup toggle className="flex-wrap">
           {sortOptions.map((srtOpt, key) => {
             if (!srtOpt.func) return null;
-            console.log(props.filterTag);
+
             return (
               <ToggleButton
                 value={key}

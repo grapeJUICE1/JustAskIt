@@ -21,7 +21,6 @@ import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 class profile extends Component {
   componentDidMount() {
-    console.log('hey');
     this.props.onFetchUserData(this.props.match.params.userID);
   }
   componentDidUpdate(prevProps) {

@@ -27,7 +27,6 @@ const Answers = (props) => {
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
-    console.log('dfffffff');
     setShow(false);
     setAnsToEdit(null);
     setSubmit(false);
@@ -126,7 +125,6 @@ const Answers = (props) => {
   }
 
   if (props.deleteSuccessful) {
-    console.log('kkkk');
     alert.success('deleted Successfully');
     props.onResetEditSuccess();
     if (props.deleteSuccessful === 'post') {
@@ -155,7 +153,6 @@ const Answers = (props) => {
               className="ml-3"
               variant="outline-danger"
               onClick={() => {
-                console.log(props.post._id);
                 props.onDelete('post', props.post._id);
               }}
             >

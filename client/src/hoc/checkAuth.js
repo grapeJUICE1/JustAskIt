@@ -15,7 +15,6 @@ const checkAuth = (Wrapped) => {
           return response;
         },
         async (error) => {
-          console.log('kerl', error.response.data.message);
           switch (error.response.status) {
             case 401:
               alert.error(error.response.data.message);

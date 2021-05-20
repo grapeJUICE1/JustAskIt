@@ -30,7 +30,7 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     'workStatus',
     'links',
   ]);
-  console.log(filteredBody);
+
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
@@ -49,7 +49,7 @@ exports.uploadPostPhoto = catchAsync(async (req, res, next) => {
     const file = dataUri(req).content;
 
     const result = await uploader.upload(file);
-    console.log(result);
+
     const url = result.url;
 
     return res.status(200).json({
@@ -63,17 +63,13 @@ exports.uploadPostPhoto = catchAsync(async (req, res, next) => {
   }
 });
 exports.uploadPhoto = catchAsync(async (req, res, next) => {
-  console.log('jjjjjjjjj');
   let photo = req.user.photo;
   if (req.file) {
     const file = dataUri(req).content;
 
     const result = await uploader.upload(file);
-    console.log(result.public_id);
 
     photo = result.public_id;
-
-    console.log(photo);
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
