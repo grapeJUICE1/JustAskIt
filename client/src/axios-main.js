@@ -4,7 +4,7 @@ import axios from 'axios';
 const token = localStorage.getItem('jwt');
 console.log(token);
 const config = {
-  baseURL: 'https://just-ask-it.herokuapp.com/api/v1/',
+  baseURL: 'http://localhost:7000/api/v1/',
   withCredentials: true,
   headers: {
     authorization: token ? `Bearer ${token}` : '',
