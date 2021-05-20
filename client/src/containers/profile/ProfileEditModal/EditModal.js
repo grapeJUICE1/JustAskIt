@@ -25,7 +25,15 @@ class EditModal extends Component {
     this.setState({ show: false });
   };
   onSubmit = async () => {
-    await this.props.onEditData(this.state.editableFields);
+    let name =
+      this.state.editableFields.name === this.props.user.name
+        ? ''
+        : this.state.editableFields.name;
+    let email =
+      this.state.editableFields.email === this.props.user.email
+        ? ''
+        : this.state.editableFields.email;
+    await this.props.onEditData({ ...this.state.editableFields, name, email });
     if (!this.props.editErr) {
       this.handleClose();
       this.showSuccessAlert();
