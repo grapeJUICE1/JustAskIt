@@ -44,114 +44,84 @@ const Answers = (props) => {
   } else if (props.loading) {
     answers = <Loader />;
   } else {
-    answers = (
-      <>
-        <h3>
-          <strong>
-            {props.total} {props.total > 1 ? 'Answers' : 'Answer'}
-          </strong>
+    answers = props.answers.map((ans) => {
+      return (
+        <Fragment key={ans._id}>
+          <LikeDislikeButtons
+            userDidLike={ans.userDidLike}
+            userDidDislike={ans.userDidDislike}
+            onLikeDislikePost={props.onLikeDislikeAnswer}
+            post={ans}
+          />
+
+          <div
+            className={`ml-5 ${styles.ans_content}`}
+            dangerouslySetInnerHTML={{ __html: `${ans.content}` }}
+          ></div>
+
           <br />
-          <br />
-          <div>
-            <Button
-              variant="dark"
-              size="lg"
-              onClick={() => {
-                setSubmit(true);
-                handleShow();
+          <span className="ml-auto">
+            <p
+              style={{
+                fontWeight: 'bold',
+                color: 'rgb(59, 59, 85)',
+                fontSize: '0.8rem',
               }}
             >
-              Submit Answer
+              answered {formatDate(ans.createdAt)}
+            </p>
+            <Image
+              cloudName="grapecluster"
+              publicId={ans.postedBy.photo}
+              width="30"
+              height="30"
+              className="rounded-circle"
+              crop="scale"
+            />
+
+            <Button className="mr-0 mt-0 pt-0 ml-auto" variant="link" size="sm">
+              <Link to={`/profile/${ans.postedBy._id}`}>
+                {ans.postedBy.name}
+              </Link>
             </Button>
-          </div>
-
-          <br />
-          <hr />
-        </h3>
-        {props.answers.map((ans) => {
-          return (
-            <Fragment key={ans._id}>
-              <LikeDislikeButtons
-                userDidLike={ans.userDidLike}
-                userDidDislike={ans.userDidDislike}
-                onLikeDislikePost={props.onLikeDislikeAnswer}
-                post={ans}
-              />
-
-              <div
-                className={`ml-5 ${styles.ans_content}`}
-                dangerouslySetInnerHTML={{ __html: `${ans.content}` }}
-              ></div>
-
-              <br />
-              <span className="ml-auto">
-                <p
-                  style={{
-                    fontWeight: 'bold',
-                    color: 'rgb(59, 59, 85)',
-                    fontSize: '0.8rem',
+          </span>
+          <div>
+            {props.user && props.user._id === ans.postedBy._id && (
+              <>
+                <Button
+                  size="sm"
+                  className="ml-3"
+                  variant="outline-secondary"
+                  onClick={() => {
+                    setAnsToEdit(ans);
+                    handleShow();
                   }}
                 >
-                  answered {formatDate(ans.createdAt)}
-                </p>
-                <Image
-                  cloudName="grapecluster"
-                  publicId={ans.postedBy.photo}
-                  width="30"
-                  height="30"
-                  className="rounded-circle"
-                  crop="scale"
-                />
-
-                <Button
-                  className="mr-0 mt-0 pt-0 ml-auto"
-                  variant="link"
-                  size="sm"
-                >
-                  <Link to={`/profile/${ans.postedBy._id}`}>
-                    {ans.postedBy.name}
-                  </Link>
+                  edit
                 </Button>
-              </span>
-              <div>
-                {props.user && props.user._id === ans.postedBy._id && (
-                  <>
-                    <Button
-                      size="sm"
-                      className="ml-3"
-                      variant="outline-secondary"
-                      onClick={() => {
-                        setAnsToEdit(ans);
-                        handleShow();
-                      }}
-                    >
-                      edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="ml-3"
-                      variant="outline-danger"
-                      onClick={() => props.onDelete('answer', ans._id)}
-                    >
-                      delete
-                    </Button>
-                  </>
-                )}
-              </div>
-              <br />
-              <Comments
-                id={ans._id}
-                comments={ans.comments}
-                forDoc="answer"
-                fetchComments={props.onFetchComments}
-              />
+                <Button
+                  size="sm"
+                  className="ml-3"
+                  variant="outline-danger"
+                  onClick={() => props.onDelete('answer', ans._id)}
+                >
+                  delete
+                </Button>
+              </>
+            )}
+          </div>
+          <br />
+          <Comments
+            id={ans._id}
+            comments={ans.comments}
+            forDoc="answer"
+            fetchComments={props.onFetchComments}
+          />
 
-              <hr />
-            </Fragment>
-          );
-        })}
-      </>
-    );
+          <hr />
+        </Fragment>
+      );
+    });
   }
 
   if (props.deleteSuccessful) {
@@ -194,6 +164,29 @@ const Answers = (props) => {
         )}
       </div>
       <Container className="d-flex flex-column justify-content-between pt-5">
+        <h3>
+          <strong>
+            {props.total} {props.total > 1 ? 'Answers' : 'Answer'}
+          </strong>
+          <br />
+          <br />
+          <div>
+            <Button
+              variant="dark"
+              size="lg"
+              onClick={() => {
+                setSubmit(true);
+                handleShow();
+              }}
+            >
+              Submit Answer
+            </Button>
+          </div>
+
+          <br />
+          <hr />
+        </h3>
+
         {answers}
         {(props.user && ansToEdit) ||
         (props.user && submit) ||

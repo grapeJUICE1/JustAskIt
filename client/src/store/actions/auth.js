@@ -27,8 +27,10 @@ export const login = (data) => {
   return async (dispatch) => {
     dispatch(loginStart());
     try {
-      const res = await axios.post(`/users/login`, data);
-      localStorage.setItem('jwt', res.data.token);
+      const res = await axios.post(`/users/login`, data, {
+        withCredentials: true,
+      });
+
       dispatch(loginSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
@@ -63,7 +65,7 @@ export const signup = (data) => {
     dispatch(signUpStart());
     try {
       const res = await axios.post(`/users/sign-up`, data);
-      localStorage.setItem('jwt', res.data.token);
+
       dispatch(signUpSuccess(res.data.data.user));
     } catch (err) {
       console.log(err);
@@ -90,7 +92,6 @@ export const logout = () => {
   return async (dispatch) => {
     try {
       await axios.post(`/users/logout`);
-      localStorage.setItem('jwt', '');
       dispatch(logoutSuccess());
     } catch (err) {
       console.log(err);
@@ -103,7 +104,7 @@ export const autoLogin = () => {
   return async (dispatch) => {
     try {
       const res = await axiosAutoLogin.post(
-        'http://localhost:7000/api/v1/users/verify',
+        'https://intense-peak-92208.herokuapp.com/api/v1/users/verify',
         {
           type: 'autoLogin',
         }

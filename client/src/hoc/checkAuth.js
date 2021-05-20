@@ -9,17 +9,6 @@ const checkAuth = (Wrapped) => {
   function CheckAuth(props) {
     const alert = useAlert();
     useEffect(() => {
-      const reqInt = axios.interceptors.request.use(
-        (request) => {
-          const token = localStorage.getItem('jwt');
-          request.authorization = token ? `Bearer ${token}` : '';
-          return request;
-        },
-        (error) => {
-          console.log(error);
-          return Promise.reject(error);
-        }
-      );
       const resInt = axios.interceptors.response.use(
         (response) => {
           // Do something with response data
@@ -27,6 +16,12 @@ const checkAuth = (Wrapped) => {
         },
         async (error) => {
           switch (error.response.status) {
+            case 401:
+              alert.error(error.response.data.message);
+              if (props.user) {
+                await props.onLogout();
+              }
+              break;
             case 429:
               alert.error(error.response.data.message);
               break;
@@ -47,7 +42,6 @@ const checkAuth = (Wrapped) => {
 
       return function cleanup() {
         axios.interceptors.response.eject(resInt);
-        axios.interceptors.request.eject(reqInt);
       };
     });
 

@@ -55,7 +55,6 @@ export const editUserData = (data) => {
     dispatch(editUserDataStart());
     try {
       const res = await axios.patch('/users/update-me', data);
-      console.log(res);
       dispatch(editUserDataSuccess(res.data.data.user));
     } catch (err) {
       dispatch(editUserDataFail(err.response.data.message));

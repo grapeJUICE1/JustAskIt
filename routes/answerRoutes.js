@@ -23,8 +23,7 @@ router.get(
 );
 router.get(
   '/:id/get-answers',
-  answerController.addVarToMiddleware,
-  authController.protect,
+
   answerController.getAnswerOfPost
 );
 router.get('/:id/get-answers-of-user', answerController.getAnswersOfUser);
