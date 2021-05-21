@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "proxy": "https://just-ask-it.herokuapp.com/api/v1/",
+  "proxy": "http://localhost:7000/api/v1/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,6 +15,7 @@
     "query-string": "^7.0.0",
     "react": "^17.0.2",
     "react-burger-menu": "^2.9.2",
+    "react-cookie-consent": "^6.2.3",
     "react-dom": "^17.0.2",
     "react-paginate": "^7.1.2",
     "react-redux": "^7.2.4",

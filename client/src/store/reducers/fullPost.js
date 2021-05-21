@@ -7,6 +7,7 @@ const initialState = {
   loading: false,
   userDidLike: false,
   userDidDislike: false,
+  likeDislikeLoading: false,
   submitError: null,
   submitLoading: false,
   submitSuccessful: false,
@@ -31,7 +32,7 @@ const fetchFullPostFailHandler = (state, action) => {
   return updateObj(state, { error: action.error, loading: false });
 };
 const likePostStartHandler = (state, action) => {
-  return updateObj(state, { error: null });
+  return updateObj(state, { error: null, likeDislikeLoading: true });
 };
 const likePostSuccessHandler = (state, action) => {
   return updateObj(state, {
@@ -41,7 +42,7 @@ const likePostSuccessHandler = (state, action) => {
   });
 };
 const likePostFailHandler = (state, action) => {
-  return updateObj(state, { error: action.error, loading: false });
+  return updateObj(state, { loading: false });
 };
 
 const submitPostsStartHandler = (state, action) => {
@@ -115,6 +116,36 @@ const deletePostsFailHandler = (state, action) => {
     deleteSuccessful: false,
   });
 };
+const checkUsersLikeDislikePost = (state, action) => {
+  let userDidLike = state.userDidLike;
+  let userDidDislike = state.userDidDislike;
+
+  if (action.response.doc) {
+    if (action.response.doc.type === 'like') {
+      userDidLike = true;
+      userDidDislike = false;
+    } else if (action.response.doc.type === 'dislike') {
+      userDidDislike = true;
+      userDidLike = false;
+    }
+  } else {
+    userDidLike = false;
+    userDidDislike = false;
+  }
+  return updateObj(state, {
+    userDidLike: userDidLike,
+    userDidDislike: userDidDislike,
+    likeDislikeLoading: false,
+  });
+};
+const checkUsersLikeDislikePostFail = (state, action) => {
+  return updateObj(state, {
+    userDidLike: false,
+    userDidDislike: false,
+    likeDislikeLoading: false,
+    // post: { ...state.post },
+  });
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -130,7 +161,10 @@ const reducer = (state = initialState, action) => {
       return likePostSuccessHandler(state, action);
     case actionTypes.LIKE_DISLIKE_POST_FAIL:
       return likePostFailHandler(state, action);
-
+    case actionTypes.CHECK_USER_LIKE_DISLIKE_POST:
+      return checkUsersLikeDislikePost(state, action);
+    case actionTypes.CHECK_USER_LIKE_DISLIKE_POST_FAIL:
+      return checkUsersLikeDislikePostFail(state, action);
     case actionTypes.SUBMIT_POST_START:
       return submitPostsStartHandler(state, action);
     case actionTypes.SUBMIT_POST_SUCCESS:

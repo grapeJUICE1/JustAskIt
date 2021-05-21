@@ -104,7 +104,7 @@ export const autoLogin = () => {
   return async (dispatch) => {
     try {
       const res = await axiosAutoLogin.post(
-        'https://intense-peak-92208.herokuapp.com/api/v1/users/verify',
+        'http://localhost:7000/api/v1/users/verify',
         {
           type: 'autoLogin',
         }

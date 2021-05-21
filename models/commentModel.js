@@ -20,8 +20,8 @@ const commentSchema = mongoose.Schema({
   dislikeCount: { type: Number, default: 0 },
   voteCount: { type: Number, default: 0 },
   createdAt: Date,
-  userDidLike: { type: Boolean, default: false },
-  userDidDislike: { type: Boolean, default: false },
+  // userDidLike: { type: Boolean, default: false },
+  // userDidDislike: { type: Boolean, default: false },
 });
 
 commentSchema.pre('save', function (next) {

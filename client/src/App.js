@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import CookieConsent from 'react-cookie-consent';
 
 import Layout from './components/Layout/Layout';
 import Posts from './containers/Posts/Posts';
@@ -35,6 +36,9 @@ function App(props) {
         <Route path="/profile/:userID" component={Profile} />
         <Route path="/users" component={Users} />
       </Switch>
+      <CookieConsent>
+        This website uses cookies to enhance the user experience.
+      </CookieConsent>
     </Layout>
   );
 }

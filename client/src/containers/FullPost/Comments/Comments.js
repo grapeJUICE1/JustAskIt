@@ -7,6 +7,7 @@ import { useAlert } from 'react-alert';
 import * as actions from '../../../store/actions/index';
 import { formatDate } from '../../../shared/utils/formatDate';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
+import Loader from '../../../components/UI/Loader/Loader';
 //   {
 //   id,
 //   forDoc,
@@ -35,15 +36,19 @@ const Comments = (props) => {
   }
   return (
     <div>
-      <Button
-        variant="link"
-        size="sm"
-        onClick={() => {
-          setNewCmnt(true);
-        }}
-      >
-        add a comment
-      </Button>
+      {props.user ? (
+        <Button
+          variant="link"
+          size="sm"
+          onClick={() => {
+            setNewCmnt(true);
+          }}
+        >
+          add a comment
+        </Button>
+      ) : (
+        'Login to add comment'
+      )}
       {newCmnt ? (
         <>
           <textarea
@@ -89,15 +94,19 @@ const Comments = (props) => {
       {props.comments
         ? props.comments.map((cmnt) => (
             <Fragment key={cmnt._id}>
-              <LikeDislikeButtons
-                userDidLike={cmnt.userDidLike}
-                userDidDislike={cmnt.userDidDislike}
-                onLikeDislikePost={props.onLikeDislikeComments}
-                isComment={true}
-                post={cmnt}
-                isSmall={true}
-                // getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
-              />
+              {!props.likeDislikeCommentLoading ? (
+                <LikeDislikeButtons
+                  userDidLike={cmnt.userDidLike}
+                  userDidDislike={cmnt.userDidDislike}
+                  onLikeDislikePost={props.onLikeDislikeComments}
+                  isComment={true}
+                  post={cmnt}
+                  isSmall={true}
+                  // getUsersFormerReactions={getUsersFormerReactionsOnThisPost}
+                />
+              ) : (
+                <Loader isSmall isLoaderFor="comment" />
+              )}
               <small>
                 {edit && edit._id === cmnt._id ? (
                   <>
@@ -150,26 +159,32 @@ const Comments = (props) => {
               </Button>
               <small className="text-muted">{formatDate(cmnt.createdAt)}</small>
               <br />
-              <Button
-                variant="link"
-                size="sm"
-                className="text-info text"
-                onClick={() => {
-                  setEdit(cmnt);
-                }}
-              >
-                <small>edit</small>
-              </Button>
-              <Button
-                variant="link"
-                size="sm"
-                className="text-info text"
-                onClick={() => {
-                  props.onDelete('comment', cmnt._id);
-                }}
-              >
-                <small>delete</small>
-              </Button>
+              {props.user?._id === cmnt.postedBy?._id ? (
+                <>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-info text"
+                    onClick={() => {
+                      setEdit(cmnt);
+                    }}
+                  >
+                    <small>edit</small>
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-info text"
+                    onClick={() => {
+                      props.onDelete('comment', cmnt._id);
+                    }}
+                  >
+                    <small>delete</small>
+                  </Button>
+                </>
+              ) : (
+                ''
+              )}
               <hr />
             </Fragment>
           ))
@@ -180,6 +195,7 @@ const Comments = (props) => {
 const mapStateToProps = (state) => {
   return {
     editSuccessful: state.fullPost.editSuccessful,
+    likeDislikeCommentLoading: state.answers.likeDislikeCommentLoading,
     submitSuccessful: state.fullPost.submitSuccessful,
     submitError: state.fullPost.submitError,
     submitLoading: state.fullPost.submitLoading,

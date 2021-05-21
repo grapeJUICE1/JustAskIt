@@ -47,13 +47,16 @@ const Answers = (props) => {
     answers = props.answers.map((ans) => {
       return (
         <Fragment key={ans._id}>
-          <LikeDislikeButtons
-            userDidLike={ans.userDidLike}
-            userDidDislike={ans.userDidDislike}
-            onLikeDislikePost={props.onLikeDislikeAnswer}
-            post={ans}
-          />
-
+          {!props.likeDislikeAnswerLoading ? (
+            <LikeDislikeButtons
+              userDidLike={ans.userDidLike}
+              userDidDislike={ans.userDidDislike}
+              onLikeDislikePost={props.onLikeDislikeAnswer}
+              post={ans}
+            />
+          ) : (
+            <Loader isSmall isLoaderFor="answer" />
+          )}
           <div
             className={`ml-5 ${styles.ans_content}`}
             dangerouslySetInnerHTML={{ __html: `${ans.content}` }}
@@ -88,6 +91,8 @@ const Answers = (props) => {
           <div>
             {props.user && props.user._id === ans.postedBy._id && (
               <>
+                <br />
+                <br />
                 <Button
                   size="sm"
                   className="ml-3"
@@ -170,19 +175,22 @@ const Answers = (props) => {
           </strong>
           <br />
           <br />
-          <div>
-            <Button
-              variant="dark"
-              size="lg"
-              onClick={() => {
-                setSubmit(true);
-                handleShow();
-              }}
-            >
-              Submit Answer
-            </Button>
-          </div>
-
+          {props.user ? (
+            <div>
+              <Button
+                variant="dark"
+                size="lg"
+                onClick={() => {
+                  setSubmit(true);
+                  handleShow();
+                }}
+              >
+                Submit Answer
+              </Button>
+            </div>
+          ) : (
+            <small>Login to submit answer</small>
+          )}
           <br />
           <hr />
         </h3>
@@ -233,8 +241,7 @@ const mapStateToProps = (state) => {
     post: state.fullPost.post,
     loading: state.answers.loading,
     total: state.answers.total,
-    userDidLike: state.answers.userDidLike,
-    userDidDislike: state.answers.userDidDislike,
+    likeDislikeAnswerLoading: state.answers.likeDislikeAnswerLoading,
     editSuccessful: state.fullPost.editSuccessful,
     submitSuccessful: state.fullPost.submitSuccessful,
     submitError: state.fullPost.submitError,

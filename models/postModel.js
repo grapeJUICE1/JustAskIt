@@ -37,8 +37,8 @@ const postSchema = mongoose.Schema(
     voteCount: { type: Number, default: 0 },
     answerCount: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
-    userDidLike: { type: Boolean, default: false },
-    userDidDislike: { type: Boolean, default: false },
+    // userDidLike: { type: Boolean, default: false },
+    // userDidDislike: { type: Boolean, default: false },
     createdAt: Date,
     postedBy: {
       type: mongoose.Schema.ObjectId,

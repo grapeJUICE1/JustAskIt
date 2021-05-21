@@ -2,6 +2,7 @@ import axios from '../../axios-main';
 import * as actionTypes from './actionTypes';
 //importing axios because main instance has an error handling interceptor
 //when i get user reactions , i dont want to trigger that
+import axiosGetLikesDislikes from 'axios';
 
 export const fetchFullPostStart = () => {
   return {
@@ -28,6 +29,7 @@ export const fetchFullPost = (postId) => {
       const res = await axios.get(`/posts/${postId}`);
 
       dispatch(fetchFullPostSuccess(res.data.data.doc));
+      dispatch(checkUsersLikeDislikePost(res.data.data.doc._id));
     } catch (err) {
       console.log(err);
       if (err.response.data.message)
@@ -62,12 +64,40 @@ export const LikeDislikePost = (postId, likeordislike = 'like') => {
     try {
       const res = await axios.post(`/posts/${postId}/${likeordislike}`);
       dispatch(LikeDislikePostSuccess(res.data.data.doc));
+      dispatch(checkUsersLikeDislikePost(postId));
     } catch (err) {
       console.log(err);
+      dispatch(checkUsersLikeDislikePostFail());
       if (err.response.data.message)
         dispatch(LikeDislikePostFail(err.response.data));
       // else if (err.response.data) dispatch(fetchAnswersFail(err.response.data));
       else dispatch(LikeDislikePostFail(err));
+    }
+  };
+};
+
+export const checkUsersLikeDislikePostSuccess = (response) => {
+  return {
+    type: actionTypes.CHECK_USER_LIKE_DISLIKE_POST,
+    response,
+  };
+};
+export const checkUsersLikeDislikePostFail = () => {
+  return {
+    type: actionTypes.CHECK_USER_LIKE_DISLIKE_POST_FAIL,
+  };
+};
+export const checkUsersLikeDislikePost = (postId) => {
+  return async (dispatch) => {
+    try {
+      const res = await axiosGetLikesDislikes.get(
+        `/posts/${postId}/get-all-reactions-of-user`,
+        { withCredentials: true }
+      );
+      dispatch(checkUsersLikeDislikePostSuccess(res.data.data));
+    } catch (err) {
+      console.log(err);
+      dispatch(checkUsersLikeDislikePostFail());
     }
   };
 };

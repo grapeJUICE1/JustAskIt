@@ -159,8 +159,7 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         doc: req.params.id,
       });
       doc.voteCount = doc.likeCount - doc.dislikeCount;
-      doc.userDidLike = false;
-      doc.userDidDisLike = false;
+
       await doc.save();
       if (type === 'like') {
         return res.status(200).json({
@@ -183,8 +182,7 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         doc: req.params.id,
       });
       doc.voteCount = doc.likeCount - doc.dislikeCount;
-      doc.userDidLike = false;
-      doc.userDidDisLike = false;
+
       await doc.save();
       if (type === 'dislike') {
         return res.status(200).json({
@@ -208,16 +206,12 @@ exports.likeDislike = (Model, allowedFields = [], type, forDoc) => {
         for: forDoc,
         doc: req.params.id,
       });
-      doc.userDidLike = true;
-      doc.userDidDisLike = false;
     } else if (type === 'dislike') {
       doc.dislikeCount = await LikeDislike.countDocuments({
         type: type,
         for: forDoc,
         doc: req.params.id,
       });
-      doc.userDidDislike = true;
-      doc.userDidLike = false;
     }
     doc.voteCount = doc.likeCount - doc.dislikeCount;
     await doc.save();

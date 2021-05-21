@@ -22,8 +22,8 @@ const answerSchema = mongoose.Schema({
   voteCount: { type: Number, default: 0 },
   createdAt: Date,
   postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
-  userDidLike: { type: Boolean, default: false },
-  userDidDislike: { type: Boolean, default: false },
+  // userDidLike: { type: Boolean, default: false },
+  // userDidDislike: { type: Boolean, default: false },
 });
 
 answerSchema.pre('save', async function (next) {

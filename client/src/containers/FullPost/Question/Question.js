@@ -5,6 +5,7 @@ import { Image } from 'cloudinary-react';
 import { formatDate, timeSince } from '../../../shared/utils/formatDate';
 import styles from './Question.module.scss';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
+import Loader from '../../../components/UI/Loader/Loader';
 
 import * as actions from '../../../store/actions/index';
 import { Link, withRouter } from 'react-router-dom';
@@ -12,9 +13,7 @@ const Question = (props) => {
   return (
     <>
       {props.post ? (
-        <Container
-          className={'d-flex flex-column justify-content-between flex-wrap '}
-        >
+        <Container className={'d-flex flex-column justify-content-between  '}>
           <h2 className={styles.Question}>
             <strong> {props.post.title} </strong>
           </h2>
@@ -26,12 +25,16 @@ const Question = (props) => {
           </h6>
           <hr />
           <div style={{ display: 'flex' }}>
-            <LikeDislikeButtons
-              userDidLike={props.post.userDidLike}
-              userDidDislike={props.post.userDidDislike}
-              onLikeDislikePost={props.onLikeDislikePost}
-              post={props.post}
-            />
+            {!props.likeDislikeLoading ? (
+              <LikeDislikeButtons
+                userDidLike={props.userDidLike}
+                userDidDislike={props.userDidDislike}
+                onLikeDislikePost={props.onLikeDislikePost}
+                post={props.post}
+              />
+            ) : (
+              <Loader isSmall isLoaderFor="question" />
+            )}
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div
               dangerouslySetInnerHTML={{
@@ -92,6 +95,7 @@ const mapStateToProps = (state) => {
     user: state.auth.user,
     userDidLike: state.fullPost.userDidLike,
     userDidDislike: state.fullPost.userDidDislike,
+    likeDislikeLoading: state.fullPost.likeDislikeLoading,
   };
 };
 

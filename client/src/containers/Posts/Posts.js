@@ -15,13 +15,14 @@ import classNames from 'classnames';
 class Posts extends Component {
   PER_PAGE = this.props.isProfile ? 5 : 10;
   queryTag = queryString.parse(this.props.location?.search)?.tag;
+
   state = {
     currentPage: 1,
     total: 0,
     sortBy: '-createdAt',
     filter: { tags: this.queryTag },
     show: false,
-    showInfo: false,
+    showInfo: this.queryTag ? true : false,
     searchBy: '',
   };
   componentDidMount() {
@@ -74,29 +75,35 @@ class Posts extends Component {
     this.setState({ filter: {}, showInfo: false });
   };
   sortByViews = (e) => {
-    this.setState({ sortBy: '-views' });
+    this.setState({ sortBy: '-views', showInfo: false });
     this.setDefaultCurrentPage();
   };
   sortByVotes = (e) => {
-    this.setState({ sortBy: '-voteCount' });
+    this.setState({ sortBy: '-voteCount', showInfo: false });
     this.setDefaultCurrentPage();
   };
   sortNewest = (e) => {
-    this.setState({ sortBy: '-createdAt' });
+    this.setState({ sortBy: '-createdAt', showInfo: false });
     this.setDefaultCurrentPage();
   };
   sortOldest = (e) => {
-    this.setState({ sortBy: 'createdAt' });
-    this.setDefaultCurrentPage();
+    this.setState({ sortBy: 'createdAt', showInfo: false });
+    // this.setDefaultCurrentPage();
   };
   filterUnanswered = (e) => {
     this.setDefaultCurrentPage();
-    this.setState({ filter: { answerCount: 0 }, showInfo: true });
-    this.sortNewest();
+    this.setState({
+      filter: { answerCount: 0 },
+      showInfo: true,
+      sortBy: '-createdAt',
+    });
   };
   filterByTag = (tag) => {
-    this.setState({ filter: { tags: tag }, showInfo: true });
-    this.sortNewest();
+    this.setState({
+      filter: { tags: tag },
+      showInfo: true,
+      sortBy: '-createdAt',
+    });
   };
 
   render() {

@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './loginSignupBox.module.scss';
 import { Container } from 'react-bootstrap';
 import classnames from 'classnames';
+import checkCookie from '../../utils/checkCookieDisabled';
 
 function loginSignupBox({ data, inputs, title }) {
   const inputChangeHandler = (evt, field) => {
@@ -55,7 +56,7 @@ function loginSignupBox({ data, inputs, title }) {
       });
     }
   };
-
+  let cookieEnabled = checkCookie();
   return (
     <Container className="d-flex flex-column justify-content-between ml-lg-4 pt-5 mt-5">
       <form className={styles.login} onSubmit={submitHandler}>
@@ -77,7 +78,14 @@ function loginSignupBox({ data, inputs, title }) {
               </span>
             </div>
           ))}
-
+          {!cookieEnabled ? (
+            <p className="text-warning text-center">
+              Cookies are blocked in your browser , authentication may fail for
+              that , for best experience , enable cookie in your browser
+            </p>
+          ) : (
+            ''
+          )}
           <button
             type="submit"
             style={data.state.submitButtonStyle}
