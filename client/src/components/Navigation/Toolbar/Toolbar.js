@@ -12,7 +12,11 @@ const Toolbar = () => {
     >
       <Sidebar />
       <Navbar.Brand className="ml-3" href="/posts">
-        <h6>JustAskIt</h6>
+        <img
+          alt="logo"
+          src="https://res.cloudinary.com/grapecluster/image/upload/v1621597330/justAskItLogo.png"
+          style={{ width: '6.25rem' }}
+        />
       </Navbar.Brand>
       <NavigationItems />
     </Navbar>

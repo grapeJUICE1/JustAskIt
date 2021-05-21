@@ -104,10 +104,11 @@ export const autoLogin = () => {
   return async (dispatch) => {
     try {
       const res = await axiosAutoLogin.post(
-        'http://localhost:7000/api/v1/users/verify',
+        '/users/verify',
         {
           type: 'autoLogin',
-        }
+        },
+        { withCredentials: true }
       );
 
       dispatch(loginSuccess(res.data.data.user));
