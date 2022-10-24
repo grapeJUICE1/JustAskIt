@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { Col, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import styles from './SortButtons.module.scss';
+import styles from './SortButtons.module.css';
 
 const SortButtons = (props) => {
   const sortOptions = [

@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+body {
+  background-color: #94b4a4;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
+  overflow-x: none;
+  min-width: 100%;
+}
+html {
+  font-size: 16px;
+}
+@media (max-width: 290px) {
+  html {
+    font-size: 10px;
+  }
+}
+@media (max-width: 220px) {
+  html {
+    font-size: 8px;
+  }
+}
+@media (max-width: 170px) {
+  html {
+    font-size: 6px;
+  }
+}
+.container {
+  min-width: 100%;
+}
+.ratio {
+  display: grid;
+}
+.ratio > * {
+  grid-area: 1;
+}
+.profilePostsMarginRight {
+  margin-right: -240px !important;
+}
+@media screen and (max-width: 992px) {
+  .profilePostsMarginRight {
+    margin-right: -15px !important;
+  }
+}
+.paddingLeftImportant {
+  padding-left: 0 !important;
+}
+.pagination {
+  padding-top: 3.125rem;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  cursor: pointer;
+}
+.pagination a {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.13rem 0.5rem;
+  border: 1px solid #6c7ac9;
+  color: #6c7ac9;
+}
+.pagination__link {
+  font-weight: bold;
+}
+.pagination__link__active a {
+  color: #fff;
+  background: #6c7ac9;
+}
+.pagination__link__disabled a {
+  color: #c6c5ca;
+  border: 1px solid #c6c5ca;
+}
+code {
+  font-size: 87.5%;
+  background-color: #a09797;
+  color: black;
+  padding: 7px;
+  word-wrap: break-word;
+  font-family: monospace;
+}
+strong {
+  font-weight: 800;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+blockquote {
+  position: relative;
+  padding-left: 1em;
+  border-left: 0.2em solid #666;
+  font-family: 'Roboto', serif;
+  font-size: 1.3rem;
+  line-height: 1.5rem;
+  font-weight: 100;
+}
+blockquote:before,
+blockquote:after {
+  content: '\201C';
+  font-family: 'Sanchez';
+  color: #666;
+}
+blockquote:after {
+  content: '\201D';
+}
+.tag {
+  display: inline-block;
+  background-color: #799cf3;
+  border: 2px solid #3a518a;
+  color: #001b17;
+  transition: all 0.2s;
+}
+.tag:hover {
+  background-color: #b9cbf6;
+  border: 2px solid #1d47b0;
+  color: #284440;
+}

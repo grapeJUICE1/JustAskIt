@@ -14,7 +14,7 @@ import SubmitPostAnswer from '../../../components/SubmitModals/SubmitPostAnswer/
 import { useAlert } from 'react-alert';
 
 import Comments from '../Comments/Comments';
-import styles from './Answers.module.scss';
+import styles from './Answers.module.css';
 
 const Answers = (props) => {
   useEffect(() => {

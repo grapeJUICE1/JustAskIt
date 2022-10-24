@@ -6,7 +6,7 @@ import { useAlert } from 'react-alert';
 import { Button, Modal, Form } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import Editor from '../../Editor/Editor';
-import styles from './SubmitPostAnswer.module.scss';
+import styles from './SubmitPostAnswer.module.css';
 import Loader from '../../UI/Loader/Loader';
 import { Redirect } from 'react-router';
 

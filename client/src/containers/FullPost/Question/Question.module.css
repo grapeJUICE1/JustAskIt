@@ -1,0 +1,11 @@
+.Question {
+  font-size: 1.5rem;
+}
+.post_content {
+  margin-top: -5.5rem;
+}
+@media (max-width: 460px) {
+  .Question {
+    font-size: 1.15rem;
+  }
+}

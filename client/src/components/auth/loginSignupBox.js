@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './loginSignupBox.module.scss';
+import styles from './loginSignupBox.module.css';
 import { Container } from 'react-bootstrap';
 import classnames from 'classnames';
 import checkCookie from '../../utils/checkCookieDisabled';

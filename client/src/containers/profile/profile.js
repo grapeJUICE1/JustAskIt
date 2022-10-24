@@ -78,6 +78,9 @@ class profile extends Component {
                       <div className="mt-3">
                         <h4>{this.props.profile.name}</h4>
                         <p className="text-secondary mb-1">
+                          {this.props.profile.email}
+                        </p>
+                        <p className="text-secondary mb-1">
                           {this.props.profile.workStatus}
                         </p>
                         <p className="text-secondary mb-1">
@@ -117,7 +120,7 @@ class profile extends Component {
               <div className="col-md-8 ml-0 ">
                 <div className="card mb-3">
                   <div className="card-body">
-                    {['name', 'bio', 'location', 'workStatus'].map(
+                    {['name', 'email', 'bio', 'location', 'workStatus'].map(
                       (val, id) => {
                         return (
                           <Fragment key={id}>

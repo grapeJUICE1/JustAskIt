@@ -92,6 +92,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     token,
     'process.env.JWT_SECRET'
   );
+  console.log('mark is it');
+  console.log(decodedToken);
   const currentUser = await User.findById(decodedToken.id);
   if (!currentUser) {
     if (req.variable === 'checkIfexist') {

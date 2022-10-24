@@ -5,7 +5,7 @@ import CookieConsent from 'react-cookie-consent';
 import Layout from './components/Layout/Layout';
 import Posts from './containers/Posts/Posts';
 
-import './App.scss';
+import './App.css';
 import FullPost from './containers/FullPost/FullPost';
 import Login from './containers/Auth/Login/Login';
 import Signup from './containers/Auth/signup/signup';

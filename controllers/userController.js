@@ -95,6 +95,7 @@ exports.uploadPhoto = catchAsync(async (req, res, next) => {
 
 exports.getOneUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
+  console.log(user);
 
   return res.status(200).json({
     status: 'success',

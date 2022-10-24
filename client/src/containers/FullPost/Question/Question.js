@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { Image } from 'cloudinary-react';
 import { formatDate, timeSince } from '../../../shared/utils/formatDate';
-import styles from './Question.module.scss';
+import styles from './Question.module.css';
 import LikeDislikeButtons from '../../../components/LikeDislikeButtons/LikeDislikeButtons';
 import Loader from '../../../components/UI/Loader/Loader';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { timeSince } from '../../shared/utils/formatDate';
-import styles from './Post.module.scss';
+import styles from './Post.module.css';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';

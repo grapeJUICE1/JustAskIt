@@ -27,7 +27,7 @@ app.use(cors({ credentials: true, origin: true }));
 
 //logging on dev environment
 // if (process.env.NODE_ENV === 'development') {
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 // }
 
 //middlewares related to secuirity
