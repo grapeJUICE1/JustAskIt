@@ -69,3 +69,7 @@ npm run dev
 ### Login/Signup Page
 
 ![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/login%20signup.png?token=GHSAT0AAAAAABZNUL2HWQGNS4US7H6CM7YSY2XR7MA)
+
+### Submit Post/Answer Modal
+
+![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/submit%20post%20answer%20modal.png?token=GHSAT0AAAAAABZNUL2HSPL6YZ33RRE4NJ3CY2XSDWA)
