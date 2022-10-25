@@ -20,7 +20,7 @@ import tagsReducer from './store/reducers/tags';
 import axios from 'axios';
 
 // axios.defaults.baseURL = 'https://intense-peak-92208.herokuapp.com/api/v1/';
-axios.defaults.baseURL = 'http://localhost:7000/api/v1/';
+axios.defaults.baseURL = 'https://tame-cyan-goldfish-hose.cyclic.app/api/v1/';
 
 axios.defaults.withCredentials = true;
 
