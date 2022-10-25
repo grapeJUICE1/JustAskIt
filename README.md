@@ -52,15 +52,19 @@ npm run dev
 
 ### Home Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/Home.png?token=GHSAT0AAAAAABZNUL2HMBINFKBS47COXTNGY2XR2TQ)
+![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/Home.png?token=GHSAT0AAAAAABZNUL2G3DG56OER647BJAO4Y2XSFGA)
 
 ### Individual Post Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/individual%20post.png?token=GHSAT0AAAAAABZNUL2GCKHYY3TD2T766O4OY2XR3UA)
+![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/individual%20post.png?token=GHSAT0AAAAAABZNUL2HMH5A7UNBHLEQ4UF2Y2XSFSA)
+
+### Individual User Page
+
+![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/User%20Page.png?token=GHSAT0AAAAAABZNUL2GRISOEWMRFSMCVW7YY2XSGNQ)
 
 ### All Users Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/all%20users%20page.png?token=GHSAT0AAAAAABZNUL2HN4YZXEI555LEHM3IY2XR53Q)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/all%20users%20page.png?raw=true)
 
 ### All Tags Page
 
