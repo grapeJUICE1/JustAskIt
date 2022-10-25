@@ -52,15 +52,15 @@ npm run dev
 
 ### Home Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/Home.png?token=GHSAT0AAAAAABZNUL2G3DG56OER647BJAO4Y2XSFGA)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/Home.png?raw=true)
 
 ### Individual Post Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/individual%20post.png?token=GHSAT0AAAAAABZNUL2HMH5A7UNBHLEQ4UF2Y2XSFSA)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/individual%20post.png?raw=true)
 
 ### Individual User Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/User%20Page.png?token=GHSAT0AAAAAABZNUL2GRISOEWMRFSMCVW7YY2XSGNQ)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/User%20Page.png?raw=true)
 
 ### All Users Page
 
@@ -68,12 +68,12 @@ npm run dev
 
 ### All Tags Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/Tags%20page.png?token=GHSAT0AAAAAABZNUL2GSA4BJ6TTIZ6TCXSWY2XR6PQ)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/Tags%20page.png?raw=true)
 
 ### Login/Signup Page
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/login%20signup.png?token=GHSAT0AAAAAABZNUL2HWQGNS4US7H6CM7YSY2XR7MA)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/login%20signup.png?raw=true)
 
 ### Submit Post/Answer Modal
 
-![image](https://raw.githubusercontent.com/grapeJUICE1/JustAskIt/master/screenshots/submit%20post%20answer%20modal.png?token=GHSAT0AAAAAABZNUL2HSPL6YZ33RRE4NJ3CY2XSDWA)
+![image](https://github.com/grapeJUICE1/JustAskIt/blob/master/screenshots/submit%20post%20answer%20modal.png?raw=true)
