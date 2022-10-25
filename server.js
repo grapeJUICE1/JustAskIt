@@ -21,7 +21,7 @@ else if (process.env.NODE_ENV === 'production')
 else {
   databaseURI = process.env.DATABASE_PROD;
 }
-
+console.log(databaseURI);
 mongoose
   .connect(databaseURI, {
     useNewUrlParser: true,
